@@ -9,8 +9,7 @@ int main(void)
 	int n;
 	/**
  * main - Entry point for a program that determines whether a random number is positive, negative, or zero.
- * This program generates a random number and checks if it is positive, negative, or zero. It then prints a message
- * indicating the result.
+ * This program generates a random number and checks if it is positive, negative, or zero.
  * Return: Always returns 0 to indicate successful execution.
  */
 	srand(time(0));
