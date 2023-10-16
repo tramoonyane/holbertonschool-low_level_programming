@@ -4,12 +4,15 @@
 /* more headers goes there */
 
 /* betty style doc for function main goes there */
+/**
+ * main - A program checking a random number.
+ * Return: Always returns 0 to indicate successful execution.
+ */
 int main(void)
 {
 	int n;
 	/**
- * main - Entry point for a program checking a random number.
- * Return: Always returns 0 to indicate successful execution.
+ * main - A program checking a random number.
  */
 	srand(time(0));
 	n = rand() - RAND_MAX / 2;
