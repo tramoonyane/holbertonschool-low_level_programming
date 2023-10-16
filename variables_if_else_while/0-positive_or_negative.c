@@ -8,7 +8,7 @@ int main(void)
 {
 	int n;
 	/**
- * main - Entry point for a program checking whether a random number is positive, negative or zero
+ * main - Entry point for a program checking a random number.
  * Return: Always returns 0 to indicate successful execution.
  */
 	srand(time(0));
