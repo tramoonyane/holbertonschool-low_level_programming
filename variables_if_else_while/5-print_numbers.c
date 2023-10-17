@@ -14,10 +14,7 @@ int i;
 for (i = 0; i <= 9; i++)
 {
 printf("%d", i);
-if (i < 9)
-printf("");
-else
-printf("\n");
 }
+printf("\n");
 return (0);
 }
