@@ -9,13 +9,11 @@
  */
 int main(void)
 {
-    int number = 0;
-
-    while (number < 10)
-    {
-        printf("%d\n", number);
-        number++;
-    }
-
-    return (0);
+int number = 0;
+while (number < 10)
+{
+printf("%d\n", number);
+number++;
+}
+return (0);
 }
