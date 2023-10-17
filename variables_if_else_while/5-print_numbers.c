@@ -10,17 +10,14 @@
  */
 int main(void)
 {
-    int i;
-
-    for (i = 0; i <= 9; i++)
-    {
-        printf("%d", i);
-
-        if (i < 9)
-            printf(" ");
-        else
-            printf("\n");
-    }
-
-    return (0);
+int i;
+for (i = 0; i <= 9; i++)
+{
+printf("%d", i);
+if (i < 9)
+printf(" ");
+else
+printf("\n");
+}
+return (0);
 }
