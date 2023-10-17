@@ -2,7 +2,8 @@
 /**
  * main - Entry point
  *
- * Description: Prints the alphabet in lowercase, then in uppercase, followed by a newline.
+ * Description: Prints the alphabet in lowercase, then in uppercase, 
+ * followed by a newline.
  *
  * Return: Always 0 (Success)
  */
@@ -19,8 +20,6 @@ int main(void)
 	{
 		putchar(letter);
 	}
-
-	putchar('\n'); // Print a newline character
-
+	putchar('\n');
 	return (0);
 }
