@@ -5,13 +5,13 @@
 
 /* betty style doc for function main goes there */
 /**
- * main - Entry point
- *
- * Description: This program generates a random number and
- * determines the last digit of that number.
- *
- * Return: 0 (Success)
- */
+* main - Entry point
+*
+* Description: This program generates a random number and
+* determines the last digit of that number.
+*
+* Return: 0 (Success)
+*/
 int main(void)
 {
 int n;
