@@ -13,9 +13,9 @@ int main(void)
 int i;
 for (i = 0; i <= 9; i++)
 {
-printf("%d", i);
+printf("%d",i);
 if (i < 9)
-printf(" ");
+printf("");
 else
 printf("\n");
 }
