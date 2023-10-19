@@ -1,9 +1,11 @@
 #include "main.h"
 
 /**
- * jack_bauer - Prints every minute of the day according to Jack Bauer's time format (HH:MM).
- *              Jack Bauer is known for his intense schedule, and this function generates
- *              all the minutes in a 24-hour day as per his format.
+ * jack_bauer - Prints every minute of the day according
+ * to Jack Bauer's time format (HH:MM).
+ * Jack Bauer is known for his intense schedule,
+ * and this function generates
+ * all the minutes in a 24-hour day as per his format.
  */
 
 void jack_bauer(void)
