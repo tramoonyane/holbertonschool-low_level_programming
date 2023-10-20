@@ -1,1 +1,12 @@
-#3
+# Makefile for creating the 'school' executable
+
+# Compiler and compiler flags
+CC = gcc
+CFLAGS = -Wall
+
+# Source files and object files
+SOURCES = main.c school.c  # Add your source files here
+OBJECTS = $(SOURCES:.c=.o)
+
+# Executable name
+EXECUTABLE = school
