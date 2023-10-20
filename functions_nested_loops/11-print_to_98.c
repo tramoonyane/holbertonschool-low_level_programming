@@ -38,7 +38,7 @@ break;
 }
 else
 {
-printf("%d,", n);
+printf("%d, ", n);
 }
 }
 }
