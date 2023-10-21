@@ -1,1 +1,31 @@
-5
+# Makefile for creating the 'school' executable
+
+# Compiler and compiler flags
+CC = gcc
+CFLAGS = -Wall
+
+# Source files
+SRC = main.c school.c  # Add your source files here
+
+# Object files derived from source files
+OBJ = $(SRC:.c=.o)
+
+# Executable name
+NAME = school
+
+# Default rule
+all: $(NAME)
+
+$(NAME): $(OBJ)
+	$(CC) $(CFLAGS) -o $@ $^
+
+# Rule to build individual object files
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+# Clean rule to remove object files and the executable
+clean:
+	rm -f $(OBJ) $(NAME)
+
+# Phony target to prevent conflicts with files named 'all' or 'clean'
+.PHONY: all clean
