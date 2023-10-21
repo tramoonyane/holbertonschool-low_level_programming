@@ -28,7 +28,7 @@ $(NAME): $(OBJ)
 
 # Clean rule to remove object files and the executable
 clean:
-	$(RM) $(OBJ) $(NAME)
+	$(RM) $(OBJ) $(NAME) *~ \#*#
 
 # Rule to remove only object files
 oclean:
