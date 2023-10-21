@@ -1,5 +1,0 @@
-# Executable name
-EXECUTABLE = school
-
-# Default rule
-all: $(EXECUTABLE)
