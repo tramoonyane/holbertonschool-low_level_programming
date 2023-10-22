@@ -1,9 +1,7 @@
 # Makefile for creating the 'school' executable
 
-# Compiler
+# Compiler and compiler flags
 COMPILER = gcc
-
-# Compiler flags
 CUSTOM_FLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
 
 # Source files
