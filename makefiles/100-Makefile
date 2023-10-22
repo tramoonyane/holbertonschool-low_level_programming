@@ -1,8 +1,10 @@
 # Makefile for creating the 'school' executable
 
-# Compiler and compiler flags
+# Compiler
 COMPILER = gcc
-CFLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
+
+# Compiler flags
+CUSTOM_FLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
 
 # Source files
 SRC = main.c school.c  # Add your source files here
@@ -13,28 +15,30 @@ OBJ = $(SRC:.c=.o)
 # Executable name
 NAME = school
 
-# Program to delete files
-RM = rm -f
-
 # Default rule
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(COMPILER) $(CFLAGS) -o $@ $^
+	$(COMPILER) $(CUSTOM_FLAGS) -o $@ $^
 
 # Rule to build individual object files
 %.o: %.c
-	$(COMPILER) $(CFLAGS) -c -o $@ $<
+	$(COMPILER) $(CUSTOM_FLAGS) -c -o $@ $<
+
+# Program to delete files
+RM = rm -f
 
 # Clean rule to remove object files and the executable
 clean:
 	$(RM) $(OBJ) $(NAME) *~ \#*#
 
 # Rule to remove only object files
-oclean: clean
+oclean:
+	$(RM) $(OBJ)
 
 # Rule to remove object files, executable, and temporary editor files
-fclean: clean
+fclean:
+	$(RM) $(OBJ) $(NAME) *~ \#*#
 
 # Rule to force recompilation of all source files
 re: fclean all
