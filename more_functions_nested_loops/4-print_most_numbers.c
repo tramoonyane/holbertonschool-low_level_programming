@@ -1,9 +1,13 @@
 #include "main.h"
 
 /**
-*  -print_most_numbers -print 01356789
-*  -Return: void
-*/
+ * print_most_numbers - Prints numbers except for 2 and 4
+ *
+ * Description: This function prints all single-digit numbers from 0 to 9,
+ * except for 2 and 4, followed by a newline character.
+ *
+ * Return: void (no return value)
+ */
 
 void print_most_numbers(void)
 {
