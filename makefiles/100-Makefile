@@ -4,6 +4,9 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
 
+# Flags to be used in the compilation
+MYCFLAGS = $(CFLAGS)
+
 # Source files
 SRC = main.c school.c  # Add your source files here
 
@@ -19,6 +22,9 @@ HEADER = m.h
 # Files to remove
 FILES_TO_REMOVE = $(OBJ) $(NAME) *~ \#*#
 
+# Compiler and compile command
+COMPILER = $(CC) $(MYCFLAGS)
+
 # Default rule
 all: $(NAME)
 
@@ -29,12 +35,12 @@ $(NAME):
 	@exit 1
 else
 $(NAME): $(OBJ)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(COMPILER) -o $@ $^
 endif
 
 # Pattern rule to build individual object files
 %.o: %.c $(HEADER)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(COMPILER) -c -o $@ $<
 
 # Clean rule to remove object files and the executable
 clean:
