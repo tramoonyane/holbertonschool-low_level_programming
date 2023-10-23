@@ -1,8 +1,8 @@
 # Makefile for creating the 'school' executable
 
 # Compiler and compiler flags
-COMPILER = gcc
-CUSTOM_FLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
+CC = gcc
+CFLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
 
 # Source files
 SRC = main.c school.c  # Add your source files here
@@ -13,38 +13,31 @@ OBJ = $(SRC:.c=.o)
 # Executable name
 NAME = school
 
+# Header file
+HEADER = m.h
+
+# Files to remove
+FILES_TO_REMOVE = $(OBJ) $(NAME) *~ \#*#
+
 # Default rule
 all: $(NAME)
 
-$(NAME): $(OBJ)
-	$(COMPILER) $(CUSTOM_FLAGS) -o $@ $^
-
-# Rule to build individual object files
-%.o: %.c
-	$(COMPILER) $(CUSTOM_FLAGS) -c -o $@ $<
-
-# Program to delete files
-RM = rm -f
+$(NAME): $(OBJ) $(HEADER)
+	$(CC) -o $@ $^ $(CFLAGS)
 
 # Clean rule to remove object files and the executable
 clean:
-	$(RM) $(OBJ) $(NAME) *~ \#*#
+	$(RM) $(FILES_TO_REMOVE)
 
 # Rule to remove only object files
 oclean:
 	$(RM) $(OBJ)
 
 # Rule to remove object files, executable, and temporary editor files
-fclean:
-	$(RM) $(OBJ) $(NAME) *~ \#*#
+fclean: clean
 
 # Rule to force recompilation of all source files
 re: fclean all
 
 # Phony targets to prevent conflicts with files named 'all' or 'clean'
 .PHONY: all clean oclean fclean re
-
-# Check for the existence of the header file m.h
-ifeq (,$(wildcard m.h))
-$(error The header file 'm.h' is missing)
-endif
