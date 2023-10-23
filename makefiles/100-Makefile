@@ -39,5 +39,8 @@ fclean: clean
 # Rule to force recompilation of all source files
 re: fclean all
 
+# Ensure m.h is present
+$(OBJ): m.h
+
 # Phony targets to prevent conflicts with files named 'all' or 'clean'
 .PHONY: all clean oclean fclean re
