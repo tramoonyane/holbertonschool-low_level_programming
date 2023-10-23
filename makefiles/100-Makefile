@@ -23,7 +23,7 @@ FILES_TO_REMOVE = $(OBJ) $(NAME) *~ \#*#
 all: $(NAME)
 
 $(NAME): $(OBJ) $(HEADER)
-	$(CC) -o $@ $^ $(CFLAGS)
+	$(CC) -o $@ $^ $(MYCFLAGS)
 
 # Clean rule to remove object files and the executable
 clean:
