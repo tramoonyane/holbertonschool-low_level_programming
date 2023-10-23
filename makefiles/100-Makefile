@@ -19,18 +19,18 @@ HEADER = m.h
 # Files to remove
 FILES_TO_REMOVE = $(OBJ) $(NAME) *~ \#*#
 
-# Default rule
-all: $(NAME)
-
-$(NAME): $(OBJ)
-	$(CC) -o $@ $^ $(MYCFLAGS)
-
 # Check if the header file exists
 ifeq ($(wildcard $(HEADER)),)
 $(NAME):
 	@echo "Error: The header file $(HEADER) is missing."
 	@exit 1
 endif
+
+# Default rule
+all: $(NAME)
+
+$(NAME): $(OBJ)
+	$(CC) -o $@ $^ $(MYCFLAGS)
 
 # Clean rule to remove object files and the executable
 clean:
