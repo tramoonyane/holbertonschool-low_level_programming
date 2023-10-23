@@ -2,9 +2,7 @@
 
 # Compiler and compiler flags
 CC = gcc
-# Define your desired flags here
-CUSTOM_FLAGS = -Wall -Werror -Wextra -pedantic
-MYCFLAGS = $(CUSTOM_FLAGS)
+CFLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
 
 # Source files
 SRC = main.c school.c  # Add your source files here
@@ -21,25 +19,11 @@ HEADER = m.h
 # Files to remove
 FILES_TO_REMOVE = $(OBJ) $(NAME) *~ \#*#
 
-# Compiler and compile command
-COMPILER = $(CC) $(MYCFLAGS)
-
 # Default rule
 all: $(NAME)
 
-# Check if the header file exists
-ifeq ($(wildcard $(HEADER)),)
-$(NAME):
-	@echo "Error: The header file $(HEADER) is missing."
-	@exit 1
-else
-$(NAME): $(OBJ)
-	$(COMPILER) -o $@ $^
-endif
-
-# Pattern rule to build individual object files
-%.o: %.c $(HEADER)
-	$(COMPILER) -c -o $@ $<
+$(NAME): $(OBJ) $(HEADER)
+	$(CC) -o $@ $^ $(MYCFLAGS)
 
 # Clean rule to remove object files and the executable
 clean:
