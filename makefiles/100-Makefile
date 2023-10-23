@@ -2,10 +2,9 @@
 
 # Compiler and compiler flags
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -pedantic  # Add your desired flags here
-
-# Flags to be used in the compilation
-MYCFLAGS = $(CFLAGS)
+# Define your desired flags here
+CUSTOM_FLAGS = -Wall -Werror -Wextra -pedantic
+MYCFLAGS = $(CUSTOM_FLAGS)
 
 # Source files
 SRC = main.c school.c  # Add your source files here
