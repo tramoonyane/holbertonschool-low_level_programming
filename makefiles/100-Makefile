@@ -23,11 +23,11 @@ FILES_TO_REMOVE = $(OBJ) $(NAME) *~ \#*#
 all: $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $@ $^ -Wall -Werror -Wextra -pedantic
+	$(CC) -o $@ $^ $(CFLAGS)
 
 # Pattern rule to build individual object files
 %.o: %.c $(HEADER)
-	$(CC) -c -o $@ $< -Wall -Werror -Wextra -pedantic
+	$(CC) -c -o $@ $< $(CFLAGS)
 
 # Clean rule to remove object files and the executable
 clean:
