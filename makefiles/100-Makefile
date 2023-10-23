@@ -24,8 +24,7 @@ ifeq ($(wildcard $(HEADER)),)
 $(NAME):
 	@echo "Error: The header file $(HEADER) is missing."
 	@exit 1
-endif
-
+else
 # Default rule
 all: $(NAME)
 
@@ -48,3 +47,4 @@ re: fclean all
 
 # Phony targets to prevent conflicts with files named 'all' or 'clean'
 .PHONY: all clean oclean fclean re
+endif
