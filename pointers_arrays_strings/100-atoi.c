@@ -14,7 +14,6 @@ int foundDigit = 0;
 int length = 0;
 while (s[length] != '\0')
 length++;
-  
 while (index < length && foundDigit == 0)
 {
 if (s[index] == '-')
