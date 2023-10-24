@@ -2,55 +2,36 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define PASSWORD_LENGTH 10
-
 /**
- * generateRandomPassword - Generates a random password.
- * @password: The buffer to store the generated password.
- * @length: The length of the password to be generated.
- */
-void generateRandomPassword(char *password, int length)
-{
-    const char charset[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-
-    for (int i = 0; i < length; i++)
-    {
-        int index = rand() % (sizeof(charset) - 1);
-        password[i] = charset[index];
-    }
-    password[length] = '\0';
-}
-
-/**
- * generateAndUsePassword - Generates and uses a random password for 101-crackme.
- * This function generates a random password and demonstrates its usage.
- */
-void generateAndUsePassword()
-{
-    char password[PASSWORD_LENGTH + 1]; // +1 for the null-terminator
-
-    // Generate a random password
-    generateRandomPassword(password, PASSWORD_LENGTH);
-
-    printf("Generated Password: %s\n", password);
-
-    // Now you can use this password in your 101-crackme program
-    // For example, you can pass it as an argument or use it as needed.
-}
-
-/**
- * main - The main function that integrates password generation with 101-crackme.
- * This function seeds the random number generator and calls the function to generate and use the password.
+ * main - Generate random valid passwords for 101-crackme.
  *
- * Return: Always 0.
+ * Description:
+ * This program generates random valid passwords for the 101-crackme program.
+ * It creates a sequence of characters within the ASCII range 48-125
+ * that sums up to 2772, which is a valid password for the crackme program.
+ *
+ * Return: Always 0 (Success)
  */
-int main()
+int main(void)
 {
-    // Seed the random number generator with the current time
+    int password[100];
+    int i, total;
+
+    total = 0;
     srand(time(NULL));
 
-    // Call the function to generate and use the password
-    generateAndUsePassword();
+    i = 0;
+    while (total < 2772 && i < 100) {
+        password[i] = rand() % 78 + 48; // Generate random characters within the ASCII range
+        total += password[i];
+        putchar(password[i]);
+        i++;
+    }
 
-    return 0;
+    if (total > 2772) {
+        password[i - 1] -= (total - 2772); // Adjust the last character to reach the target
+        putchar(password[i - 1]);
+    }
+
+    return (0);
 }
