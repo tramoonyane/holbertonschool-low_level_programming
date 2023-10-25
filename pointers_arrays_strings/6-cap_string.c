@@ -12,7 +12,7 @@ int i;
 for (i = 0; separators[i]; i++)
 {
 if (c == separators[i])
-return 1;
+return (1);
 }
 return (0);
 }
