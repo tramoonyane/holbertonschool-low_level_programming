@@ -1,4 +1,3 @@
-#include "main.h"
 /**
 * is_separator - Checks if a character is a word separator.
 * @c: The character to check.
@@ -18,7 +17,7 @@ return (0);
 }
 
 /**
-* cap_string - Capitalizes all letters of each word in a string.
+* cap_string - Capitalizes the first letter of each word in a string.
 * @str: The input string.
 *
 * Return: Pointer to the modified string.
@@ -38,12 +37,13 @@ i++;
 }
 else
 {
-while (str[i] != '\0' && !is_separator(str[i]))
-{
 if (str[i] >= 'a' && str[i] <= 'z')
 {
 str[i] = str[i] - 32;
 }
+i++;
+while (str[i] != '\0' && !is_separator(str[i]))
+{
 i++;
 }
 }
