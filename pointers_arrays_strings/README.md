@@ -70,3 +70,11 @@ You are not allowed to hard-code special values
 We will use the -fsanitize=signed-integer-overflow gcc flag to compile your code.
 FYI: The standard library provides a similar function: atoi. Run man atoi to learn more.
 
+C - More pointers, arrays and strings
+TASKS:
+Write a function that concatenates two strings.
+
+Prototype: char *_strcat(char *dest, char *src);
+This function appends the src string to the dest string, overwriting the terminating null byte (\0) at the end of dest, and then adds a terminating null byte
+Returns a pointer to the resulting string dest
+FYI: The standard library provides a similar function: strcat. Run man strcat to learn more.
