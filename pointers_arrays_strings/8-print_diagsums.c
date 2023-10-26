@@ -30,4 +30,4 @@ secondary_diag_sum += a[i];
 a -= size;
 }
 printf("%d, %d\n", main_diag_sum, secondary_diag_sum);
-} 
+}
