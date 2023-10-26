@@ -7,8 +7,10 @@
 * @size: The size of the matrix (number of rows or columns).
 *
 * Description:
-* This function calculates and prints the sum of the main diagonal (from top-left to
-* bottom-right) and the sum of the secondary diagonal (from top-right to bottom-left)
+* This function calculates and prints
+* the sum of the main diagonal (from top-left to
+* bottom-right) and the sum of
+* the secondary diagonal (from top-right to bottom-left)
 * of a square matrix of integers.
 */
 void print_diagsums(int *a, int size)
