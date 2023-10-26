@@ -1,3 +1,4 @@
+#include "main.h"
 /**
 * _strspn - Get the length of a prefix substring
 * @s: The string to search
@@ -9,7 +10,8 @@
 *
 * Return: The number of bytes in the initial segment of 's' that match 'accept'.
 */
-unsigned int _strspn(char *s, char *accept) {
+unsigned int _strspn(char *s, char *accept)
+{
 unsigned int length = 0;
 int found;
 while (*s != '\0')
@@ -33,5 +35,5 @@ else
 break;
 }
 }
-return length;
+return (length);
 }
