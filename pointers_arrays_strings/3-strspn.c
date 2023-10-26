@@ -7,7 +7,8 @@
 * consists only of characters from the 'accept' string. It counts the number
 * of continuous characters in 's' that match any character in 'accept'.
 *
-* Return: The number of bytes in the initial segment of 's' that match 'accept'.
+* Return: The number of bytes
+* in the initial segment of 's' that match 'accept'.
 */
 unsigned int _strspn(char *s, char *accept)
 {
