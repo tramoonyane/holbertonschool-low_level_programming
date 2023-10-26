@@ -1,3 +1,4 @@
+#include "main.h"
 /**
 * _memset - Fill memory with a constant byte
 * @s: Pointer to the memory area to be filled
