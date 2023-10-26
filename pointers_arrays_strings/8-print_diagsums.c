@@ -23,6 +23,6 @@ for (i = 0; i < size; i++)
 main_diag_sum += a[i * size + i];
 secondary_diag_sum += a[i * size + (size - 1 - i)];
 }
-printf(%d\n", main_diag_sum);
-printf(%d\n", secondary_diag_sum);
+printf("%d\n", main_diag_sum);
+printf("%d\n", secondary_diag_sum);
 }
