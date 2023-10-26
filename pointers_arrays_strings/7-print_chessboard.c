@@ -1,3 +1,4 @@
+#include "main.h"
 /**
 * print_chessboard - Print a chessboard
 * @a: The 2D array representing the chessboard
