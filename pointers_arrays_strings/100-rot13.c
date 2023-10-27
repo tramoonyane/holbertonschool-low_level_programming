@@ -1,5 +1,5 @@
 #include "main.h"
-#include <stddef.h>
+
 /**
 * rot13 - Encodes a string using the ROT13 cipher.
 * @str: The input string to be encoded.
@@ -8,18 +8,23 @@
 */
 char *rot13(char *str)
 {
-if (str == NULL)
-return (NULL);
-char *ptr = str; // Declare ptr at the beginning of the block
-while (*ptr)
+int i = 0, j;
+char a[] = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+char b[] = "nopqrstuvwxyzabcdefghijklmNOPQRSTUVWXYZABCDEFGHIJKLM";
+
+while (str[i])
 {
-char c = *ptr; 
-if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+j = 0;
+while (j < 52)
 {
-char base = (c >= 'A' && c <= 'Z') ? 'A' : 'a';
-*ptr = (c - base + 13) % 26 + base;
+if (a[j] == str[i])
+{
+str[i] = b[j];
+break;
 }
-ptr++;
+j++;
+}
+i++;
 }
 return (str);
 }
