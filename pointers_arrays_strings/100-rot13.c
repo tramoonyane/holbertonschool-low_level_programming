@@ -1,4 +1,5 @@
 #include "main.h"
+#include <stddef.h>
 /**
 * rot13 - Encodes a string using the ROT13 cipher.
 * @str: The input string to be encoded.
