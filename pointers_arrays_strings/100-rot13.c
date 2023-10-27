@@ -10,10 +10,10 @@ char *rot13(char *str)
 {
 if (str == NULL)
 return (NULL);
-char *ptr = str;
+char *ptr = str; // Declare ptr at the beginning of the block
 while (*ptr)
 {
-char c = *ptr;
+char c = *ptr; 
 if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
 {
 char base = (c >= 'A' && c <= 'Z') ? 'A' : 'a';
