@@ -2,64 +2,58 @@
 #include <stdio.h>
 
 /**
- * print_buffer - Prints the content of a buffer in a specific format.
- * @b: The buffer to be printed.
- * @size: The number of bytes to be printed from the buffer.
+ * print_line - prints a s bytes of a buffer
+ * @c: buffer to print
+ * @s: bytes of buffer to print
+ * @l: line of buffer to print
  *
- * Description:
- * - The function prints the content of a buffer with a specific format.
- * - Each line starts with the position of the first byte in hexadecimal.
- * - Hexadecimal content is displayed, with two bytes separated by a space.
- * - Printable characters are shown as characters;
- * others are displayed as dots.
- * - Each line ends with a newline character.
- * - If size is 0 or less, the output consists of a newline character only.
- *
- * Return: No return value.
+ * Return: void
  */
-void print_buffer(char *b, int size)
+
+void print_line(char *c, int s, int l)
 {
-if (size <= 0)
+int j, k;
+for (j = 0; j <= 9; j++)
 {
-printf("\n");
-return;
-}
-for (int i = 0; i < size; i += 10)
-{
-printf("%08x: ", i);
-for (int j = 0; j < 10; j++)
-{
-if (i + j < size)
-printf("%02x%c", b[i + j], j % 2 == 1 ? ' ' : '\0');
+if (j <= s)
+printf("%02x", c[l * 10 + j]);
 else
 printf("  ");
+if (j % 2)
+putchar(' ');
 }
-printf(" ");
-for (int j = 0; j < 10; j++)
+for (k = 0; k <= s; k++)
 {
-if (i + j < size)
-printf("%c", (b[i + j] >= 32 && b[i + j] <= 126) ? b[i + j] : '.');
+if (c[l * 10 + k] > 31 && c[l * 10 + k] < 127)
+putchar(c[l * 10 + k]);
 else
-printf(" ");
-}
-printf("\n");
+putchar('.');
 }
 }
 
 /**
- * main - Entry point of the program.
+ * print_buffer - prints a buffer
+ * @b: buffer to print
+ * @size: size of buffer
  *
- * Description:
- * - The main function demonstrates the usage of the print_buffer function.
- * - It initializes a character buffer, calculates its size, and then calls
- *   print_buffer to print the buffer's content in a specific format.
- *
- * Return: 0 to indicate successful execution.
+ * Return: void
  */
-int main(void)
+void print_buffer(char *b, int size)
 {
-char buffer[] = "This is a string!\nAnd this is the rest of the #buffer :)";
-int size = sizeof(buffer) - 1;
-print_buffer(buffer, size);
-return (0);
+int i;
+for (i = 0; i <= (size - 1) / 10 && size; i++)
+{
+printf("%08x: ", i * 10);
+if (i < size / 10)
+{
+print_line(b, 9, i);
+}
+else
+{
+print_line(b, size % 10 - 1, i);
+}
+putchar('\n');
+}
+if (size == 0)
+putchar('\n');
 }
