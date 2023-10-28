@@ -7,14 +7,14 @@ int *p;
 
 p = a;
 
-/* Not allowed to use the variable a
+/*
+* Not allowed to use the variable a
 * Not allowed to modify the variable p
 * only write one statement
 * not allowed to use ,
 * not allowed to code anything else
 * than the line of expected line of code
-* at the expected line
-* before the ;
+* at the expected line before the ;
 */
 *p = (int[]){98};
   
