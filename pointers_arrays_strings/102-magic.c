@@ -4,7 +4,7 @@ int main(void)
 {
 int a[] = {0, 1, 2, 3, 4};
 int *p;
-  
+
 p = a;
 
 /* Not allowed to use the variable a
