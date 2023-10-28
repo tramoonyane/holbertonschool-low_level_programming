@@ -22,15 +22,15 @@ int main(void)
 
     i = 0;
     while (total < 2772 && i < 100) {
-        password[i] = rand() % 78 + 48;
-        total += password[i];
-        putchar(password[i]);
+        password[i] = rand() % 78;
+        total += password[i] + 48;
+        putchar(password[i] + 48);
         i++;
     }
 
     if (total > 2772) {
         password[i - 1] -= (total - 2772);
-        putchar(password[i - 1]);
+        putchar(password[i - 1] + 48);
     }
 
     return (0);
