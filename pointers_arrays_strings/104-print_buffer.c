@@ -8,7 +8,7 @@
 *
 * Description:
 * - The function prints the content of a buffer in a specific format.
-* - Each line starts with the position of 
+* - Each line starts with the position of
 *   the first byte of the line in hexadecimal.
 * - Each line shows the hexadecimal content of
 *   the buffer, 2 bytes at a time, separated by a space.
