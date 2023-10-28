@@ -8,8 +8,10 @@
 *
 * Description:
 * - The function prints the content of a buffer in a specific format.
-* - Each line starts with the position of the first byte of the line in hexadecimal.
-* - Each line shows the hexadecimal content of the buffer, 2 bytes at a time, separated by a space.
+* - Each line starts with the position of 
+*   the first byte of the line in hexadecimal.
+* - Each line shows the hexadecimal content of
+*   the buffer, 2 bytes at a time, separated by a space.
 * - If the byte is a printable character, it prints the character, otherwise, it prints a dot ('.').
 * - Each line ends with a newline character ('\n').
 * - If size is 0 or less, the output consists of a newline character only.
@@ -19,7 +21,8 @@
 
 void print_buffer(char *b, int size)
 {
-if (size <= 0) {
+if (size <= 0)
+{
 printf("\n");
 return;
 }
@@ -64,7 +67,7 @@ printf("\n");
 }
 }
 
-int main()
+int main(void)
 {
 char buffer[] = "This is a string!\nAnd this is the rest of the #buffer :)";
 int size = sizeof(buffer) - 1;
