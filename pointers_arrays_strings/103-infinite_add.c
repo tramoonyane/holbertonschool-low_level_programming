@@ -6,7 +6,8 @@
 * @r: The buffer to store the result.
 * @size_r: The size of the buffer.
 *
-* Return: A pointer to the result if it fits in the buffer; otherwise, return 0.
+* Return: A pointer to the result if it fits in the buffer;
+* otherwise, return 0.
 */
 char *infinite_add(char *n1, char *n2, char *r, int size_r)
 {
@@ -36,7 +37,7 @@ if (j >= 0)
 sum += n2[j] - '0';
 carry = sum / 10;
 r[--k] = (sum % 10) + '0';
-  
+
 if (i >= 0)
 i--;
 if (j >= 0)
@@ -45,7 +46,7 @@ j--;
 
 if (k == 0)
 {
-return 0;
+return (0);
 }
 
 for (i = 0; r[k]; i++, k++)
