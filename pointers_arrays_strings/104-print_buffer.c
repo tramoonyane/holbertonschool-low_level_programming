@@ -70,6 +70,5 @@ int main(void)
 char buffer[] = "This is a string!\nAnd this is the rest of the #buffer :)";
 int size = sizeof(buffer) - 1;
 print_buffer(buffer, size);
-
-  return (0);
+return (0);
 }
