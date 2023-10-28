@@ -12,7 +12,8 @@
 *   the first byte of the line in hexadecimal.
 * - Each line shows the hexadecimal content of
 *   the buffer, 2 bytes at a time, separated by a space.
-* - If the byte is a printable character, it prints the character, otherwise, it prints a dot ('.').
+* - If the byte is a printable character, it prints the character,
+*   otherwise, it prints a dot ('.').
 * - Each line ends with a newline character ('\n').
 * - If size is 0 or less, the output consists of a newline character only.
 *
@@ -26,13 +27,10 @@ if (size <= 0)
 printf("\n");
 return;
 }
-  
 int i, j;
-
 for (i = 0; i < size; i += 10)
 {
 printf("%08x: ", i);
-
 for (j = i; j < i + 10; j++)
 {
 if (j < size)
