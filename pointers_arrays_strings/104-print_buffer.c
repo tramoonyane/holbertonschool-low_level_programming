@@ -10,7 +10,8 @@
  * - The function prints the content of a buffer with a specific format.
  * - Each line starts with the position of the first byte in hexadecimal.
  * - Hexadecimal content is displayed, with two bytes separated by a space.
- * - Printable characters are shown as characters; others are displayed as dots.
+ * - Printable characters are shown as characters;
+ * others are displayed as dots.
  * - Each line ends with a newline character.
  * - If size is 0 or less, the output consists of a newline character only.
  *
