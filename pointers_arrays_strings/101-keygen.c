@@ -22,14 +22,14 @@ int main(void)
 
     i = 0;
     while (total < 2772 && i < 100) {
-        password[i] = rand() % 78 + 48; // Generate random characters within the ASCII range
+        password[i] = rand() % 78 + 48;
         total += password[i];
         putchar(password[i]);
         i++;
     }
 
     if (total > 2772) {
-        password[i - 1] -= (total - 2772); // Adjust the last character to reach the target
+        password[i - 1] -= (total - 2772);
         putchar(password[i - 1]);
     }
 
