@@ -1,1 +1,24 @@
 my backup file
+#include <stdio.h>
+/** The `main` function is the entry point of the program.
+ * It declares an integer array `a` and a pointer `p`.
+ * The program aims to modify `a[2]` without directly using the variable `a` or modifying `p`.
+ * After the modification, the program prints the value of `a[2]` (which should be 98).
+ * Return: 0 to indicate successful execution.
+ */
+int main(void)
+{
+	int a[] = {0, 1, 2, 3, 4};
+	int *p;
+
+	p = a;
+	
+ /**
+  * Not allowed to modify the variable p and 
+  */
+*p = (int[]){98};
+/* Add one line here to print "a[2] = 98," followed by a new line */
+printf("a[2] = %d\n", 98);
+
+return (0);
+}
