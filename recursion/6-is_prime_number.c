@@ -13,7 +13,8 @@ return (is_prime_recursive(n, 2));
 }
 
 /**
-* is_prime_recursive - Helper function to check if a number is prime recursively
+* is_prime_recursive - Helper function to check if a number
+* is prime recursively
 * @n: The input number
 * @divisor: The current divisor to check
 * Return: 1 if n is prime, 0 if not
