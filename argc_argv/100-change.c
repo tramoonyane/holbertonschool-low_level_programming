@@ -12,11 +12,11 @@ int minCoins(int cents)
 int coins[] = {25, 10, 5, 2, 1};
 int numCoins = sizeof(coins) / sizeof(coins[0]);
 int count = 0;
+int i;
 if (cents <= 0)
 {
 return (0);
 }
-int i;
 for (i = 0; i < numCoins; i++)
 {
 while (cents >= coins[i])
