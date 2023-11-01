@@ -16,7 +16,8 @@ if (cents <= 0)
 {
 return (0);
 }
-for (int i = 0; i < numCoins; i++)
+int i;
+for (i = 0; i < numCoins; i++)
 {
 while (cents >= coins[i])
 {
