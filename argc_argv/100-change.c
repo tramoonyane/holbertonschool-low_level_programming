@@ -43,13 +43,14 @@ printf("Error\n");
 return (1);
 }
 int cents = atoi(argv[1]);
+int coinsNeeded;
 if (cents < 0)
 {
 printf("0\n");
 }
 else
 {
-int coinsNeeded = minCoins(cents);
+coinsNeeded = minCoins(cents);
 printf("%d\n", coinsNeeded);
 }
 return (0);
