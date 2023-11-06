@@ -3,7 +3,8 @@
 #include <string.h>
 
 /**
-* string_nconcat - Concatenate two strings, taking the first 'n' characters from s2.
+* string_nconcat - Concatenate two strings,
+* taking the first 'n' characters from s2.
 * @s1: The first string.
 * @s2: The second string.
 * @n: The number of characters to concatenate from s2.
