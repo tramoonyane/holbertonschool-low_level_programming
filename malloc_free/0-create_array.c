@@ -32,7 +32,8 @@ char fill_char = 'A';
 char *result = create_array(size, fill_char);
 if (result != NULL)
 {
-for (unsigned int i = 0; i < size; i++)
+unsigned int i;
+for (i = 0; i < size; i++)
 {
 _putchar(result[i]);
 }
