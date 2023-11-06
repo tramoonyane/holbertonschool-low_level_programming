@@ -2,15 +2,6 @@
 #include <stdlib.h>
 
 /**
-* _putchar - Custom function to print a character
-* @c: The character to print
-*/
-void _putchar(char c)
-{
-write(1, &c, 1);
-}
-
-/**
 * create_array - Create an array of characters and initialize it with a specific character
 * @size: The size of the array
 * @c: The character to initialize the array with
