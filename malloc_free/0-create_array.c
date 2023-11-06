@@ -26,19 +26,3 @@ array[i] = c;
 }
 return array;
 }
-int main()
-{
-unsigned int size = 10;
-char fill_char = 'A';
-char *result = create_array(size, fill_char);
-if (result != NULL)
-{
-unsigned int i;
-for (i = 0; i < size; i++)
-{
-_putchar(result[i]);
-}
-free(result);
-}
-return (0);
-}
