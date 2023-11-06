@@ -18,7 +18,8 @@ if (array == NULL)
 {
 return (NULL);
 }
-for (unsigned int i = 0; i < size; i++)
+unsigned int i;
+for (i = 0; i < size; i++)
 {
 array[i] = c;
 }
