@@ -1,5 +1,6 @@
 #include "main.h"
 #include <stdlib.h>
+#include <stdlib.h>
 
 /**
 * _calloc - Allocate memory for an array and initialize it to zero.
