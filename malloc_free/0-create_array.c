@@ -2,7 +2,8 @@
 #include <stdlib.h>
 
 /**
-* create_array - Create an array of characters and initialize it with a specific character
+* create_array - Create an array of characters and
+* initialize itwith a specific character
 * @size: The size of the array
 * @c: The character to initialize the array with
 * Return: Pointer to the created array, or NULL on failure
@@ -24,5 +25,5 @@ for (i = 0; i < size; i++)
 {
 array[i] = c;
 }
-return array;
+return (array);
 }
