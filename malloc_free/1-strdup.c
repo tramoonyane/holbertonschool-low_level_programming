@@ -20,6 +20,5 @@ if (duplicate == NULL)
 return (NULL);
 for (i = 0; i <= length; i++)
 duplicate[i] = str[i];
-free(str);
 return (duplicate);
 }
