@@ -62,6 +62,8 @@ return (word);
  */
 char **strtow(char *str)
 {
+int num_words, word_index, i;
+char **word_array;
 if (str == NULL || str[0] == '\0')
 {
 return (NULL);
@@ -72,8 +74,7 @@ if (word_array == NULL)
 {
 return (NULL);
 }
-int word_index = 0;
-int i;
+word_index = 0;
 while (*str)
 {
 if (*str == ' ')
