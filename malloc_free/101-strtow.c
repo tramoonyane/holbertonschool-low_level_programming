@@ -2,20 +2,8 @@
 #include <unistd.h>
 #include <stdlib.h>
 /**
- * _putchar - writes the character c to stdout
- * @c: The character to print
- *
- * Return: On success 1.
- * On error, -1 is returned, and errno is set appropriately.
- */
-int _putchar(char c)
-{
-return (write(1, &c, 1));
-}
-/**
  * word_count - Counts the number of words in a string.
  * @str: The string to count the words in.
- *
  * Return: The number of words in the string.
  */
 int word_count(char *str)
