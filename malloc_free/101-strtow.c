@@ -30,18 +30,18 @@ return (count);
 /**
  * copy_word - Copies a word from the input string.
  * @str: The input string.
- *
  * Return: A dynamically allocated copy of the word.
  */
 char *copy_word(char *str)
 {
 int len = 0;
 int i;
+char *word;
 while (str[len] && str[len] != ' ')
 {
 len++;
 }
-char *word = (char *)malloc(len + 1);
+word = (char *)malloc(len + 1);
 if (word == NULL)
 {
 return (NULL);
