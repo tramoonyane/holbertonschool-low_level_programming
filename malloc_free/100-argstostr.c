@@ -24,21 +24,25 @@ return (len);
  */
 char *argstostr(int ac, char **av)
 {
+int total_length = 0;
+int i, j, len;
+char *concatenated_str;
+int current_position; 
 if (ac == 0 || av == NULL)
 return (NULL);
-int total_length = 0;
-for (int i = 0; i < ac; i++)
+
+for (i = 0; i < ac; i++)
 {
 total_length += _strlen(av[i]) + 1;
 }
-char *concatenated_str = (char *)malloc(sizeof(char) * total_length + 1);
+concatenated_str = (char *)malloc(sizeof(char) * total_length + 1);
 if (concatenated_str == NULL)
 return (NULL);
-int current_position = 0;
-for (int i = 0; i < ac; i++)
+current_position = 0;
+for (i = 0; i < ac; i++)
 {
-int len = _strlen(av[i]);
-for (int j = 0; j < len; j++)
+len = _strlen(av[i]);
+for (j = 0; j < len; j++)
 {
 concatenated_str[current_position] = av[i][j];
 current_position++;
