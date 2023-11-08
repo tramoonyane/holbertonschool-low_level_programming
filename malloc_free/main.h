@@ -9,7 +9,7 @@ int **alloc_grid(int width, int height);
 void free_grid(int **grid, int height);
 char *argstostr(int ac, char **av);
 char **strtow(char *str);
-static int count_words(char *str);
-static char *copy_word(char *str);
+int count_words(char *str);
+char *copy_word(char *str);
 
 #endif
