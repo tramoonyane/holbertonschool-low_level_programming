@@ -45,7 +45,8 @@ if (word == NULL)
 {
 return (NULL);
 }
-for (int i = 0; i < len; i++)
+int i;
+for (i = 0; i < len; i++)
 {
 word[i] = str[i];
 }
@@ -71,6 +72,7 @@ if (word_array == NULL)
 return (NULL);
 }
 int word_index = 0;
+int i;
 while (*str)
 {
 if (*str == ' ')
@@ -82,7 +84,7 @@ else
 char *word = copy_word(str);
 if (word == NULL)
 {
-for (int i = 0; i < word_index; i++)
+for (i = 0; i < word_index; i++)
 {
 free(word_array[i]);
 }
