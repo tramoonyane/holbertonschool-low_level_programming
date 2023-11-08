@@ -7,7 +7,7 @@
  *
  * Return: The number of words in the string.
  */
-static int count_words(char *str)
+int count_words(char *str)
 {
 int count = 0;
 int in_word = 0;
@@ -16,7 +16,8 @@ while (*str)
 if (*str == ' ')
 {
 in_word = 0;
-} else if (!in_word)
+}
+else if (!in_word)
 {
 count++;
 in_word = 1;
@@ -32,7 +33,7 @@ return (count);
  *
  * Return: A dynamically allocated copy of the word.
  */
-static char *copy_word(char *str)
+char *copy_word(char *str)
 {
 int len = 0;
 while (str[len] && str[len] != ' ')
