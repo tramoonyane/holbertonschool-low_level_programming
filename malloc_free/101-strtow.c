@@ -26,22 +26,18 @@ char **strtow(char *str)
 {
 if (str == NULL || str[0] == '\0')
 return (NULL);
-int word_count = count_words(str);
-char **words = (char **)malloc(sizeof(char *) * (word_count + 1));
+int word_count = 0;
+char **words = NULL;
+int i = 0, j = 0, k = 0, word_len = 0;
+word_count = count_words(str);
+words = (char **)malloc(sizeof(char *) * (word_count + 1));
 if (words == NULL)
 return (NULL);
-int i = 0, j = 0;
-while (str[i] != '\0')
+for (i = 0; str[i] != '\0'; i++)
 {
 if (str[i] != ' ')
 {
-int word_len = 0;
-int k = i;
-while (str[k] != ' ' && str[k] != '\0')
-{
-word_len++;
-k++;
-}
+word_len = word_length(str, i);
 words[j] = (char *)malloc(sizeof(char) * (word_len + 1));
 if (words[j] == NULL)
 {
@@ -52,10 +48,6 @@ for (k = 0; k < word_len; k++, i++)
 words[j][k] = str[i];
 words[j][k] = '\0';
 j++;
-}
-else
-{
-i++;
 }
 }
 words[j] = NULL;
