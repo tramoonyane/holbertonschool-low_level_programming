@@ -68,8 +68,8 @@ if (str == NULL || str[0] == '\0')
 {
 return (NULL);
 }
-int num_words = count_words(str);
-char **word_array = (char **)malloc((num_words + 1) * sizeof(char *));
+num_words = count_words(str);
+word_array = (char **)malloc((num_words + 1) * sizeof(char *));
 if (word_array == NULL)
 {
 return (NULL);
