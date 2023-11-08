@@ -35,7 +35,6 @@ return (count);
 /**
  * strtow - Splits a string into words.
  * @str: The string to split.
- *
  * Return: Returns a pointer to an array of strings (words).
  */
 char **strtow(char *str)
