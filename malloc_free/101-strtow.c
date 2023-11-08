@@ -11,6 +11,7 @@ int count_words(char *str)
 {
 int count = 0;
 int in_word = 0;
+int i;
 while (*str)
 {
 if (*str == ' ')
@@ -36,6 +37,7 @@ return (count);
 char *copy_word(char *str)
 {
 int len = 0;
+int i;
 while (str[len] && str[len] != ' ')
 {
 len++;
@@ -45,7 +47,6 @@ if (word == NULL)
 {
 return (NULL);
 }
-int i;
 for (i = 0; i < len; i++)
 {
 word[i] = str[i];
