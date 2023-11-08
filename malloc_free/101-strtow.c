@@ -29,7 +29,7 @@ return (NULL);
 int word_count = 0;
 char **words = NULL;
 int i = 0, j = 0, k = 0, word_len = 0;
-word_count = count_words(str);
+word_count = word_count(str);
 words = (char **)malloc(sizeof(char *) * (word_count + 1));
 if (words == NULL)
 return (NULL);
