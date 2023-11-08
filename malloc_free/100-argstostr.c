@@ -27,7 +27,7 @@ char *argstostr(int ac, char **av)
 int total_length = 0;
 int i, j, len;
 char *concatenated_str;
-int current_position; 
+int current_position;
 if (ac == 0 || av == NULL)
 return (NULL);
 
