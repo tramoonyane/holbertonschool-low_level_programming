@@ -6,53 +6,44 @@
  * @str: The input string to split.
  * Return: A pointer to an array of strings (words), or NULL on failure.
  */
+/**
+ * strtow - Splits a string into words.
+ * @str: The input string to split.
+ * Return: A pointer to an array of strings (words), or NULL on failure.
+ */
 char **strtow(char *str)
 {
-int num_words, word_index;
+int num_words, word_index, i;
 char **word_array;
-int i;
-if (str == NULL || str[0] == '\0')
-{
+if (!str || !*str)
 return (NULL);
-}
 num_words = count_words(str);
 if (num_words == 0)
 {
-word_array = (char **)malloc(sizeof(char *));
-if (word_array == NULL)
+word_array = malloc(sizeof(char *));
+if (!word_array)
 return (NULL);
 word_array[0] = NULL;
 return (word_array);
 }
-word_array = (char **)malloc((num_words + 1) * sizeof(char *));
-if (word_array == NULL)
+word_array = malloc((num_words + 1) * sizeof(char *));
+if (!word_array)
 return (NULL);
-word_index = 0;
-while (*str)
+for (word_index = 0; *str; word_index++)
 {
-if (*str == ' ')
-{
+while (*str == ' ')
 str++;
-}
-else
-{
 char *word = copy_word(str);
-if (word == NULL)
+if (!word)
 {
-for (i = 0; i < word_index; i++)
-{
-free(word_array[i]);
-}
+while (word_index-- > 0)
+free(word_array[word_index]);
 free(word_array);
 return (NULL);
 }
 word_array[word_index] = word;
-word_index++;
 while (*str && *str != ' ')
-{
 str++;
-}
-}
 }
 word_array[word_index] = NULL;
 return (word_array);
