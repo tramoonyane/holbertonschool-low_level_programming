@@ -11,6 +11,5 @@ char *argstostr(int ac, char **av);
 char **strtow(char *str);
 int count_words(char *str);
 char *copy_word(char *str);
-free_word_array(word_array);
 
 #endif
