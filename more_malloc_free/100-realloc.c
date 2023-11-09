@@ -44,8 +44,8 @@ return (new_ptr);
 int main(void)
 {
 char *p;
-char *new_p;
 p = (char *)malloc(sizeof(char) * 30);
-new_p = (char *)realloc(p, sizeof(char) * 30);
+(void)p;
+p = (char *)realloc(p, sizeof(char) * 30);
 return (0);
 }
