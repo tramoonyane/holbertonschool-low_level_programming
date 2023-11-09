@@ -2,6 +2,22 @@
 #include <stdlib.h>
 
 /**
+ * free_word_array - Frees the memory allocated for word_array.
+ * @word_array: The word array to free.
+ */
+void free_word_array(char **word_array)
+{
+int i;
+if (word_array)
+{
+for (i = 0; word_array[i] != NULL; i++)
+{
+free(word_array[i]);
+}
+free(word_array);
+}
+}
+/**
  * strtow - Splits a string into words.
  * @str: The input string to split.
  * Return: A pointer to an array of strings (words), or NULL on failure.
