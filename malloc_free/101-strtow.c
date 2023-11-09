@@ -11,6 +11,7 @@ char **strtow(char *str)
 int num_words, len, i, word_index = 0;
 char **word_array;
 char *word;
+char *end;
 if (!str || !*str)
 return (NULL);
 num_words = count_words(str);
@@ -23,7 +24,7 @@ while (*str == ' ')
 str++;
 if (*str == '\0')
 break;
-char *end = str;
+end = str;
 while (*end && *end != ' ')
 end++;
 len = end - str;
