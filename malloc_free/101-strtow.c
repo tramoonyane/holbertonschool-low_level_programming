@@ -10,6 +10,7 @@ char **strtow(char *str)
 {
 int num_words, word_index;
 char **word_array;
+int i;
 if (str == NULL || str[0] == '\0')
 return (NULL);
 num_words = count_words(str);
@@ -28,7 +29,7 @@ else
 char *word = copy_word(str);
 if (word == NULL)
 {
-for (int i = 0; i < word_index; i++)
+for (i = 0; i < word_index; i++)
 {
 free(word_array[i]);
 }
