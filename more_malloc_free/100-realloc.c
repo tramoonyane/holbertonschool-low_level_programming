@@ -26,7 +26,7 @@ if (ptr != NULL)
 unsigned int i;
 char *p = ptr;
 char *np = new_ptr;
-	
+
 for (i = 0; i < old_size; i++)
 {
 np[i] = p[i];
