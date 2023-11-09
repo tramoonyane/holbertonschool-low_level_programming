@@ -20,7 +20,7 @@ if (!word_array)
 return (NULL);
 while (*str)
 {
-while (*str == ' ')
+while (*str && *str == ' ')
 str++;
 if (*str == '\0')
 break;
