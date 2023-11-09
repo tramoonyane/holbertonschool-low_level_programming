@@ -35,3 +35,17 @@ free(ptr);
 }
 return (new_ptr);
 }
+
+/**
+ * main - Entry point
+ *
+ * Return: Always 0
+ */
+int main(void)
+{
+char *p;
+char *new_p;
+p = (char *)malloc(sizeof(char) * 30);
+new_p = (char *)realloc(p, sizeof(char) * 30);
+return (0);
+}
