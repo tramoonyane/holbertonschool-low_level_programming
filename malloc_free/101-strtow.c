@@ -8,18 +8,14 @@
  */
 char **strtow(char *str)
 {
-int num_words, word_index,
+int num_words, word_index;
 char **word_array;
 if (str == NULL || str[0] == '\0')
-{
 return (NULL);
-}
 num_words = count_words(str);
 word_array = (char **)malloc((num_words + 1) * sizeof(char *));
 if (word_array == NULL)
-{
 return (NULL);
-}
 word_index = 0;
 while (*str)
 {
@@ -32,7 +28,7 @@ else
 char *word = copy_word(str);
 if (word == NULL)
 {
-for (i = 0; i < word_index; i++)
+for (int i = 0; i < word_index; i++)
 {
 free(word_array[i]);
 }
