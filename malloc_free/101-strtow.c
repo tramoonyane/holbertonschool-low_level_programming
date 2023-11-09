@@ -20,6 +20,7 @@ word_array = malloc(sizeof(char *));
 if (!word_array)
 return (NULL);
 word_array[0] = NULL;
+word_array[1] = NULL;
 return (word_array);
 }
 word_array = malloc((num_words + 1) * sizeof(char *));
