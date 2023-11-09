@@ -13,8 +13,9 @@
  */
 char **strtow(char *str)
 {
-int num_words, word_index, i;
+int num_words, word_index;
 char **word_array;
+char *word;
 if (!str || !*str)
 return (NULL);
 num_words = count_words(str);
@@ -33,7 +34,7 @@ for (word_index = 0; *str; word_index++)
 {
 while (*str == ' ')
 str++;
-char *word = copy_word(str);
+word = copy_word(str);
 if (!word)
 {
 while (word_index-- > 0)
