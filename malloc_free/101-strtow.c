@@ -20,12 +20,12 @@ if (!word_array)
 return (NULL);
 while (*str)
 {
-while (*str == '')
+while (*str == ' ')
 str++;
 if (*str == '\0')
 break;
 end = str;
-while (*end && *end != '')
+while (*end && *end != ' ')
 end++;
 len = end - str;
 word = malloc(len + 1);
@@ -60,7 +60,7 @@ int count = 0;
 int in_word = 0;
 while (*str)
 {
-if (*str == '')
+if (*str == ' ')
 {
 in_word = 0;
 }
