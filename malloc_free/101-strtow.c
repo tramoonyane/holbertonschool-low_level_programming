@@ -12,8 +12,18 @@ int num_words, word_index;
 char **word_array;
 int i;
 if (str == NULL || str[0] == '\0')
+{
 return (NULL);
+}
 num_words = count_words(str);
+if (num_words == 0)
+{
+word_array = (char **)malloc(sizeof(char *));
+if (word_array == NULL)
+return (NULL);
+word_array[0] = NULL;
+return (word_array);
+}
 word_array = (char **)malloc((num_words + 1) * sizeof(char *));
 if (word_array == NULL)
 return (NULL);
