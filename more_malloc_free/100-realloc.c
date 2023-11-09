@@ -16,7 +16,7 @@ if (new_size == 0)
 free(ptr);
 return (NULL);
 }
-void *new_ptr = malloc(new_size);
+new_ptr = malloc(new_size);
 if (new_ptr == NULL)
 {
 return (NULL);
