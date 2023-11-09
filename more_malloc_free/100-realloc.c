@@ -1,4 +1,4 @@
-#include "main.h" 
+#include "main.h"
 #include <stdlib.h>
 
 /**
@@ -15,11 +15,11 @@ void *new_ptr;
 if (new_size == 0)
 {
 free(ptr);
-return NULL;
+return (NULL);
 }
 if (ptr == NULL)
 {
-return malloc(new_size);
+return (malloc(new_size));
 }
 if (new_size == old_size)
 {
