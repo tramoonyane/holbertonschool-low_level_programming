@@ -36,6 +36,8 @@ free(ptr);
 return (new_ptr);
 }
 
+int main(void);
+
 /**
  * main - Entry point
  *
