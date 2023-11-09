@@ -17,7 +17,7 @@ free(ptr);
 return (NULL);
 }
 new_ptr = malloc(new_size);
-if (!new_ptr == NULL)
+if (!new_ptr)
 {
 return (NULL);
 }
@@ -27,7 +27,7 @@ unsigned int i;
 unsigned char *p = ptr;
 unsigned char *np = new_ptr;
 
-for (i = 0; i < size; i++)
+for (i = 0; i < old_size && i < new_size; i++)
 {
 np[i] = p[i];
 }
