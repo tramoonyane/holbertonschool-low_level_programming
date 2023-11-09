@@ -57,7 +57,6 @@ int count_words(char *str)
 {
 int count = 0;
 int in_word = 0;
-int i;
 while (*str)
 {
 if (*str == ' ')
