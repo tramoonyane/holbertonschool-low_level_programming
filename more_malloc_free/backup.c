@@ -27,7 +27,7 @@ void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size)
       char *p = ptr;
       char *np = new_ptr;
 
-      for (i = 0; i < new_size && i < old_size; i++)
+      for (i = 0; i < old_size; i++)
 	{
 	  np[i] = p[i];
 	}
