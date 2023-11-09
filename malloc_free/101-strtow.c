@@ -6,11 +6,6 @@
  * @str: The input string to split.
  * Return: A pointer to an array of strings (words), or NULL on failure.
  */
-/**
- * strtow - Splits a string into words.
- * @str: The input string to split.
- * Return: A pointer to an array of strings (words), or NULL on failure.
- */
 char **strtow(char *str)
 {
 int num_words, word_index;
