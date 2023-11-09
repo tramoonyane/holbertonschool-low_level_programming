@@ -8,39 +8,38 @@
  */
 char **strtow(char *str)
 {
-int num_words, word_index;
+int num_words, len, i, word_index = 0;
 char **word_array;
 char *word;
 if (!str || !*str)
 return (NULL);
 num_words = count_words(str);
-if (num_words == 0)
-{
-word_array = malloc(sizeof(char *));
-if (!word_array)
-return (NULL);
-word_array[0] = NULL;
-word_array[1] = NULL;
-return (word_array);
-}
 word_array = malloc((num_words + 1) * sizeof(char *));
 if (!word_array)
 return (NULL);
-for (word_index = 0; *str; word_index++)
+while (*str)
 {
 while (*str == ' ')
 str++;
-word = copy_word(str);
+if (*str == '\0')
+break;
+char *end = str;
+while (*end && *end != ' ')
+end++;
+len = end - str;
+word = malloc(len + 1);
 if (!word)
 {
-while (word_index-- > 0)
-free(word_array[word_index]);
-free(word_array);
+free_word_array(word_array);
 return (NULL);
 }
-word_array[word_index] = word;
-while (*str && *str != ' ')
-str++;
+for (i = 0; i < len; i++)
+{
+word[i] = str[i];
+}
+word[len] = '\0';
+word_array[word_index++] = word;
+str = end;
 }
 word_array[word_index] = NULL;
 return (word_array);
