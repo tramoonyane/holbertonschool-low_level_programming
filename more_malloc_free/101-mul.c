@@ -101,15 +101,15 @@ int main(int argc, char *argv[])
             result[len1 + len2 + 1] += carry;
     }
     for (i = 0; i < len - 1; i++)
-    {    
-        if (result[i])    
-            a = 1;    
-        if (a)    
-            putchar(result[i] + '0');    
-    }    
-    if (!a)    
-        putchar('0');    
-    putchar('\n');    
-    free(result);    
-    return (0);    
+    {
+        if (result[i])
+            a = 1;
+        if (a)
+            putchar(result[i] + '0');
+    }
+    if (!a)
+        putchar('0');
+    putchar('\n');
+    free(result);
+    return (0);
 }
