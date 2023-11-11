@@ -1,6 +1,5 @@
 #include "main.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 /**
  * is_digit - checks if a string contains a non-digit char
@@ -54,6 +53,7 @@ exit(98);
  *
  * Return: always 0 (Success)
  */
+int _putchar(char c);
 int main(int argc, char *argv[])
 {
 char *s1, *s2;
@@ -92,14 +92,11 @@ carry /= 10;
 if (carry > 0)
 result[len1 + len2 + 1] += carry;
 }
-}
 for (i = 0; i < len - 1; i++)
-{
 if (result[i])
 a = 1;
 if (a)
 _putchar(result[i] + '0');
-}
 if (!a)
 _putchar('0');
 _putchar('\n');
