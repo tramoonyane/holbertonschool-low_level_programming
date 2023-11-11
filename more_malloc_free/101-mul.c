@@ -54,7 +54,7 @@ exit(98);
  *
  * Return: always 0 (Success)
  */
-int _putchar(char c);
+
 int main(int argc, char *argv[])
 {
 char *s1, *s2;
