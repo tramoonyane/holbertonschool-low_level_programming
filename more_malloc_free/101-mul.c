@@ -10,15 +10,15 @@
  */
 int is_digit(char *s)
 {
-    int i = 0;
+int i = 0;
 
-    while (s[i])
-    {
-        if (s[i] < '0' || s[i] > '9')
-            return (0);
-        i++;
-    }
-    return (1);
+while (s[i])
+{
+if (s[i] < '0' || s[i] > '9')
+return (0);
+i++;
+}
+return (1);
 }
 
 /**
@@ -29,13 +29,13 @@ int is_digit(char *s)
  */
 int _strlen(char *s)
 {
-    int i = 0;
+int i = 0;
 
-    while (s[i] != '\0')
-    {
-        i++;
-    }
-    return (i);
+while (s[i] != '\0')
+{
+i++;
+}
+return (i);
 }
 
 /**
@@ -47,20 +47,17 @@ int _strlen(char *s)
  */
 void *_calloc(unsigned int nmemb, unsigned int size)
 {
-    char *ptr;
-    unsigned int i;
+char *ptr;
+unsigned int i;
 
-    if (nmemb == 0 || size == 0)
-        return (NULL);
-
-    ptr = malloc(nmemb * size);
-    if (ptr == NULL)
-        return (NULL);
-
-    for (i = 0; i < (nmemb * size); i++)
-        ptr[i] = 0;
-
-    return (ptr);
+if (nmemb == 0 || size == 0)
+return (NULL);
+ptr = malloc(nmemb * size);
+if (ptr == NULL)
+return (NULL);
+for (i = 0; i < (nmemb * size); i++)
+ptr[i] = 0;
+return (ptr);
 }
 
 /**
