@@ -39,25 +39,12 @@ return (i);
 }
 
 /**
- * _calloc - allocates memory for an array and initializes to zero
- * @nmemb: number of elements
- * @size: size of each element
- *
- * Return: pointer to the allocated memory
+ * errors - handles errors for main
  */
-void *_calloc(unsigned int nmemb, unsigned int size)
+void errors(void)
 {
-char *ptr;
-unsigned int i;
-
-if (nmemb == 0 || size == 0)
-return (NULL);
-ptr = malloc(nmemb * size);
-if (ptr == NULL)
-return (NULL);
-for (i = 0; i < (nmemb * size); i++)
-ptr[i] = 0;
-return (ptr);
+printf("Error\n");
+exit(98);
 }
 
 /**
@@ -73,7 +60,7 @@ char *s1, *s2;
 int len1, len2, len, i, carry, digit1, digit2, *result, a = 0;
 s1 = argv[1], s2 = argv[2];
 if (argc != 3 || !is_digit(s1) || !is_digit(s2))
-exit(98);
+errors();
 len1 = _strlen(s1);
 len2 = _strlen(s2);
 len = len1 + len2 + 1;
