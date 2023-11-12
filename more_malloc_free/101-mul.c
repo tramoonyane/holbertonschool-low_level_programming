@@ -42,7 +42,7 @@ p = malloc(nmemb + 1);
 if (p == NULL)
 {
 printf("Error: Memory allocation failed\n");
-        exit(98);
+exit(98);
 }
 for (i = 0; i < nmemb; i++)
 p[i] = '0';
