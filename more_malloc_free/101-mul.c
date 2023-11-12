@@ -39,16 +39,15 @@ char *_callocX(unsigned int nmemb)
 unsigned int i;
 char *p;
 p = malloc(nmemb + 1);
-if (p == NULL) {
-        printf("Error: Memory allocation failed\n");
+if (p == NULL)
+{
+printf("Error: Memory allocation failed\n");
         exit(98);
-    }
-
-    for (i = 0; i < nmemb; i++)
-        p[i] = '0';
-
-    p[i] = '\0';
-    return (p);
+}
+for (i = 0; i < nmemb; i++)
+p[i] = '0';
+p[i] = '\0';
+return (p);
 }
 /**
  * main - multiplies inf numbers
