@@ -1,7 +1,17 @@
 #include "main.h"
 #include <stdlib.h>
 #include <stdio.h>
-
+/**
+ * main - Entry point of the program.
+ *
+ * Description: Multiplies two positive numbers provided as command line
+ * arguments and prints the result.
+ *
+ * @argc: Number of command line arguments.
+ * @argv: Array of command line arguments.
+ *
+ * Return: 0 on success, 98 on failure.
+ */
 int main(int argc, char *argv[])
 {
 	char *num1 = argv[1];
@@ -22,9 +32,17 @@ int main(int argc, char *argv[])
 		mul(num1, num2);
 	}
 
-	return 0;
+	return (0);
 }
-
+/**
+ * mul - Multiplies two numbers represented as strings.
+ *
+ * Description: This function takes two strings representing numbers,
+ * multiplies them, and prints the result.
+ *
+ * @s1: The first input number as a string.
+ * @s2: The second input number as a string.
+ */
 void mul(char *s1, char *s2)
 {
 	int i, l1, l2, total_l, f_digit, s_digit, res = 0, tmp;
@@ -86,7 +104,17 @@ void mul(char *s1, char *s2)
 	/* Free dynamically allocated memory */
 	free(temp);
 }
-
+/**
+ * _calloc - Allocates memory for an array and initializes it to zero.
+ *
+ * Description: This function dynamically allocates memory for an array of
+ * a specified size and initializes all its elements to zero.
+ *
+ * @nmemb: Number of elements in the array.
+ * @size: Size of each element in bytes.
+ *
+ * Return: A pointer to the allocated memory, or NULL if allocation fails.
+ */
 void *_calloc(unsigned int nmemb, unsigned int size)
 {
 	char *ptr;
@@ -100,7 +128,18 @@ void *_calloc(unsigned int nmemb, unsigned int size)
 
 	return (ptr);
 }
-
+/**
+ * _memset - Fills a block of memory with a constant byte.
+ *
+ * Description: This function fills the first n bytes of the memory
+ * area pointed to by s with the constant byte b.
+ *
+ * @s: Pointer to the memory block.
+ * @b: Value to be set.
+ * @n: Number of bytes to be set to the value.
+ *
+ * Return: A pointer to the memory area s.
+ */
 char *_memset(char *s, char b, unsigned int n)
 {
 	unsigned int i = 0;
