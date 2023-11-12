@@ -51,13 +51,10 @@ void *_calloc(unsigned int nmemb, unsigned int size)
 
 
 /**
- * multiply - initialize array with 0 byte
- *
- * @s1: string 1
- * @s2: string 2
- *
- * Return: nothing
-*/
+ * mul - Multiplies two numbers represented as strings.
+ * @s1: The first input number as a string.
+ * @s2: The second input number as a string.
+ */
 
 void mul(char *s1, char *s2)
 {
