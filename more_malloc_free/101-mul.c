@@ -36,10 +36,8 @@ int main(int argc, char *argv[])
 }
 /**
  * mul - Multiplies two numbers represented as strings.
- *
  * Description: This function takes two strings representing numbers,
  * multiplies them, and prints the result.
- *
  * @s1: The first input number as a string.
  * @s2: The second input number as a string.
  */
@@ -57,26 +55,20 @@ void mul(char *s1, char *s2)
 	l2 = 0;
 	while (s2[l2] != '\0')
 		l2++;
-
 	/* Store the original length of s2 for later use */
 	tmp = l2;
-
 	/* Calculate the total length of the result */
 	total_l = l1 + l2;
-
 	/* Dynamically allocate memory for the result */
 	ptr = _calloc(sizeof(int), total_l);
-
 	/* store our pointer address to free later */
 	temp = ptr;
-
 	/* Perform multiplication algorithm */
 	for (l1--; l1 >= 0; l1--)
 	{
 		f_digit = s1[l1] - '0';
 		res = 0;
 		l2 = tmp;
-
 		for (l2--; l2 >= 0; l2--)
 		{
 			s_digit = s2[l2] - '0';
