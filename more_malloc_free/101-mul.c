@@ -84,7 +84,6 @@ void mul(char *s1, char *s2)
 			ptr[l1 + l2 + 1] = res % 10;
 			res /= 10;
 		}
-
 		if (res)
 			ptr[l1 + l2 + 1] = res % 10;
 	}
@@ -120,10 +119,10 @@ void *_calloc(unsigned int nmemb, unsigned int size)
 	char *ptr;
 
 	if (nmemb == 0 || size == 0)
-		return NULL;
+		return (NULL);
 	ptr = malloc(nmemb * size);
 	if (ptr == NULL)
-		return NULL;
+		return (NULL);
 	_memset(ptr, 0, nmemb * size);
 
 	return (ptr);
