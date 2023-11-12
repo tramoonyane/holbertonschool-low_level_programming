@@ -8,5 +8,7 @@ int *array_range(int min, int max);
 int _putchar(char c);
 void *_realloc(void *ptr, unsigned int old_size, unsigned int new_size);
 int _isnumber(char *s);
+char *_callocX(unsigned int nmemb);
+
 
 #endif
