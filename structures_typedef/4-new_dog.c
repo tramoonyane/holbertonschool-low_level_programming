@@ -1,6 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "dog.h"
+/**
+ * _strlen - Returns the length of a string.
+ * @s: The input string.
+ *
+ * Return: The length of the string.
+ */
+int _strlen(char *s)
+{
+int len = 0;
+  
+while (s[len] != '\0')
+{
+len++;
+}
+return (len);
+}
+
+/**
+ * _strcpy - Copies a string.
+ * @dest: The destination buffer.
+ * @src: The source string.
+ *
+ * Return: A pointer to the destination buffer.
+ */
+char *_strcpy(char *dest, char *src)
+{
+int i = 0;
+
+while (src[i] != '\0')
+{
+dest[i] = src[i];
+i++;
+}
+dest[i] = '\0';
+return (dest);
+}
 
 /**
  * new_dog - Creates a new dog.
