@@ -52,29 +52,3 @@ free(d->name);
 free(d->owner);
 free(d);
 }
-/**
- * main - Entry point of the program.
- *
- * Return: 0 on success, 1 on failure.
- *
- * Description: The main function demonstrates the usage of the new_dog
- * function to create a dog, prints information about the dog, and then
- * frees the allocated memory using the free_dog function.
- */
-int main(void)
-{
-char name[] = "Ghost";
-float age = 4.75;
-char owner[] = "Jon Snow";
-
-dog_t *my_dog = new_dog(name, age, owner);
-if (my_dog == NULL)
-{
-printf("Error creating dog.\n");
-return (1);
-}
-printf("My name is %s, I am %.2f, and my owner is %s\n",
-my_dog->name, my_dog->age, my_dog->owner);
-free_dog(my_dog);
-return (0);
-}
