@@ -16,8 +16,15 @@ char *name;
 float age;
 char *owner;
 };
+/**
+ * dog_t - Typedef for struct dog.
+ *
+ * Description: This typedef provides a new name, dog_t, for the
+ * struct dog type. It can be used interchangeably with struct dog
+ * to represent variables that encapsulate information about dogs.
+ */
+typedef struct dog dog_t;
 void init_dog(struct dog *d, char *name, float age, char *owner);
 void print_dog(struct dog *d);
-dog_t *new_dog(char *name, float age, char *owner);
 
 #endif
