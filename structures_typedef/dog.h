@@ -10,7 +10,8 @@
  * including its name, age, and owner. It is designed to be used
  * for creating variables that represent individual dogs.
  */
-struct dog {
+struct dog
+{
     char *name;
     float age;
     char *owner;
