@@ -1,7 +1,5 @@
 #include <stdlib.h>
 
-int _putchar(char c);
-
 /**
  * print_name - Prints a name using function pointer
  * @name: The name to be printed
@@ -12,7 +10,8 @@ int _putchar(char c);
  */
 void print_name(char *name, void (*f)(char *))
 {
-    if (name != NULL && f != NULL) {
-        f(name);
-    }
+if (name != NULL && f != NULL)
+{
+f(name);
+}
 }
