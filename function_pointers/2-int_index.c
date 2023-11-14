@@ -6,7 +6,8 @@
  * @size: Number of elements in the array
  * @cmp: Pointer to the comparison function
  *
- * Return: Index of the first element for which cmp doesn't return 0, or -1 if no match
+ * Return: Index of the first element for which
+ * cmp doesn't return 0, or -1 if no match
  *
  * Description: This function searches for an integer in an array by using the
  * provided comparison function pointer. It returns the index of the first
@@ -26,4 +27,5 @@ return (i);
 }
 }
 }
-return (-1);}
+return (-1);
+}
