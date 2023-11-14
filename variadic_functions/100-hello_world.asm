@@ -16,4 +16,4 @@ _start:
 	;;  Exit the program
 	mov rax, 60         ; Syscall number for sys_exit
 	xor rdi, rdi    ; Exit code 0
-	syscall	; Call kernel	
+	syscall	; Call kernel
