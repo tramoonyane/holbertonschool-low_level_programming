@@ -29,7 +29,8 @@ va_start(args, format);
 while (format && format[i])
 {
 format_char = format[i];
-if (i > 0)
+if (i > 0 && (format[i - 1] == 'c' || format[i - 1] == 'i' ||
+format[i - 1] == 'f' || format[i - 1] == 's'))
 printf(", ");
 switch (format_char)
 {
