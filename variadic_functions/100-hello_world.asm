@@ -3,9 +3,9 @@ section .data
     msg_len equ $ - message         ; Calculate the length of the message
 
 section .text
-    global _start                  ; Entry point for the program
+    global main                    ; Change the entry point label to 'main'
 
-_start:
+main:                              ; Rename _start to main
     ; Write the message to stdout
     mov rax, 1                     ; System call number for sys_write
     mov rdi, 1                     ; File descriptor 1 (stdout)
