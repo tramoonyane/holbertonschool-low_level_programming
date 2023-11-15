@@ -11,6 +11,7 @@
  */
 int main(int argc, char *argv[])
 {
+int i;
 if (argc != 2)
 {
 write(2, "Error\n", 6);
@@ -23,7 +24,7 @@ write(2, "Error\n", 6);
 exit(2);
 }
 unsigned char *ptr = (unsigned char *)main;
-for (int i = 0; i < num_bytes; i++)
+for (i = 0; i < num_bytes; i++)
 {
 char hex[3];
 sprintf(hex, "%02x", *(ptr + i));
