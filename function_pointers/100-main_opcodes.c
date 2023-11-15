@@ -1,37 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <udis86.h>
 
 /**
- * main - Prints the opcodes of its own main function
- * @argc: Number of arguments
- * @argv: Array of arguments
- *
- * Return: 0 on success,
- * 1 if incorrect number of arguments, 2 if negative bytes
- */
+* main - prints its own opcodes
+* @argc: number of arguments
+* @argv: array of arguments
+*
+* Return: Always 0 (Success)
+*/
 int main(int argc, char *argv[])
 {
+int bytes, i;
+char *arr;
+
 if (argc != 2)
 {
-fprintf(stderr, "Error\n");
+printf("Error\n");
 exit(1);
 }
-int num_bytes = atoi(argv[1]);
-if (num_bytes < 0)
+bytes = atoi(argv[1]);
+if (bytes < 0)
 {
-fprintf(stderr, "Error\n");
+printf("Error\n");
 exit(2);
 }
-unsigned char *ptr = (unsigned char *)main;
-ud_t ud_obj;
-ud_init(&ud_obj);
-ud_set_input_buffer(&ud_obj, ptr, num_bytes);
-ud_set_mode(&ud_obj, 64);
-ud_set_syntax(&ud_obj, UD_SYN_INTEL);
-while (ud_disassemble(&ud_obj))
+arr = (char *)main;
+for (i = 0; i < bytes; i++)
 {
-printf("\t%s\n", ud_insn_hex(&ud_obj));
+if (i == bytes - 1)
+{
+printf("%02hhx\n", arr[i]);
+break;
+}
+printf("%02hhx ", arr[i]);
 }
 return (0);
 }
