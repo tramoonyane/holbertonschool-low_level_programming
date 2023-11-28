@@ -15,7 +15,7 @@ dlistint_t *new_node;
 /* Allocate memory for new node */
 new_node = malloc(sizeof(dlistint_t));
 if (new_node == NULL)
-(return NULL);
+return (NULL);
 
 /* Initialize the new node */
 new_node->n = n;
