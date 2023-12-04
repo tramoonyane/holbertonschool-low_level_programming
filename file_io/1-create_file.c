@@ -1,6 +1,7 @@
 #include "main.h"
 #include <fcntl.h>
 #include <unistd.h>
+#include <string.h>
 
 #define PERMISSIONS (S_IRUSR | S_IWUSR)
 
