@@ -12,6 +12,7 @@
  * This function checks for errors in file handling
  * operations and prints error messages accordingly,
  * exiting the program with the appropriate exit codes.
+ */
 void error_file(int file_from, int file_to, char *argv[])
 {
 	if (file_from == -1)
