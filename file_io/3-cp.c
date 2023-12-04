@@ -1,26 +1,25 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-#define BUF_SIZE 1024
-#define PERMS (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)
-
 /**
- * print_error - Prints error messages and
- * exits the program with the given code
- * @code: Exit code
- * @message: Error message
- * @filename: Name of the file causing the error
- * @fd: File descriptor value
- */
-void print_error(int code, char *message, char *filename, int fd)
+ * error_file - Handles file-related errors
+ * and exits the program with appropriate codes
+ * @file_from: File descriptor for file_from
+ * @file_to: File descriptor for file_to
+ * @argv: Array of command-line arguments
+ *
+ * This function checks for errors in file handling
+ * operations and prints error messages accordingly,
+ * exiting the program with the appropriate exit codes.
+void error_file(int file_from, int file_to, char *argv[])
 {
-dprintf(STDERR_FILENO, "%s %s", message, filename);
-if (fd != -1)
-dprintf(STDERR_FILENO, " fd %d", fd);
-dprintf(STDERR_FILENO, "\n");
-exit(code);
+	if (file_from == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't read from file %s\n", argv[1]);
+		exit(98);
+	}
+	if (file_to == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't write to %s\n", argv[2]);
+		exit(99);
+	}
 }
 
 /**
@@ -28,35 +27,52 @@ exit(code);
  * @argc: Number of arguments
  * @argv: Array of arguments
  * Return: 0 on success, 97, 98, 99, or 100 on error
+ *
+ * This function checks the command-line arguments,
+ * opens the specified files, reads from
+ * file_from and writes to file_to until the entire
+ * file is copied, handling errors
+ * during file operations and closing file descriptors appropriately.
  */
-int main(int argc, char *argv[]) {
-    int fd_from, fd_to, bytes_read, bytes_written;
-    char buffer[BUF_SIZE];
+int main(int argc, char *argv[])
+{
+	int file_from, file_to, err_close;
+	ssize_t nchars, nwr;
+	char buf[1024];
 
-    if (argc != 3) {
-        dprintf(STDERR_FILENO, "Usage: %s file_from file_to\n", argv[0]);
-        return (97);
-    }
+	if (argc != 3)
+	{
+		dprintf(STDERR_FILENO, "%s\n", "Usage: cp file_from file_to");
+		exit(97);
+	}
 
-    fd_from = open(argv[1], O_RDONLY);
-    if (fd_from == -1)
-        print_error(98, "Error: Can't read from file", argv[1], -1);
+	file_from = open(argv[1], O_RDONLY);
+	file_to = open(argv[2], O_CREAT | O_WRONLY | O_TRUNC | O_APPEND, 0664);
+	error_file(file_from, file_to, argv);
 
-    fd_to = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC, PERMS);
-    if (fd_to == -1)
-        print_error(99, "Error: Can't write to file", argv[2], -1);
+	nchars = 1024;
+	while (nchars == 1024)
+	{
+		nchars = read(file_from, buf, 1024);
+		if (nchars == -1)
+			error_file(-1, 0, argv);
+		nwr = write(file_to, buf, nchars);
+		if (nwr == -1)
+			error_file(0, -1, argv);
+	}
 
-    while ((bytes_read = read(fd_from, buffer, BUF_SIZE)) > 0) {
-        bytes_written = write(fd_to, buffer, bytes_read);
-        if (bytes_written != bytes_read)
-            print_error(99, "Error: Can't write to file", argv[2], fd_to);
-    }
+	err_close = close(file_from);
+	if (err_close == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_from);
+		exit(100);
+	}
 
-    if (bytes_read == -1)
-        print_error(98, "Error: Can't read from file", argv[1], fd_from);
-
-    if (close(fd_from) == -1 || close(fd_to) == -1)
-        print_error(100, "Error: Can't close fd", "", -1);
-
-    return (0);
+	err_close = close(file_to);
+	if (err_close == -1)
+	{
+		dprintf(STDERR_FILENO, "Error: Can't close fd %d\n", file_from);
+		exit(100);
+	}
+	return (0);
 }
