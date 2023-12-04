@@ -7,7 +7,8 @@
 #define PERMS (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH)
 
 /**
- * print_error - Prints error messages and exits the program with the given code
+ * print_error - Prints error messages and
+ * exits the program with the given code
  * @code: Exit code
  * @message: Error message
  * @filename: Name of the file causing the error
