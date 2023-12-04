@@ -29,28 +29,12 @@ exit(code);
  * @argv: Array of arguments
  * Return: 0 on success, 97, 98, 99, or 100 on error
  */
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <fcntl.h>
-
-#define BUF_SIZE 1024
-#define PERMS (S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH) // rw-rw-r--
-
-void print_error(int code, char *message, char *filename, int fd) {
-    dprintf(STDERR_FILENO, "%s %s", message, filename);
-    if (fd != -1)
-        dprintf(STDERR_FILENO, " fd %d", fd);
-    dprintf(STDERR_FILENO, "\n");
-    exit(code);
-}
-
 int main(int argc, char *argv[]) {
     int fd_from, fd_to, bytes_read, bytes_written;
 
     if (argc != 3) {
         dprintf(STDERR_FILENO, "Usage: %s file_from file_to\n", argv[0]);
-        return 97;
+        return (97);
     }
 
     fd_from = open(argv[1], O_RDONLY);
@@ -73,5 +57,5 @@ int main(int argc, char *argv[]) {
     if (close(fd_from) == -1 || close(fd_to) == -1)
         print_error(100, "Error: Can't close fd", "", -1);
 
-    return 0;
+    return (0);
 }
