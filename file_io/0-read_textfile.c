@@ -7,6 +7,9 @@
  * @letters: number of letters to read and print
  * Return: number of letters read and printed, 0 on failure
  */
+#include "main.h"
+#include <fcntl.h>
+
 #define BUFFER_SIZE 1024
 
 ssize_t read_textfile(const char *filename, size_t letters) {
@@ -20,14 +23,14 @@ ssize_t read_textfile(const char *filename, size_t letters) {
     if (file_descriptor == -1)
         return 0;
 
-    while ((bytes_read = read(file_descriptor, buffer, BUFFER_SIZE)) > 0 && total_bytes < letters) {
+    while ((bytes_read = read(file_descriptor, buffer, BUFFER_SIZE)) > 0 && (size_t)total_bytes < letters) {
         bytes_written = write(STDOUT_FILENO, buffer, bytes_read);
-        if (bytes_written == -1 || bytes_written != bytes_read) {
+        if (bytes_written == -1 || (size_t)bytes_written != (size_t)bytes_read) {
             close(file_descriptor);
             return total_bytes;
         }
         total_bytes += bytes_written;
-        if (total_bytes >= letters)
+        if ((size_t)total_bytes >= letters)
             break;
     }
 
