@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 /**
  * error_file - Handles file-related errors
  * and exits the program with appropriate codes
