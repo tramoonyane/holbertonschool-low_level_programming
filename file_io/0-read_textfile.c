@@ -12,6 +12,7 @@ ssize_t read_textfile(const char *filename, size_t letters)
     int file_descriptor;
     ssize_t bytes_read, bytes_written;
     char *buffer;
+    int newline_flag = 0;  // Flag to check if a newline is printed
 
     if (filename == NULL)
         return (0);
@@ -48,7 +49,20 @@ ssize_t read_textfile(const char *filename, size_t letters)
             }
             if (buffer[bytes_read - 1] != '\n')
             {
-                bytes_written += write(STDOUT_FILENO, "\n", 1);
+                newline_flag = 0;  // Reset newline_flag if the last character is not a newline
+                for (ssize_t i = bytes_read - 1; i >= 0; i--)
+                {
+                    if (buffer[i] == ' ' || buffer[i] == '\t')
+                    {
+                        newline_flag = 1;
+                        bytes_written += write(STDOUT_FILENO, "\n", 1);
+                        break;
+                    }
+                }
+                if (!newline_flag)
+                {
+                    bytes_written += write(STDOUT_FILENO, "\n", 1);
+                }
                 if (bytes_written <= 0)
                 {
                     free(buffer);
