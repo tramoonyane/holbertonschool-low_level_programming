@@ -49,7 +49,7 @@ ssize_t read_textfile(const char *filename, size_t letters)
             }
             if (buffer[bytes_read - 1] != '\n')
             {
-                newline_flag = 0;  // Reset newline_flag if the last character is not a newline
+                newline_flag = 0;
                 for (i = bytes_read - 1; i >= 0; i--)
                 {
                     if (buffer[i] == ' ' || buffer[i] == '\t')
