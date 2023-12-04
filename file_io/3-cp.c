@@ -31,6 +31,7 @@ exit(code);
  */
 int main(int argc, char *argv[]) {
     int fd_from, fd_to, bytes_read, bytes_written;
+    char buffer[BUF_SIZE];
 
     if (argc != 3) {
         dprintf(STDERR_FILENO, "Usage: %s file_from file_to\n", argv[0]);
