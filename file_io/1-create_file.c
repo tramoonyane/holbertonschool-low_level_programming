@@ -2,7 +2,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-#define PERMISSIONS (S_IRUSR | S_IWUSR) // rw-------
+#define PERMISSIONS (S_IRUSR | S_IWUSR)
 
 /**
  * create_file - creates a file and writes text_content to it
