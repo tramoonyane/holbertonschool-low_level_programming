@@ -7,7 +7,7 @@
  * Return: actual number of letters read and printed, 0 on failure
  */
 
-ssize_t read_textfile(const char *filename, size_t letters);
+ssize_t read_textfile(const char *filename, size_t letters)
 {
 char *buf;
 ssize_t fd;
