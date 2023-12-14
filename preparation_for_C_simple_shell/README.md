@@ -6,7 +6,7 @@ This is a simple Unix command line interpreter created as a project for Holberto
 
 ## How to Use
 
-1. Compile the shell using the provided Makefile or gcc command.
+1. Compile the shell using the provided gcc command.
 2. Run the compiled executable `hsh`.
 3. Enter commands and press Enter to execute.
 4. To exit the shell, use the `exit` command or press Ctrl+D.
