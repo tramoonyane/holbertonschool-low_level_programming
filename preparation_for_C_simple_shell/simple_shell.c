@@ -33,6 +33,10 @@ int main(void)
         arguments = tokenize_input(buffer);
         if (arguments != NULL)
         {
+            if (strcmp(arguments[0], "exit") == 0) {
+                free(arguments);
+                break;
+            }
             execute_command(arguments);
             free(arguments);
         }
@@ -93,6 +97,10 @@ void execute_command(char **arguments)
 {
     pid_t pid;
     int status;
+
+    if (strcmp(arguments[0], "exit") == 0) {
+        exit(EXIT_SUCCESS);
+    }
 
     pid = fork();
     if (pid == -1)
