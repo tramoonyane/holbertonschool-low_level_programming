@@ -98,9 +98,38 @@ char **tokenize_input(char *input)
  * Description: This function takes the parsed input command
  *              and executes it with the given arguments.
  */
+/**
+ * execute_command - Execute a command with given arguments
+ * @arguments: Array of pointers to tokens (arguments)
+ *
+ * Description: This function takes the parsed input command
+ *              and executes it with the given arguments.
+ */
 void execute_command(char **arguments)
 {
-    /* Implementation of execute_command function */
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    if (pid == -1)
+    {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+    else if (pid == 0)
+    {
+        // Child process
+        if (execvp(arguments[0], arguments) == -1)
+        {
+            perror("execvp");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else
+    {
+        // Parent process
+        waitpid(pid, &status, 0);
+    }
 }
 
 /**
