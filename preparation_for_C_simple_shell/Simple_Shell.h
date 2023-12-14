@@ -49,9 +49,46 @@ int main(void)
  *
  * Return: Array of pointers to tokens (arguments)
  */
+/**
+ * tokenize_input - Tokenize user input
+ * @input: User input string
+ *
+ * Return: Array of pointers to tokens (arguments)
+ */
 char **tokenize_input(char *input)
 {
-    /* Implementation of tokenize_input function */
+    int bufsize = MAX_ARGUMENTS;
+    int position = 0;
+    char **tokens = malloc(bufsize * sizeof(char *));
+    char *token;
+
+    if (!tokens)
+    {
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(input, TOKEN_DELIM);
+    while (token != NULL)
+    {
+        tokens[position] = token;
+        position++;
+
+        if (position >= bufsize)
+        {
+            bufsize += MAX_ARGUMENTS;
+            tokens = realloc(tokens, bufsize * sizeof(char *));
+            if (!tokens)
+            {
+                perror("realloc");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        token = strtok(NULL, TOKEN_DELIM);
+    }
+    tokens[position] = NULL;
+    return tokens;
 }
 
 /**
