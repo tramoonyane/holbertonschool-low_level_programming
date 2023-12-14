@@ -15,7 +15,7 @@ int main(void)
         perror("malloc");
         exit(EXIT_FAILURE);
     }
-
+    char **arguments;
     while (1)
     {
         print_prompt();
@@ -30,7 +30,7 @@ int main(void)
             buffer[strlen(buffer) - 1] = '\0';
         }
 
-        char **arguments = tokenize_input(buffer);
+        arguments = tokenize_input(buffer);
         if (arguments != NULL)
         {
             execute_command(arguments);
