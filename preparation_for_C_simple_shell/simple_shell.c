@@ -4,36 +4,30 @@
  *
  * Return: Always 0 on success
  */
+#include "Simple_Shell.h"
+/**
+ * main - Entry point for the simple shell
+ *
+ * Return: Always 0 on success
+ */
 int main(void)
 {
-    char *buffer;
-    size_t bufsize = BUFFER_SIZE;
-    char **arguments;
+    char *buffer = NULL;
+    size_t bufsize = 0;
+    ssize_t characters_read;
 
-    buffer = malloc(bufsize * sizeof(char));
-    if (buffer == NULL)
+    while ((characters_read = getline(&buffer, &bufsize, stdin)) != -1)
     {
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-    while (1)
-    {
-        print_prompt();
-        if (getline(&buffer, &bufsize, stdin) == -1)
+        if (characters_read > 0 && buffer[characters_read - 1] == '\n')
         {
-            printf("\n");
-            break;
+            buffer[characters_read - 1] = '\0'; // Remove newline character
         }
 
-        if (buffer[strlen(buffer) - 1] == '\n')
-        {
-            buffer[strlen(buffer) - 1] = '\0';
-        }
-
-        arguments = tokenize_input(buffer);
+        char **arguments = tokenize_input(buffer);
         if (arguments != NULL)
         {
-            if (strcmp(arguments[0], "exit") == 0) {
+            if (strcmp(arguments[0], "exit") == 0)
+            {
                 free(arguments);
                 break;
             }
@@ -43,8 +37,9 @@ int main(void)
     }
 
     free(buffer);
-    return 0;
+    return (0);
 }
+
 /**
  * tokenize_input - Tokenize user input
  * @input: User input string
