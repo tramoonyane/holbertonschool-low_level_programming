@@ -16,7 +16,7 @@ No command-line options are available.
 Enter commands and press Enter to execute. The shell will display a prompt ($). To exit the shell, use the `exit` command or press Ctrl+D.
 
 .SH AUTHOR
-Written by [Your Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe].
+Written by [Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe].
 
 .SH SEE ALSO
 Full documentation available in README.md file.
