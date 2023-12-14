@@ -119,4 +119,5 @@ void execute_command(char **arguments)
 void print_prompt(void)
 {
     printf("$ ");
+    fflush(stdout);
 }
