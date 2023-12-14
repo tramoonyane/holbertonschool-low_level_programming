@@ -1,0 +1,25 @@
+.TH SIMPLE_SHELL 1 "December 2023" "Version 1.0" "Simple Shell Manual"
+
+.SH NAME
+simple_shell \- a simple Unix shell
+
+.SH SYNOPSIS
+simple_shell
+
+.SH DESCRIPTION
+Simple_shell is a simple command line interpreter that reads user input, tokenizes it, and executes commands.
+
+.SH OPTIONS
+No command-line options are available.
+
+.SH USAGE
+Enter commands and press Enter to execute. The shell will display a prompt ($). To exit the shell, use the `exit` command or press Ctrl+D.
+
+.SH AUTHOR
+Written by [Your Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe].
+
+.SH SEE ALSO
+Full documentation available in README.md file.
+
+.SH BUGS
+No known bugs.
