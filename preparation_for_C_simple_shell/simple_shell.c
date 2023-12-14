@@ -8,6 +8,7 @@ int main(void)
 {
     char *buffer;
     size_t bufsize = BUFFER_SIZE;
+    char **arguments;
 
     buffer = malloc(bufsize * sizeof(char));
     if (buffer == NULL)
@@ -15,7 +16,6 @@ int main(void)
         perror("malloc");
         exit(EXIT_FAILURE);
     }
-    char **arguments;
     while (1)
     {
         print_prompt();
