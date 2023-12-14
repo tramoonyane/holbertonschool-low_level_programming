@@ -4,26 +4,21 @@
  *
  * Return: Always 0 on success
  */
-#include "Simple_Shell.h"
-/**
- * main - Entry point for the simple shell
- *
- * Return: Always 0 on success
- */
 int main(void)
 {
     char *buffer = NULL;
     size_t bufsize = 0;
     ssize_t characters_read;
+    char **arguments;
 
     while ((characters_read = getline(&buffer, &bufsize, stdin)) != -1)
     {
         if (characters_read > 0 && buffer[characters_read - 1] == '\n')
         {
-            buffer[characters_read - 1] = '\0'; // Remove newline character
+            buffer[characters_read - 1] = '\0';
         }
 
-        char **arguments = tokenize_input(buffer);
+        arguments = tokenize_input(buffer);
         if (arguments != NULL)
         {
             if (strcmp(arguments[0], "exit") == 0)
@@ -79,7 +74,7 @@ char **tokenize_input(char *input)
         token = strtok(NULL, TOKEN_DELIM);
     }
     tokens[position] = NULL;
-    return tokens;
+    return (tokens);
 }
 /**
  * execute_command - Execute a command with given arguments
