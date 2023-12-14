@@ -109,7 +109,7 @@ void execute_command(char **arguments)
     {
         if (execvp(arguments[0], arguments) == -1)
         {
-            perror("execvp");
+            fprintf(stderr, "%s: %d: %s: not found\n", arguments[0], 1, arguments[0]);
             exit(EXIT_FAILURE);
         }
     }
@@ -126,4 +126,5 @@ void execute_command(char **arguments)
 void print_prompt(void)
 {
     printf("$ ");
+    fflush(stdout);
 }
