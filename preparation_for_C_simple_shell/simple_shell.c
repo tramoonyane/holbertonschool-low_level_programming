@@ -11,13 +11,20 @@ int main(void)
     ssize_t characters_read;
     char **arguments;
 
-    while ((characters_read = getline(&buffer, &bufsize, stdin)) != -1)
+    while (1)
     {
-        if (characters_read > 0 && buffer[characters_read - 1] == '\n')
+        print_prompt();
+        characters_read = getline(&buffer, &bufsize, stdin);
+        if (characters_read == -1)
+        {
+            printf("\n");
+            break;
+        }
+        if(buffer[characters_read - 1] == '\n')
         {
             buffer[characters_read - 1] = '\0';
         }
-
+        
         arguments = tokenize_input(buffer);
         if (arguments != NULL)
         {
@@ -119,5 +126,4 @@ void execute_command(char **arguments)
 void print_prompt(void)
 {
     printf("$ ");
-    fflush(stdout);
 }
