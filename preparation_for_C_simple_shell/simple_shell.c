@@ -1,5 +1,4 @@
 #include "simple_shell.h"
-
 /**
  * main - Entry point for the simple shell
  *
@@ -40,15 +39,8 @@ int main(void)
     }
 
     free(buffer);
-    return (0);
+    return 0;
 }
-
-/**
- * tokenize_input - Tokenize user input
- * @input: User input string
- *
- * Return: Array of pointers to tokens (arguments)
- */
 /**
  * tokenize_input - Tokenize user input
  * @input: User input string
@@ -90,14 +82,6 @@ char **tokenize_input(char *input)
     tokens[position] = NULL;
     return tokens;
 }
-
-/**
- * execute_command - Execute a command with given arguments
- * @arguments: Array of pointers to tokens (arguments)
- *
- * Description: This function takes the parsed input command
- *              and executes it with the given arguments.
- */
 /**
  * execute_command - Execute a command with given arguments
  * @arguments: Array of pointers to tokens (arguments)
@@ -118,7 +102,6 @@ void execute_command(char **arguments)
     }
     else if (pid == 0)
     {
-        // Child process
         if (execvp(arguments[0], arguments) == -1)
         {
             perror("execvp");
@@ -127,11 +110,9 @@ void execute_command(char **arguments)
     }
     else
     {
-        // Parent process
         waitpid(pid, &status, 0);
     }
 }
-
 /**
  * print_prompt - Display shell prompt
  *
