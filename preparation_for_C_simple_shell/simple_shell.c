@@ -109,7 +109,7 @@ void execute_command(char **arguments)
     {
         if (execvp(arguments[0], arguments) == -1)
         {
-            fprintf(stderr, "%s: %d: %s: not found\n", arguments[0], 1, arguments[0]);
+            fprintf(stderr, "./hsh: 1: %s: not found\n", arguments[0]);
             exit(EXIT_FAILURE);
         }
     }
