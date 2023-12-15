@@ -1,5 +1,7 @@
 #include "Simple_Shell.h"
 
+#include "Simple_Shell.h"
+
 char **tokenize_input(char *input) {
     int bufsize = MAX_ARGUMENTS;
     int position = 0;
@@ -47,6 +49,8 @@ void execute_command(char **arguments) {
             fprintf(stderr, "./hsh: 1: %s: not found\n", arguments[0]);
             exit(EXIT_FAILURE);
         }
+    } else {
+        wait(NULL);
     }
 }
 
