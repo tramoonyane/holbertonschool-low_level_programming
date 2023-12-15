@@ -30,7 +30,7 @@ int main(void) {
             free(arguments);
         } else {
             status = 1;
-            continue; // Skip waiting for non-existent command
+            continue;
         }
 
         wait(&status); // Wait for child process
