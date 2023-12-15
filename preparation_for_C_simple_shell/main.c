@@ -5,10 +5,10 @@ int main(void) {
     size_t bufsize = 0;
     ssize_t characters_read;
     char **arguments;
-    int status;
+    int status = 0;
 
     while (1) {
-        print_prompt(int status);
+        print_prompt(status);
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
             printf("\n");
@@ -26,8 +26,12 @@ int main(void) {
                 free(buffer);
                 exit(EXIT_SUCCESS);
             }
+            }
             execute_command(arguments);
             free(arguments);
+            status = 0;
+        } else {
+            status = 1;
         }
     }
 
