@@ -1,4 +1,4 @@
-#include "simple_shell.h"
+#include "Simple_Shell.h"
 
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
