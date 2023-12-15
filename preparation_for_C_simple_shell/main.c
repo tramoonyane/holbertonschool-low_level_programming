@@ -33,7 +33,7 @@ int main(void) {
             continue;
         }
 
-        wait(&status); // Wait for child process
+        wait(&status);
         if (WIFEXITED(status)) {
             status = WEXITSTATUS(status);
         }
