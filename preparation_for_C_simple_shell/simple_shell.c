@@ -1,4 +1,4 @@
-#include "shell.h"
+#include "Simple_Shell.h"
 
 void prompt() {
     printf("#cisfun$ ");
