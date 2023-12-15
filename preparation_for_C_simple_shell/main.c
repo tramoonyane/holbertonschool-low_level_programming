@@ -7,8 +7,7 @@ int main(void) {
     char **arguments;
     int status = 0;
     
-
-    while (1) {
+           while (1) {
         
             print_prompt(status);
         
@@ -36,10 +35,7 @@ int main(void) {
             execute_command(arguments);
             free(arguments);
             status = 0;
-        } else {
-            status = 1;
-        }
-    }
+        } 
 
     free(buffer);
     return 0;
