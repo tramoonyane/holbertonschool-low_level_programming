@@ -124,7 +124,6 @@ void execute_command(char **arguments) {
     while (path != NULL) {
         snprintf(command_path, PATH_MAX_LENGTH, "%s/%s", path, arguments[0]);
         
-        // Check if the command exists in the directory
         if (access(command_path, X_OK) == 0) {
             found = 1;
             break;
