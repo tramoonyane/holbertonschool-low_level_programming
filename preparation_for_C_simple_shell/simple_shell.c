@@ -80,8 +80,11 @@ void execute_command(char **arguments)
  *
  * Description: This function prints the shell prompt.
  */
-void print_prompt(void)
-{
-    printf("$ ");
+void print_prompt(int status) {
+    if (status == 0) {
+        printf("($)");
+    } else {
+        printf("($?)");
+    }
     fflush(stdout);
 }
