@@ -6,6 +6,7 @@ void display_prompt() {
 
 char** parse_arguments(const char *command) {
     char *token;
+     int i;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -13,7 +14,7 @@ char** parse_arguments(const char *command) {
     }
 
     token = strtok((char *)command, " ");
-    int i = 0;
+    i = 0;
     while (token != NULL) {
         args[i] = token;
         token = strtok(NULL, " ");
@@ -53,6 +54,7 @@ char* read_command() {
 int main(int argc, char *argv[]) {
     char *command;
     char **args;
+    pid_t pid;
 
     do {
         display_prompt();
@@ -67,7 +69,7 @@ int main(int argc, char *argv[]) {
 
         args = parse_arguments(command);
 
-        pid_t pid = fork();
+        pid = fork();
 
         if (pid == -1) {
             perror("fork error");
