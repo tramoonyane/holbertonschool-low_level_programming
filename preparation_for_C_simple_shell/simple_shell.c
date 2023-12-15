@@ -11,7 +11,6 @@ int main(void) {
         characters_read = getline(&buffer, &bufsize, stdin);
 
         if (characters_read == -1) {
-            // Handle end of file (Ctrl+D)
             printf("\n");
             free(buffer);
             break;
