@@ -39,7 +39,6 @@ int main(void) {
             wait(NULL);
             prompt(); /* Print the prompt after executing the command */
         }
-        }
     }
 
     return EXIT_SUCCESS;
