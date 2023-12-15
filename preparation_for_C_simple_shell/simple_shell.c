@@ -39,11 +39,10 @@ int main(int argc, char *argv[]) {
                     break;
                 } else if (strcmp(arguments[0], "env") == 0) {
                     print_environment();
-                    free(arguments);
                 } else {
                     execute_command(arguments);
-                    free(arguments);
                 }
+                free(arguments);
             }
         }
     } else {
