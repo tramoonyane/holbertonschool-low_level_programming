@@ -1,7 +1,8 @@
 #include "Simple_Shell.h"
 
 void prompt() {
-    printf("#cisfun$ ");
+    printf("$ ");
+    fflush(stdout); /* Flush the output buffer */
 }
 
 int main(void) {
