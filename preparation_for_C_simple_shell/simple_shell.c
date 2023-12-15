@@ -5,6 +5,7 @@ void display_prompt() {
 }
 
 char* read_command() {
+    char *command;
     char input[BUFFER_SIZE];
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
@@ -19,7 +20,7 @@ char* read_command() {
 
     input[strcspn(input, "\n")] = '\0';
 
-    char *command = (char *)malloc(strlen(input) + 1);
+    command = (char *)malloc(strlen(input) + 1);
     if (command == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
@@ -31,6 +32,8 @@ char* read_command() {
 
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
+    pid_t pid;
+    int status;
 
     do {
         display_prompt();
@@ -43,7 +46,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             exit(EXIT_SUCCESS);
         }
 
-        pid_t pid = fork();
+        pid = fork();
 
         if (pid == -1) {
             perror("fork error");
@@ -56,7 +59,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 exit(EXIT_FAILURE);
             }
         } else {
-            int status;
             waitpid(pid, &status, 0);
         }
 
