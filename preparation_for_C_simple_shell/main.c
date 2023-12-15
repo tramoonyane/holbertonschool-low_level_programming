@@ -32,11 +32,6 @@ int main(void) {
             status = 1;
             continue;
         }
-
-        wait(&status);
-        if (WIFEXITED(status)) {
-            status = WEXITSTATUS(status);
-        }
     }
 
     free(buffer);
