@@ -1,4 +1,5 @@
 #include "simple_shell.h"
+#include <unistd.h>
 
 #define BUFFER_SIZE 1024
 #define PROMPT "$ "
@@ -27,6 +28,14 @@ char* read_command() {
     return command;
 }
 
+int is_valid_command(const char *command) {
+    if (access(command, X_OK) == -1) {
+        printf("Error: Command '%s' not found or not executable.\n", command);
+        return 0; /* Not a valid command */
+    }
+    return 1; /* Valid command */
+}
+
 int main() {
     char *command;
 
@@ -38,6 +47,11 @@ int main() {
         /* Check if the command is more than one word */
         if (strchr(command, ' ') != NULL) {
             printf("Error: Command should contain only one word.\n");
+            free(command);
+            continue;
+        }
+
+        if (!is_valid_command(command)) {
             free(command);
             continue;
         }
