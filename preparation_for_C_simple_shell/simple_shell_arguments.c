@@ -70,9 +70,9 @@ int main(int argc, char *argv[]) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            if (execve(args[0], args, NULL) == -1) {
+            if (execvp(args[0], args) == -1) {
                 char error_buffer[BUFFER_SIZE];
-                snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
+                snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
                 write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
             }
