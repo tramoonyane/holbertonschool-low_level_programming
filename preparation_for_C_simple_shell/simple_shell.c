@@ -18,7 +18,8 @@ int main(void)
         if (characters_read == -1)
         {
             printf("\n");
-            break;
+            free(buffer);
+            exit(EXIT_SUCCESS);
         }
         if(buffer[characters_read - 1] == '\n')
         {
@@ -31,7 +32,8 @@ int main(void)
             if (strcmp(arguments[0], "exit") == 0)
             {
                 free(arguments);
-                break;
+                free(buffer);
+                exit(EXIT_SUCCESS);
             }
             execute_command(arguments);
             free(arguments);
