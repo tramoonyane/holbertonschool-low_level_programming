@@ -1,5 +1,7 @@
 #include "Simple_Shell.h"
 
+#define MAX_TOKENS 64
+
 int main(void) {
     char *buffer = NULL;
     size_t bufsize = 0;
@@ -11,6 +13,7 @@ int main(void) {
         characters_read = getline(&buffer, &bufsize, stdin);
 
         if (characters_read == -1) {
+            // Handle end of file (Ctrl+D)
             printf("\n");
             free(buffer);
             break;
@@ -32,16 +35,33 @@ int main(void) {
 }
 
 char **tokenize_input(char *input) {
-    char **tokens = malloc(2 * sizeof(char *));
+    int bufsize = MAX_TOKENS;
+    int position = 0;
+    char **tokens = malloc(bufsize * sizeof(char *));
+    char *token;
 
     if (!tokens) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
 
-    tokens[0] = input;
-    tokens[1] = NULL;
+    token = strtok(input, TOKEN_DELIM);
+    while (token != NULL) {
+        tokens[position] = token;
+        position++;
 
+        if (position >= bufsize) {
+            bufsize += MAX_TOKENS;
+            tokens = realloc(tokens, bufsize * sizeof(char *));
+            if (!tokens) {
+                perror("realloc");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        token = strtok(NULL, TOKEN_DELIM);
+    }
+    tokens[position] = NULL;
     return tokens;
 }
 
