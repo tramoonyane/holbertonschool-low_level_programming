@@ -5,14 +5,13 @@ int main(void) {
     size_t bufsize = 0;
     ssize_t characters_read;
     char **arguments;
-    int status = 0;
 
     while (1) {
-        print_prompt(status);
+        print_prompt();
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
             printf("\n");
-            free(buffer);
+            free(buffer);  // Free allocated memory before exit
             exit(EXIT_SUCCESS);
         }
         if (buffer[characters_read - 1] == '\n') {
@@ -23,14 +22,11 @@ int main(void) {
         if (arguments != NULL) {
             if (strcmp(arguments[0], "exit") == 0) {
                 free(arguments);
-                free(buffer);
+                free(buffer);  // Free allocated memory before exit
                 exit(EXIT_SUCCESS);
             }
             execute_command(arguments);
             free(arguments);
-        } else {
-            status = 1;
-            continue;
         }
     }
 
