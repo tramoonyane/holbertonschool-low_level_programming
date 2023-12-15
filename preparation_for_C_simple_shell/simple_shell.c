@@ -1,16 +1,16 @@
-#include "simple_shell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <libgen.h>
 #include <sys/wait.h>
-#include <stdbool.h>
-
-extern char **environ; /* Declaration of the environment variable */
+#include <sys/types.h>
 
 #define BUFFER_SIZE 1024
 #define PROMPT "$ "
 
 void display_prompt() {
-    printf("%s", PROMPT);
+    write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
 char* read_command() {
@@ -18,15 +18,15 @@ char* read_command() {
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
-            printf("\n");
-            exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
         } else {
             perror("fgets error");
             exit(EXIT_FAILURE);
         }
     }
 
-    input[strcspn(input, "\n")] = '\0'; /* Remove trailing newline */
+    input[strcspn(input, "\n")] = '\0';
 
     char *command = (char *)malloc(strlen(input) + 1);
     if (command == NULL) {
@@ -56,13 +56,14 @@ int main(int argc, char *argv[]) {
         command = read_command();
 
         if (feof(stdin)) {
-            printf("\n");
+            write(STDOUT_FILENO, "\n", 1);
             free(command);
-            exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
+            exit(EXIT_SUCCESS);
         }
 
         if (has_arguments(command)) {
-            fprintf(stderr, "%s: 1: %s: Command should not contain arguments.\n", argv[0], command);
+            char *error_message = "Error: Command should not contain arguments.\n";
+            write(STDERR_FILENO, error_message, strlen(error_message));
             free(command);
             continue;
         }
@@ -73,14 +74,14 @@ int main(int argc, char *argv[]) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            /* Child process */
             char *args[] = {command, NULL};
-            if (execve(command, args, environ) == -1) {
-                fprintf(stderr, "%s: 1: %s: not found\n", argv[0], command); /* Correctly prints error with program name */
+            if (execve(command, args, NULL) == -1) {
+                char error_buffer[BUFFER_SIZE];
+                snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
+                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
             }
         } else {
-            /* Parent process */
             int status;
             waitpid(pid, &status, 0);
         }
@@ -88,7 +89,7 @@ int main(int argc, char *argv[]) {
         free(command);
     } while (strcmp(command, "exit") != 0);
 
-    printf("Exiting...\n");
+    write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
     return EXIT_SUCCESS;
 }
