@@ -1,7 +1,7 @@
 #include "Simple_Shell.h"
 
 void prompt() {
-    printf("($)\n");
+    printf("($)");
     fflush(stdout); /* Flush the output buffer */
 }
 
