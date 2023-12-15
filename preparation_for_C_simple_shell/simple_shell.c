@@ -1,6 +1,9 @@
 #include "Simple_Shell.h"
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
 #define MAX_TOKENS 64
 #define PATH_MAX_LENGTH 1024
@@ -14,8 +17,6 @@ int main(int argc, char *argv[]) {
     char **arguments;
 
     if (argc == 1) {
-        char **arguments;
-
         while (1) {
             print_prompt();
             characters_read = getline(&buffer, &bufsize, stdin);
@@ -38,6 +39,7 @@ int main(int argc, char *argv[]) {
                     break;
                 } else if (strcmp(arguments[0], "env") == 0) {
                     print_environment();
+                    free(arguments);
                 } else {
                     execute_command(arguments);
                     free(arguments);
@@ -108,8 +110,7 @@ void execute_command(char **arguments) {
     char *path;
     char command_path[PATH_MAX_LENGTH];
     int found;
-    
-    
+
     if (strcmp(arguments[0], "exit") == 0) {
         exit(EXIT_SUCCESS);
     } else if (strcmp(arguments[0], "env") == 0) {
@@ -147,7 +148,6 @@ void execute_command(char **arguments) {
         waitpid(pid, &status, 0);
     }
 }
-
 
 void print_prompt(void) {
     printf("$ ");
