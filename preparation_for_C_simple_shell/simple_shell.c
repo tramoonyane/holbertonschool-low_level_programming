@@ -47,8 +47,7 @@ char **tokenize_input(char *input)
  * Description: This function takes the parsed input command
  *              and executes it with the given arguments.
  */
-void execute_command(char **arguments)
-{
+void execute_command(char **arguments) {
     pid_t pid;
     int status;
 
@@ -57,24 +56,24 @@ void execute_command(char **arguments)
     }
 
     pid = fork();
-    if (pid == -1)
-    {
+    if (pid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
-    }
-    else if (pid == 0)
-    {
-        if (execvp(arguments[0], arguments) == -1)
-        {
+    } else if (pid == 0) {
+        if (execvp(arguments[0], arguments) == -1) {
             fprintf(stderr, "./hsh: 1: %s: not found\n", arguments[0]);
             exit(EXIT_FAILURE);
         }
-    }
-    else
-    {
+    } else {
         waitpid(pid, &status, 0);
+        if (WIFEXITED(status)) {
+            exit(WEXITSTATUS(status)); // Ensure child process exits after execution
+        } else {
+            exit(EXIT_FAILURE); // If child process didn't exit normally, force it to exit
+        }
     }
 }
+
 /**
  * print_prompt - Display shell prompt
  *
