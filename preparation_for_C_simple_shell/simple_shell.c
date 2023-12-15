@@ -78,19 +78,23 @@ char **tokenize_input(char *input) {
 }
 
 void execute_command(char **arguments) {
+    pid_t pid;
+    int status;
+    char *path_env;
+    char *path;
+    char command_path[PATH_MAX_LENGTH];
+    int found;
+    
+    
     if (strcmp(arguments[0], "exit") == 0) {
         exit(EXIT_SUCCESS);
     } else if (strcmp(arguments[0], "env") == 0) {
         print_environment();
         return;
     }
-
-    pid_t pid;
-    int status;
-    char *path_env = getenv("PATH");
-    char *path = strtok(path_env, ":");
-    char command_path[PATH_MAX_LENGTH];
-    int found = 0;
+    path_env = getenv("PATH");
+    path = strtok(path_env, ":");
+    found = 0;
 
     while (path != NULL) {
         snprintf(command_path, PATH_MAX_LENGTH, "%s/%s", path, arguments[0]);
