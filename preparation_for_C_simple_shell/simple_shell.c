@@ -18,7 +18,7 @@ char* read_command() {
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
             printf("\n");
-            exit(EXIT_SUCCESS); // Exit gracefully on Ctrl+D
+            exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
         } else {
             perror("fgets error");
             exit(EXIT_FAILURE);
