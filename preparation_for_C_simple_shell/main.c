@@ -7,12 +7,12 @@ int main(void) {
     char **arguments;
 
     while (1) {
-        print_prompt(void);
+        print_prompt();
 
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
             free(buffer);
-            continue;
+            break;
         }
 
         if (buffer[characters_read - 1] == '\n') {
@@ -29,8 +29,8 @@ int main(void) {
             execute_command(arguments);
             free(arguments);
         } 
-        free(buffer);
     }
 
+    free(buffer);
     return 0;
 }
