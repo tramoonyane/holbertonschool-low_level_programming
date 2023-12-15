@@ -54,6 +54,7 @@ char** parse_arguments(const char *command) {
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
+     pid_t pid;
 
     do {
         display_prompt();
@@ -68,7 +69,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         args = parse_arguments(command);
 
-        pid_t pid;
         if (access(args[0], X_OK) != -1) {
             pid = fork();
         } else {
