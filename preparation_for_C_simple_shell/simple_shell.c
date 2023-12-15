@@ -68,7 +68,7 @@ void execute_command(char **arguments) {
         waitpid(pid, &status, 0);
         if (WIFEXITED(status)) {
             status = WEXITSTATUS(status);
-            exit(status); // This line will exit the child process with the status
+            exit(status);
         } else {
             exit(EXIT_FAILURE);
         }
