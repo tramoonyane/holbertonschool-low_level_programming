@@ -65,7 +65,9 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            char *args[] = {command, NULL}; /* Fix: Initialize args[] with command and NULL */
+            char *args[2];
+            args[0] = command;
+            args[1] = NULL;
             if (execvp(command, args) == -1) {
                 char error_buffer[BUFFER_SIZE];
                 snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
