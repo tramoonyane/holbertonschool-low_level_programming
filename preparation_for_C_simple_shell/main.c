@@ -18,7 +18,7 @@ int main(void) {
             printf("\n");
             free(buffer);
             if (interactive) {
-                exit(EXIT_SUCCESS);
+                continue;
             } else {
                 break;
             }
@@ -34,7 +34,7 @@ int main(void) {
                 free(arguments);
                 free(buffer);
                 if (interactive) {
-                    exit(EXIT_SUCCESS);
+                    continue;
                 } else {
                     break;
                 }
