@@ -7,43 +7,76 @@
 
 extern char **environ;
 
-int main(void) {
-    char *buffer = NULL;
-    size_t bufsize = 0;
-    ssize_t characters_read;
-    char **arguments;
+void execute_command(char **arguments);
+char **tokenize_input(char *input);
 
-    while (1) {
-        print_prompt();
-        characters_read = getline(&buffer, &bufsize, stdin);
+int main(int argc, char *argv[]) {
+    if (argc == 1) {
+        // Interactive mode
+        char *buffer = NULL;
+        size_t bufsize = 0;
+        ssize_t characters_read;
+        char **arguments;
 
-        if (characters_read == -1) {
-            printf("\n");
-            free(buffer);
-            break;
-        }
+        while (1) {
+            print_prompt();
+            characters_read = getline(&buffer, &bufsize, stdin);
 
-        if (buffer[characters_read - 1] == '\n') {
-            buffer[characters_read - 1] = '\0';
-        }
-
-        arguments = tokenize_input(buffer);
-        if (arguments != NULL && arguments[0] != NULL) {
-            if (strcmp(arguments[0], "exit") == 0) {
+            if (characters_read == -1) {
+                printf("\n");
                 free(buffer);
-                free(arguments);
                 break;
-            } else if (strcmp(arguments[0], "env") == 0) {
-                print_environment();
-            } else {
+            }
+
+            if (buffer[characters_read - 1] == '\n') {
+                buffer[characters_read - 1] = '\0';
+            }
+
+            arguments = tokenize_input(buffer);
+            if (arguments != NULL && arguments[0] != NULL) {
+                if (strcmp(arguments[0], "exit") == 0) {
+                    free(buffer);
+                    free(arguments);
+                    break;
+                } else if (strcmp(arguments[0], "env") == 0) {
+                    print_environment();
+                } else {
+                    execute_command(arguments);
+                    free(arguments);
+                }
+            }
+        }
+
+        free(buffer);
+    } else {
+        // Non-interactive mode
+        FILE *input_file = fopen(argv[1], "r");
+        if (input_file == NULL) {
+            perror("Error opening file");
+            return EXIT_FAILURE;
+        }
+
+        char *buffer = NULL;
+        size_t bufsize = 0;
+        ssize_t characters_read;
+
+        while ((characters_read = getline(&buffer, &bufsize, input_file)) != -1) {
+            if (buffer[characters_read - 1] == '\n') {
+                buffer[characters_read - 1] = '\0';
+            }
+
+            char **arguments = tokenize_input(buffer);
+            if (arguments != NULL && arguments[0] != NULL) {
                 execute_command(arguments);
                 free(arguments);
             }
         }
+
+        free(buffer);
+        fclose(input_file);
     }
 
-    free(buffer);
-    return 0;
+    return EXIT_SUCCESS;
 }
 
 char **tokenize_input(char *input) {
