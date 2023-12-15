@@ -1,6 +1,9 @@
 #include "simple_shell.h"
 #include <unistd.h>
-#include <libgen.h> /* Included for basename() */
+#include <libgen.h>
+#include <sys/wait.h>
+
+extern char **environ; /* Declaration of the environment variable */
 
 #define BUFFER_SIZE 1024
 #define PROMPT "$ "
@@ -14,8 +17,8 @@ char* read_command() {
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
-            printf("\n"); /* Print newline for Ctrl+D */
-            exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
+            printf("\n");
+            exit(EXIT_SUCCESS); // Exit gracefully on Ctrl+D
         } else {
             perror("fgets error");
             exit(EXIT_FAILURE);
@@ -34,14 +37,6 @@ char* read_command() {
     return command;
 }
 
-int is_valid_command(const char *command) {
-    if (access(command, X_OK) == -1) {
-        fprintf(stderr, "%s: 1: %s: not found\n", basename(command), command);
-        return 0; /* Not a valid command */
-    }
-    return 1; /* Valid command */
-}
-
 int main(int argc, char *argv[]) {
     char *command;
 
@@ -50,28 +45,36 @@ int main(int argc, char *argv[]) {
 
         command = read_command();
 
-        /* Check for Ctrl+D (end-of-file) */
         if (feof(stdin)) {
-            printf("\n"); /* Print newline for Ctrl+D */
+            printf("\n");
             free(command);
             exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
         }
-        
-        /* Check if the command is more than one word */
+
         if (strchr(command, ' ') != NULL) {
             fprintf(stderr, "%s: 1: %s: Command should contain only one word.\n", argv[0], command);
             free(command);
             continue;
         }
 
-        if (!is_valid_command(command)) {
-            free(command);
-            continue;
+        pid_t pid = fork();
+
+        if (pid == -1) {
+            perror("fork error");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            /* Child process */
+            char *args[] = {command, NULL};
+            if (execve(command, args, environ) == -1) {
+                fprintf(stderr, "%s: 1: %s: not found\n", basename(command), command);
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            /* Parent process */
+            int status;
+            waitpid(pid, &status, 0);
         }
 
-        printf("Command entered: %s\n", command);
-
-        /* Free memory allocated for command */
         free(command);
     } while (strcmp(command, "exit") != 0);
 
