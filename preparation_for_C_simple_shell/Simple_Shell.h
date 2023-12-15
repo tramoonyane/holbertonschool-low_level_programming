@@ -15,6 +15,6 @@
 /* Function prototypes */
 char **tokenize_input(char *input);
 void execute_command(char **arguments);
-void print_prompt(void);
+void print_prompt(int status);
 
 #endif /* SIMPLE_SHELL_H */
