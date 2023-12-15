@@ -14,13 +14,20 @@ int main(void) {
         }
 
         characters_read = getline(&buffer, &bufsize, stdin);
+
         if (characters_read == -1) {
-            printf("\n");
-            free(buffer);
-            if (interactive) {
-                continue;
+            if (feof(stdin)) {
+                printf("\n");
+                free(buffer);
+                if (interactive) {
+                    continue;
+                } else {
+                    break;
+                }
             } else {
-                break;
+                perror("getline");
+                free(buffer);
+                exit(EXIT_FAILURE);
             }
         }
 
