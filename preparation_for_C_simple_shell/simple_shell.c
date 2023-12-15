@@ -76,7 +76,7 @@ int main(int argc, char *argv[]) {
             /* Child process */
             char *args[] = {command, NULL};
             if (execve(command, args, environ) == -1) {
-                fprintf(stderr, "%s: 1: %s: not found\n", basename(command), command);
+                fprintf(stderr, "%s: 1: %s: not found\n", argv[0], command); /* Correctly prints error with program name */
                 exit(EXIT_FAILURE);
             }
         } else {
