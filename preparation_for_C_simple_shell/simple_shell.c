@@ -7,14 +7,12 @@
 
 extern char **environ;
 
-void execute_command(char **arguments);
-char **tokenize_input(char *input);
-
 int main(int argc, char *argv[]) {
+    char *buffer = NULL;
+    size_t bufsize = 0;
+    ssize_t characters_read;
+
     if (argc == 1) {
-        char *buffer;
-        size_t bufsize;
-        ssize_t characters_read;
         char **arguments;
 
         while (1) {
@@ -45,8 +43,6 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-
-        free(buffer);
     } else {
         FILE *input_file = fopen(argv[1], "r");
         if (input_file == NULL) {
@@ -54,8 +50,6 @@ int main(int argc, char *argv[]) {
             return EXIT_FAILURE;
         }
 
-        buffer = NULL;
-        bufsize = 0;
         while ((characters_read = getline(&buffer, &bufsize, input_file)) != -1) {
             if (buffer[characters_read - 1] == '\n') {
                 buffer[characters_read - 1] = '\0';
@@ -68,10 +62,10 @@ int main(int argc, char *argv[]) {
             }
         }
 
-        free(buffer);
         fclose(input_file);
     }
 
+    free(buffer);
     return EXIT_SUCCESS;
 }
 
