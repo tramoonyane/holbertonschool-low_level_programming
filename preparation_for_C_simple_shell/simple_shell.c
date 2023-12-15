@@ -78,6 +78,6 @@ void execute_command(char **arguments) {
     }
 }
 void print_prompt(void) {
-    printf("($)\n");
+    printf("($)");
     fflush(stdout);
 }
