@@ -1,6 +1,52 @@
 #include "simple_shell.h"
 
-// ... (display_prompt, read_command, parse_arguments functions remain unchanged)
+void display_prompt() {
+    write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
+}
+
+char* read_command() {
+    char input[BUFFER_SIZE];
+
+    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
+        if (feof(stdin)) {
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        } else {
+            perror("fgets error");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    input[strcspn(input, "\n")] = '\0';
+
+    char *command = (char *)malloc(strlen(input) + 1);
+    if (command == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    strcpy(command, input);
+    return command;
+}
+
+char** parse_arguments(const char *command) {
+    char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    char *token = strtok((char *)command, " ");
+    int i = 0;
+    while (token != NULL) {
+        args[i] = token;
+        token = strtok(NULL, " ");
+        i++;
+    }
+    args[i] = NULL;
+
+    return args;
+}
 
 int main(int argc, char *argv[]) {
     char *command;
@@ -28,7 +74,7 @@ int main(int argc, char *argv[]) {
         if (access(args[0], X_OK) != -1) {
             pid = fork();
         } else {
-            // PATH handling logic here
+            /* PATH handling logic here */
         }
 
         if (pid == -1) {
@@ -36,7 +82,9 @@ int main(int argc, char *argv[]) {
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
             if (execv(args[0], args) == -1) {
-                perror("execv error");
+                char error_buffer[BUFFER_SIZE];
+                snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
+                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
             }
         } else {
