@@ -5,7 +5,7 @@
 #define MAX_TOKENS 64
 #define PATH_MAX_LENGTH 1024
 
-extern char **environ; // External variable that holds the environment
+extern char **environ;
 
 int main(void) {
     char *buffer = NULL;
@@ -18,7 +18,6 @@ int main(void) {
         characters_read = getline(&buffer, &bufsize, stdin);
 
         if (characters_read == -1) {
-            // Handle end of file (Ctrl+D)
             printf("\n");
             free(buffer);
             break;
@@ -31,12 +30,10 @@ int main(void) {
         arguments = tokenize_input(buffer);
         if (arguments != NULL && arguments[0] != NULL) {
             if (strcmp(arguments[0], "exit") == 0) {
-                // Handle 'exit' command
                 free(buffer);
                 free(arguments);
                 break;
             } else if (strcmp(arguments[0], "env") == 0) {
-                // Handle 'env' command
                 print_environment();
             } else {
                 execute_command(arguments);
@@ -82,10 +79,8 @@ char **tokenize_input(char *input) {
 
 void execute_command(char **arguments) {
     if (strcmp(arguments[0], "exit") == 0) {
-        // Handle 'exit' command
         exit(EXIT_SUCCESS);
     } else if (strcmp(arguments[0], "env") == 0) {
-        // Handle 'env' command
         print_environment();
         return;
     }
