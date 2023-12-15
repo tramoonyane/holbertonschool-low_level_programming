@@ -11,6 +11,7 @@ int main(int argc, char *argv[]) {
     char *buffer = NULL;
     size_t bufsize = 0;
     ssize_t characters_read;
+    char **arguments;
 
     if (argc == 1) {
         char **arguments;
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]) {
                 buffer[characters_read - 1] = '\0';
             }
 
-            char **arguments = tokenize_input(buffer);
+            arguments = tokenize_input(buffer);
             if (arguments != NULL && arguments[0] != NULL) {
                 execute_command(arguments);
                 free(arguments);
