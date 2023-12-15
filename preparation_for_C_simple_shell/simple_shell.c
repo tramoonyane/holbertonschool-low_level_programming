@@ -28,22 +28,19 @@ char* read_command() {
 }
 
 int main() {
-    while (1) {
+    char *command;
+
+    do {
         display_prompt();
 
-        char *command = read_command();
+        command = read_command();
         printf("Command entered: %s\n", command);
-
-        /* Exit the loop if the user inputs 'exit' */
-        if (strcmp(command, "exit") == 0) {
-            printf("Exiting...\n");
-            free(command);
-            break;
-        }
 
         /* Free memory allocated for command */
         free(command);
-    }
+    } while (strcmp(command, "exit") != 0);
+
+    printf("Exiting...\n");
 
     return EXIT_SUCCESS;
 }
