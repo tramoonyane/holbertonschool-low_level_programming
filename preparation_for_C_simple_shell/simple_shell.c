@@ -53,10 +53,6 @@ void execute_command(char **arguments) {
 }
 
 void print_prompt(int status) {
-    if (status == 0) {
-        printf("($)");
-    } else {
-        printf("($?)");
-    }
+    printf("($)");
     fflush(stdout);
 }
