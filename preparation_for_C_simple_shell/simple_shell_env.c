@@ -41,7 +41,6 @@ void print_environment() {
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     pid_t pid;
-    char *args[];
 
     do {
         display_prompt();
@@ -66,7 +65,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            args[] = {command, NULL};
+            char *args[] = {command, NULL};
             if (execve(command, args, NULL) == -1) {
                 char error_buffer[BUFFER_SIZE];
                 snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
