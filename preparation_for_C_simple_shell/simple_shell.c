@@ -1,7 +1,7 @@
 #include "Simple_Shell.h"
 
 void prompt() {
-    printf("$ ");
+    printf("($) ");
     fflush(stdout); /* Flush the output buffer */
 }
 
@@ -37,6 +37,7 @@ int main(void) {
             }
         } else {
             wait(NULL);
+            printf("\n"); /* Print a new line after command execution */
         }
     }
 
