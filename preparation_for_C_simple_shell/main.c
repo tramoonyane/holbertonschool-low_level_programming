@@ -11,7 +11,7 @@ int main(int status) {
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
             printf("\n");
-            free(buffer);  // Free allocated memory before exit
+            free(buffer);
             exit(EXIT_SUCCESS);
         }
         if (buffer[characters_read - 1] == '\n') {
@@ -22,7 +22,7 @@ int main(int status) {
         if (arguments != NULL) {
             if (strcmp(arguments[0], "exit") == 0) {
                 free(arguments);
-                free(buffer);  // Free allocated memory before exit
+                free(buffer);
                 exit(EXIT_SUCCESS);
             }
             execute_command(arguments);
