@@ -13,7 +13,7 @@ int main(void) {
     char *program_name = "./hsh"; /* Change this accordingly if your executable has a different name */
 
     while (1) {
-        prompt(); // Print the initial prompt before waiting for input
+        prompt(); /* Print the initial prompt before waiting for input */
 
         if (fgets(buffer, BUFFER_SIZE, stdin) == NULL) {
             printf("\n");
