@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <libgen.h>
 #include <sys/wait.h>
+#include <stdbool.h>
 
 extern char **environ; /* Declaration of the environment variable */
 
@@ -37,6 +38,15 @@ char* read_command() {
     return command;
 }
 
+bool has_arguments(const char *command) {
+    for (int i = 0; command[i] != '\0'; ++i) {
+        if (command[i] == ' ') {
+            return true;
+        }
+    }
+    return false;
+}
+
 int main(int argc, char *argv[]) {
     char *command;
 
@@ -49,6 +59,12 @@ int main(int argc, char *argv[]) {
             printf("\n");
             free(command);
             exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
+        }
+
+        if (has_arguments(command)) {
+            fprintf(stderr, "%s: 1: %s: Command should not contain arguments.\n", argv[0], command);
+            free(command);
+            continue;
         }
 
         pid_t pid = fork();
