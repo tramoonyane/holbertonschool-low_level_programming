@@ -1,5 +1,40 @@
 #include "Simple_Shell.h"
 
+int main(void) {
+    char *buffer = NULL;
+    size_t bufsize = 0;
+    ssize_t characters_read;
+    char **arguments;
+
+    while (1) {
+        print_prompt();
+
+        characters_read = getline(&buffer, &bufsize, stdin);
+        if (characters_read == -1) {
+            free(buffer);
+            break;
+        }
+
+        if (buffer[characters_read - 1] == '\n') {
+            buffer[characters_read - 1] = '\0';
+        }
+
+        arguments = tokenize_input(buffer);
+        if (arguments != NULL) {
+            if (strcmp(arguments[0], "exit") == 0) {
+                free(buffer);
+                free(arguments);
+                exit(EXIT_SUCCESS);
+            }
+            execute_command(arguments);
+            free(arguments);
+        } 
+    }
+
+    free(buffer);
+    return 0;
+}
+
 char **tokenize_input(char *input) {
     int bufsize = MAX_ARGUMENTS;
     int position = 0;
@@ -44,7 +79,7 @@ void execute_command(char **arguments) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         if (execvp(arguments[0], arguments) == -1) {
-            fprintf(stderr, "./hsh: 1: %s: not found\n", arguments[0]);
+            fprintf(stderr, "%s: not found\n", arguments[0]);
             exit(EXIT_FAILURE);
         }
     } else {
@@ -53,6 +88,6 @@ void execute_command(char **arguments) {
 }
 
 void print_prompt(void) {
-    printf("($)");
+    printf("($)\n");
     fflush(stdout);
 }
