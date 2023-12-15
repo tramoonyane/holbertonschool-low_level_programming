@@ -15,6 +15,7 @@ int main(void) {
 
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
+            free(buffer);
             if (interactive) {
                 printf("\n");
                 continue;
@@ -27,15 +28,24 @@ int main(void) {
             buffer[characters_read - 1] = '\0';
         }
 
+        if (strcmp(buffer, "") == 0) {
+            free(buffer);
+            if (interactive) {
+                continue;
+            } else {
+                break;
+            }
+        }
+
         arguments = tokenize_input(buffer);
         if (arguments != NULL) {
             if (strcmp(arguments[0], "exit") == 0) {
                 free(arguments);
                 free(buffer);
                 if (interactive) {
-                    continue;
-                } else {
                     break;
+                } else {
+                    exit(EXIT_SUCCESS);
                 }
             }
             execute_command(arguments);
