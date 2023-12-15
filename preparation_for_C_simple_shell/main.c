@@ -34,7 +34,7 @@ int main(void) {
             status = 1;
         }
 
-        free(buffer); // Free allocated memory after command execution
+        free(buffer);
     }
 
     return 0;
