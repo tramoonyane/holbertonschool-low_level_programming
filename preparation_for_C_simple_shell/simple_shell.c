@@ -12,9 +12,8 @@ char **tokenize_input(char *input);
 
 int main(int argc, char *argv[]) {
     if (argc == 1) {
-        // Interactive mode
-        char *buffer = NULL;
-        size_t bufsize = 0;
+        char *buffer;
+        size_t bufsize;
         ssize_t characters_read;
         char **arguments;
 
@@ -49,17 +48,14 @@ int main(int argc, char *argv[]) {
 
         free(buffer);
     } else {
-        // Non-interactive mode
         FILE *input_file = fopen(argv[1], "r");
         if (input_file == NULL) {
             perror("Error opening file");
             return EXIT_FAILURE;
         }
 
-        char *buffer = NULL;
-        size_t bufsize = 0;
-        ssize_t characters_read;
-
+        buffer = NULL;
+        bufsize = 0;
         while ((characters_read = getline(&buffer, &bufsize, input_file)) != -1) {
             if (buffer[characters_read - 1] == '\n') {
                 buffer[characters_read - 1] = '\0';
