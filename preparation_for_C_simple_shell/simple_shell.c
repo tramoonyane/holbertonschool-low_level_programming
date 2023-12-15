@@ -37,7 +37,7 @@ int main(void) {
             }
         } else {
             wait(NULL);
-            printf("\n"); /* Print a new line after command execution */
+            printf("$\n"); /* Print a new line after command execution */
         }
     }
 
