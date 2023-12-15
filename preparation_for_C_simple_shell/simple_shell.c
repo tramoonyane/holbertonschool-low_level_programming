@@ -1,6 +1,6 @@
 #include "simple_shell.h"
 #include <unistd.h>
-#include <libgen.h> // Included for basename()
+#include <libgen.h> /* Included for basename() */
 
 #define BUFFER_SIZE 1024
 #define PROMPT "$ "
@@ -13,8 +13,13 @@ char* read_command() {
     char input[BUFFER_SIZE];
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
-        perror("fgets error");
-        exit(EXIT_FAILURE);
+        if (feof(stdin)) {
+            printf("\n"); /* Print newline for Ctrl+D */
+            exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
+        } else {
+            perror("fgets error");
+            exit(EXIT_FAILURE);
+        }
     }
 
     input[strcspn(input, "\n")] = '\0'; /* Remove trailing newline */
@@ -44,6 +49,13 @@ int main(int argc, char *argv[]) {
         display_prompt();
 
         command = read_command();
+
+        /* Check for Ctrl+D (end-of-file) */
+        if (feof(stdin)) {
+            printf("\n"); /* Print newline for Ctrl+D */
+            free(command);
+            exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
+        }
         
         /* Check if the command is more than one word */
         if (strchr(command, ' ') != NULL) {
