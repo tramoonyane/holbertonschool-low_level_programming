@@ -109,7 +109,7 @@ void execute_command(char **arguments) {
     char *path_env;
     char *path;
     char command_path[PATH_MAX_LENGTH];
-    int found;
+    int found = 0;
 
     if (strcmp(arguments[0], "exit") == 0) {
         exit(EXIT_SUCCESS);
@@ -117,16 +117,19 @@ void execute_command(char **arguments) {
         print_environment();
         return;
     }
+
     path_env = getenv("PATH");
     path = strtok(path_env, ":");
-    found = 0;
-
+    
     while (path != NULL) {
         snprintf(command_path, PATH_MAX_LENGTH, "%s/%s", path, arguments[0]);
+        
+        // Check if the command exists in the directory
         if (access(command_path, X_OK) == 0) {
             found = 1;
             break;
         }
+        
         path = strtok(NULL, ":");
     }
 
