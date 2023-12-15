@@ -37,6 +37,8 @@ int main(void) {
             }
         } else {
             wait(NULL);
+            prompt(); /* Print the prompt after executing the command */
+        }
         }
     }
 
