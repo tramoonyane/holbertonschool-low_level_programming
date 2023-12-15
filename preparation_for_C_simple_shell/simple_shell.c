@@ -1,5 +1,33 @@
 #include "Simple_Shell.h"
 
+int main(void) {
+    char *buffer = NULL;
+    size_t bufsize = 0;
+    ssize_t characters_read;
+    char **arguments;
+
+    while (1) {
+        characters_read = getline(&buffer, &bufsize, stdin);
+        if (characters_read == -1) {
+            free(buffer);
+            break;
+        }
+
+        if (buffer[characters_read - 1] == '\n') {
+            buffer[characters_read - 1] = '\0';
+        }
+
+        arguments = tokenize_input(buffer);
+        if (arguments != NULL) {
+            execute_command(arguments);
+            free(arguments);
+        }
+    }
+
+    free(buffer);
+    return 0;
+}
+
 char **tokenize_input(char *input) {
     int bufsize = MAX_ARGUMENTS;
     int position = 0;
@@ -33,10 +61,7 @@ char **tokenize_input(char *input) {
 
 void execute_command(char **arguments) {
     pid_t pid;
-
-    if (strcmp(arguments[0], "exit") == 0) {
-        exit(EXIT_SUCCESS);
-    }
+    int status;
 
     pid = fork();
     if (pid == -1) {
@@ -44,15 +69,14 @@ void execute_command(char **arguments) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         if (execvp(arguments[0], arguments) == -1) {
-            fprintf(stderr, "%s: not found\n", arguments[0]);
+            perror("execvp");
             exit(EXIT_FAILURE);
         }
     } else {
-        wait(NULL);
+        waitpid(pid, &status, 0);
     }
 }
-
 void print_prompt(void) {
-    printf("($)");
+    printf("($)\n");
     fflush(stdout);
 }
