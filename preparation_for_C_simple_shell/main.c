@@ -28,7 +28,7 @@ int main(void) {
             }
             execute_command(arguments);
             free(arguments);
-            wait(NULL); // Wait for child process to finish
+            wait(NULL);
             status = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
         } else {
             status = 1;
