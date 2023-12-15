@@ -26,7 +26,6 @@ int main(void) {
                 free(buffer);
                 exit(EXIT_SUCCESS);
             }
-            }
             execute_command(arguments);
             free(arguments);
             status = 0;
