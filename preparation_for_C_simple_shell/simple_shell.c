@@ -1,7 +1,5 @@
 #include "Simple_Shell.h"
 
-#include "Simple_Shell.h"
-
 char **tokenize_input(char *input) {
     int bufsize = MAX_ARGUMENTS;
     int position = 0;
