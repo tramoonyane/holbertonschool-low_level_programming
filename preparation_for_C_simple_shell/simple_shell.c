@@ -33,7 +33,6 @@ char **tokenize_input(char *input) {
 
 void execute_command(char **arguments) {
     pid_t pid;
-    int status;
 
     if (strcmp(arguments[0], "exit") == 0) {
         exit(EXIT_SUCCESS);
