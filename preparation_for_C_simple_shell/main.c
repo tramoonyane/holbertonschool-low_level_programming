@@ -1,13 +1,14 @@
 #include "Simple_Shell.h"
 
-int main(int status) {
+int main(void) {
     char *buffer = NULL;
     size_t bufsize = 0;
     ssize_t characters_read;
     char **arguments;
+    int status;
 
     while (1) {
-        print_prompt();
+        print_prompt(int status);
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
             printf("\n");
