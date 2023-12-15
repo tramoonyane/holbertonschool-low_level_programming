@@ -1,7 +1,7 @@
 #include "Simple_Shell.h"
 
 void prompt() {
-    printf("($)");
+    printf("($)\n$ ");
     fflush(stdout); /* Flush the output buffer */
 }
 
@@ -13,7 +13,7 @@ int main(void) {
     char *program_name = "./hsh"; /* Change this accordingly if your executable has a different name */
 
     while (1) {
-        prompt();
+        prompt(); // Print the initial prompt before waiting for input
 
         if (fgets(buffer, BUFFER_SIZE, stdin) == NULL) {
             printf("\n");
@@ -37,8 +37,9 @@ int main(void) {
             }
         } else {
             wait(NULL);
-            prompt(); /* Print the prompt after executing the command */
         }
+
+        printf("\n"); // Add a newline after command output
     }
 
     return EXIT_SUCCESS;
