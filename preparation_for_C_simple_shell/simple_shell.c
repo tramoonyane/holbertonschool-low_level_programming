@@ -15,6 +15,7 @@ int main(void) {
         characters_read = getline(&buffer, &bufsize, stdin);
 
         if (characters_read == -1) {
+           
             printf("\n");
             free(buffer);
             break;
@@ -26,6 +27,11 @@ int main(void) {
 
         arguments = tokenize_input(buffer);
         if (arguments != NULL && arguments[0] != NULL) {
+            if (strcmp(arguments[0], "exit") == 0) {
+                free(buffer);
+                free(arguments);
+                break;
+            }
             execute_command(arguments);
             free(arguments);
         }
@@ -81,6 +87,11 @@ void execute_command(char **arguments) {
             break;
         }
         path = strtok(NULL, ":");
+    }
+
+    if (strcmp(arguments[0], "exit") == 0) {
+        // 'exit' built-in command
+        exit(EXIT_SUCCESS);
     }
 
     if (!found) {
