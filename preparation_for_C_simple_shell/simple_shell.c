@@ -1,13 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <libgen.h>
-#include <sys/wait.h>
-#include <sys/types.h>
-
-#define BUFFER_SIZE 1024
-#define PROMPT "$ "
+#include "simple_shell.h"
 
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
@@ -38,15 +29,6 @@ char* read_command() {
     return command;
 }
 
-bool has_arguments(const char *command) {
-    for (int i = 0; command[i] != '\0'; ++i) {
-        if (command[i] == ' ') {
-            return true;
-        }
-    }
-    return false;
-}
-
 int main(int argc, char *argv[]) {
     char *command;
 
@@ -61,23 +43,15 @@ int main(int argc, char *argv[]) {
             exit(EXIT_SUCCESS);
         }
 
-        if (has_arguments(command)) {
-            char *error_message = "Error: Command should not contain arguments.\n";
-            write(STDERR_FILENO, error_message, strlen(error_message));
-            free(command);
-            continue;
-        }
-
         pid_t pid = fork();
 
         if (pid == -1) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            char *args[] = {command, NULL};
-            if (execve(command, args, NULL) == -1) {
+            if (execlp(command, command, NULL) == -1) {
                 char error_buffer[BUFFER_SIZE];
-                snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
+                snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", command);
                 write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
             }
