@@ -7,6 +7,7 @@ void prompt() {
 int main(void) {
     char buffer[BUFFER_SIZE];
     char *argv[2];
+    pid_t pid = fork();
 
     char *program_name = "./hsh"; /* Change this accordingly if your executable has a different name */
 
@@ -20,7 +21,7 @@ int main(void) {
 
         buffer[strcspn(buffer, "\n")] = '\0';
 
-        pid_t pid = fork();
+        pid = fork();
 
         if (pid == -1) {
             perror(program_name);
