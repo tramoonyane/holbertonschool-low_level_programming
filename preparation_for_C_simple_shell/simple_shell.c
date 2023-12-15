@@ -48,12 +48,6 @@ void execute_command(char **arguments) {
             fprintf(stderr, "./hsh: 1: %s: not found\n", arguments[0]);
             exit(EXIT_FAILURE);
         }
-    } else {
-        waitpid(pid, &status, 0);
-        if (!WIFEXITED(status)) {
-            exit(EXIT_FAILURE);
-        }
-        exit(WEXITSTATUS(status));
     }
 }
 
