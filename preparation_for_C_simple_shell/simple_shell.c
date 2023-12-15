@@ -15,7 +15,8 @@ int main(int argc, char *argv[]) {
     size_t bufsize = 0;
     ssize_t characters_read;
     char **arguments;
-
+    
+    setenv("PATH", "/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin", 1);
     if (argc == 1) {
         while (1) {
             print_prompt();
