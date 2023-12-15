@@ -7,6 +7,7 @@ int main(void) {
     char **arguments;
 
     while (1) {
+        print_prompt();
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
             free(buffer);
