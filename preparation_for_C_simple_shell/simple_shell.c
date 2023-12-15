@@ -34,6 +34,14 @@ int main() {
         display_prompt();
 
         command = read_command();
+        
+        /* Check if the command is more than one word */
+        if (strchr(command, ' ') != NULL) {
+            printf("Error: Command should contain only one word.\n");
+            free(command);
+            continue;
+        }
+
         printf("Command entered: %s\n", command);
 
         /* Free memory allocated for command */
