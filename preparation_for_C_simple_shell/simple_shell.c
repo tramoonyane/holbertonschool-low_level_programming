@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#define BUFFER_SIZE 1024
+#include "shell.h"
 
 void prompt() {
     printf("#cisfun$ ");
@@ -15,12 +8,14 @@ int main(void) {
     char buffer[BUFFER_SIZE];
     char *argv[2];
 
+    char *program_name = "./hsh"; /* Change this accordingly if your executable has a different name */
+
     while (1) {
         prompt();
 
         if (fgets(buffer, BUFFER_SIZE, stdin) == NULL) {
             printf("\n");
-            break;  // End of file (Ctrl+D)
+            break;  /* End of file (Ctrl+D) */
         }
 
         buffer[strcspn(buffer, "\n")] = '\0';
@@ -28,14 +23,14 @@ int main(void) {
         pid_t pid = fork();
 
         if (pid == -1) {
-            perror("Error");
+            perror(program_name);
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
             argv[0] = buffer;
             argv[1] = NULL;
 
             if (execve(argv[0], argv, NULL) == -1) {
-                perror("Error");
+                perror(program_name);
                 exit(EXIT_FAILURE);
             }
         } else {
