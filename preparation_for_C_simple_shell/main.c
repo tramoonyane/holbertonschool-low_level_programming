@@ -5,10 +5,9 @@ int main(void) {
     size_t bufsize = 0;
     ssize_t characters_read;
     char **arguments;
-    int status = 0;
 
     while (1) {
-        print_prompt(status);
+        print_prompt(void);
 
         characters_read = getline(&buffer, &bufsize, stdin);
         if (characters_read == -1) {
