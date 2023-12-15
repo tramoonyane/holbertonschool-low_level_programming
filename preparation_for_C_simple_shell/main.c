@@ -1,6 +1,6 @@
 #include "Simple_Shell.h"
 
-int main(int argc, char *argv[]) {
+int main(void) {
     char *buffer = NULL;
     size_t bufsize = 0;
     ssize_t characters_read;
