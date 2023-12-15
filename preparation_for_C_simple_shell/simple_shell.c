@@ -9,7 +9,10 @@ int main(void) {
     while (1) {
         print_prompt();
         characters_read = getline(&buffer, &bufsize, stdin);
+
         if (characters_read == -1) {
+            // Handle end of file (Ctrl+D)
+            printf("\n");
             free(buffer);
             break;
         }
@@ -19,7 +22,7 @@ int main(void) {
         }
 
         arguments = tokenize_input(buffer);
-        if (arguments != NULL) {
+        if (arguments != NULL && arguments[0] != NULL) {
             execute_command(arguments);
             free(arguments);
         }
@@ -30,33 +33,16 @@ int main(void) {
 }
 
 char **tokenize_input(char *input) {
-    int bufsize = MAX_ARGUMENTS;
-    int position = 0;
-    char **tokens = malloc(bufsize * sizeof(char *));
-    char *token;
+    char **tokens = malloc(2 * sizeof(char *));
 
     if (!tokens) {
         perror("malloc");
         exit(EXIT_FAILURE);
     }
 
-    token = strtok(input, TOKEN_DELIM);
-    while (token != NULL) {
-        tokens[position] = token;
-        position++;
+    tokens[0] = input;
+    tokens[1] = NULL;
 
-        if (position >= bufsize) {
-            bufsize += MAX_ARGUMENTS;
-            tokens = realloc(tokens, bufsize * sizeof(char *));
-            if (!tokens) {
-                perror("realloc");
-                exit(EXIT_FAILURE);
-            }
-        }
-
-        token = strtok(NULL, TOKEN_DELIM);
-    }
-    tokens[position] = NULL;
     return tokens;
 }
 
@@ -70,14 +56,15 @@ void execute_command(char **arguments) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         if (execvp(arguments[0], arguments) == -1) {
-            perror("execvp");
+            fprintf(stderr, "%s: command not found\n", arguments[0]);
             exit(EXIT_FAILURE);
         }
     } else {
         waitpid(pid, &status, 0);
     }
 }
+
 void print_prompt(void) {
-    printf("($)");
+    printf("($) ");
     fflush(stdout);
 }
