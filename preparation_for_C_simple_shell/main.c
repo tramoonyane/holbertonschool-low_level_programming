@@ -26,14 +26,17 @@ int main(void) {
                 free(buffer);
                 exit(EXIT_SUCCESS);
             }
-             execute_command(arguments);
+             }
+            execute_command(arguments);
             free(arguments);
-            wait(&status);
-            if (WIFEXITED(status)) {
-                status = WEXITSTATUS(status);
-            }
         } else {
             status = 1;
+            continue; // Skip waiting for non-existent command
+        }
+
+        wait(&status); // Wait for child process
+        if (WIFEXITED(status)) {
+            status = WEXITSTATUS(status);
         }
     }
 
