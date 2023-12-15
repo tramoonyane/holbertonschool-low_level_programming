@@ -1,6 +1,8 @@
 #include "Simple_Shell.h"
+#include <string.h>
 
 #define MAX_TOKENS 64
+#define PATH_MAX_LENGTH 1024
 
 int main(void) {
     char *buffer = NULL;
@@ -68,14 +70,32 @@ char **tokenize_input(char *input) {
 void execute_command(char **arguments) {
     pid_t pid;
     int status;
+    char *path_env = getenv("PATH");
+    char *path = strtok(path_env, ":");
+    char command_path[PATH_MAX_LENGTH];
+    int found = 0;
+
+    while (path != NULL) {
+        snprintf(command_path, PATH_MAX_LENGTH, "%s/%s", path, arguments[0]);
+        if (access(command_path, X_OK) == 0) {
+            found = 1;
+            break;
+        }
+        path = strtok(NULL, ":");
+    }
+
+    if (!found) {
+        fprintf(stderr, "%s: command not found\n", arguments[0]);
+        return;
+    }
 
     pid = fork();
     if (pid == -1) {
         perror("fork");
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
-        if (execvp(arguments[0], arguments) == -1) {
-            fprintf(stderr, "%s: command not found\n", arguments[0]);
+        if (execv(command_path, arguments) == -1) {
+            perror("execv");
             exit(EXIT_FAILURE);
         }
     } else {
@@ -84,6 +104,6 @@ void execute_command(char **arguments) {
 }
 
 void print_prompt(void) {
-    printf("($) ");
+    printf(":) ");
     fflush(stdout);
 }
