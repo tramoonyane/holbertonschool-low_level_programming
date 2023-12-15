@@ -5,6 +5,7 @@ void display_prompt() {
 }
 
 char* read_command() {
+    char *command;
     char input[BUFFER_SIZE];
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
@@ -19,7 +20,7 @@ char* read_command() {
 
     input[strcspn(input, "\n")] = '\0';
 
-    char *command = (char *)malloc(strlen(input) + 1);
+    command = (char *)malloc(strlen(input) + 1);
     if (command == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
@@ -31,13 +32,16 @@ char* read_command() {
 
 void print_environment() {
     extern char **environ;
-    for (int i = 0; environ[i] != NULL; i++) {
+    int i;
+    for (i = 0; environ[i] != NULL; i++) {
         printf("%s\n", environ[i]);
     }
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
+    pid_t pid;
+    char *args[];
 
     do {
         display_prompt();
@@ -56,13 +60,13 @@ int main(int argc, char *argv[]) {
             continue;
         }
 
-        pid_t pid = fork();
+        pid = fork();
 
         if (pid == -1) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            char *args[] = {command, NULL};
+            args[] = {command, NULL};
             if (execve(command, args, NULL) == -1) {
                 char error_buffer[BUFFER_SIZE];
                 snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
