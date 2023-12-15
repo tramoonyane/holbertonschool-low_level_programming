@@ -1,7 +1,7 @@
 #include "Simple_Shell.h"
 
 void prompt() {
-    printf("($)\n$ ");
+    printf("($)");
     fflush(stdout); /* Flush the output buffer */
 }
 
@@ -39,7 +39,7 @@ int main(void) {
             wait(NULL);
         }
 
-        printf("\n"); /* Add a newline after command output */
+        printf("\n$"); /* Add a newline after command output */
     }
 
     return EXIT_SUCCESS;
