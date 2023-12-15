@@ -26,10 +26,12 @@ int main(void) {
                 free(buffer);
                 exit(EXIT_SUCCESS);
             }
-            execute_command(arguments);
+             execute_command(arguments);
             free(arguments);
-            wait(NULL);
-            status = WIFEXITED(status) ? WEXITSTATUS(status) : 1;
+            wait(&status);
+            if (WIFEXITED(status)) {
+                status = WEXITSTATUS(status);
+            }
         } else {
             status = 1;
         }
