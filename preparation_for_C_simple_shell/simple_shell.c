@@ -51,12 +51,6 @@ int main(int argc, char *argv[]) {
             exit(EXIT_SUCCESS); /* Exit gracefully on Ctrl+D */
         }
 
-        if (strchr(command, ' ') != NULL) {
-            fprintf(stderr, "%s: 1: %s: Command should contain only one word.\n", argv[0], command);
-            free(command);
-            continue;
-        }
-
         pid_t pid = fork();
 
         if (pid == -1) {
