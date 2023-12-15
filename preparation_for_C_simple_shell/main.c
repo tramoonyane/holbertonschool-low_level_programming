@@ -28,11 +28,7 @@ int main(void) {
             }
             execute_command(arguments);
             free(arguments);
-            status = 0;
-        } else {
-            status = 1;
-        }
-
+        } 
         free(buffer);
     }
 
