@@ -1,4 +1,4 @@
-.TH SIMPLE_SHELL 14 "December 2023" "Version 1.0" "Simple Shell Manual"
+.TH SIMPLE_SHELL 16 "December 2023" "Version 1.0" "Simple Shell Manual"
 
 .SH NAME
 simple_shell \- a simple Unix shell
@@ -7,19 +7,28 @@ simple_shell \- a simple Unix shell
 simple_shell
 
 .SH DESCRIPTION
-Simple_shell is a simple command line interpreter that reads user input, tokenizes it, and executes commands.
+The \fBsimple_shell\fR command invokes a basic Unix shell. It interprets user commands, tokenizes input, and executes them. It offers various functionalities implemented across different files.
 
 .SH OPTIONS
 No command-line options are available.
 
 .SH USAGE
-Enter commands and press Enter to execute. The shell will display a prompt ($). To exit the shell, use the `exit` command or press Ctrl+D.
+To use the shell, execute the \fBsimple_shell\fR command. Upon startup, the shell displays a prompt (\fB$\fR) where commands can be entered. To execute a command, type it and press Enter. To exit the shell, use the \fBexit\fR command or press Ctrl+D.
+
+.SH FUNCTIONALITIES
+The shell provides several functionalities across separate files:
+- \fBsimple_shell.c\fR: Main shell implementation.
+- \fBSimple_Shell.h\fR: Header file with function prototypes and definitions.
+- \fBsimple_shell_arguments.c\fR: Handles command line arguments.
+- \fBsimple_shell_path.c\fR: Manages command execution with PATH handling.
+- \fBsimple_shell_exit.c\fR: Implements the exit built-in command.
+- \fBsimple_shell_env.c\fR: Implements the env built-in command.
 
 .SH AUTHOR
 Written by [Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe].
 
 .SH SEE ALSO
-Full documentation available in README.md file.
+For full documentation and detailed information, refer to the README.md file.
 
 .SH BUGS
 No known bugs.
