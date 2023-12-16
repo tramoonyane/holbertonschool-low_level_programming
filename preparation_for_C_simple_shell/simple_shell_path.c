@@ -33,7 +33,7 @@ char* read_command() {
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
-    pid_t pid;
+     pid_t pid;
 
     do {
         display_prompt();
@@ -56,41 +56,36 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             char *token = strtok(env_path, ":");
             while (token != NULL) {
                 path = (char *)malloc(strlen(token) + strlen(args[0]) + 2);
-                if (path == NULL) {
-                    perror("malloc error");
-                    exit(EXIT_FAILURE);
-                }
                 strcpy(path, token);
                 strcat(path, "/");
                 strcat(path, args[0]);
                 if (access(path, X_OK) != -1) {
                     args[0] = path;
                     pid = fork();
-                    if (pid == -1) {
-                        perror("fork error");
-                        exit(EXIT_FAILURE);
-                    } else if (pid == 0) {
-                        if (execv(args[0], args) == -1) {
-                            perror("execv error");
-                            exit(EXIT_FAILURE);
-                        }
-                    } else {
-                        int status;
-                        waitpid(pid, &status, 0);
-                    }
-                    free(path);
                     break;
                 }
                 free(path);
                 token = strtok(NULL, ":");
             }
-
             if (token == NULL) {
                 fprintf(stderr, "%s: command not found\n", args[0]);
                 free(command);
                 free(args);
                 continue;
             }
+        }
+
+        if (pid == -1) {
+            perror("fork error");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            if (execv(args[0], args) == -1) {
+                perror("execv error");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            int status;
+            waitpid(pid, &status, 0);
         }
 
         free(args);
