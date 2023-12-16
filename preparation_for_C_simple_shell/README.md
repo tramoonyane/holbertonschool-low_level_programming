@@ -46,8 +46,6 @@ Replace `task1_executable`with relevant executable names for each task.
 ## Authors
 
 This project was created by [Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe] for Holberton School.
-
-This README structure gives an overview of the functionalities implemented in different files for different tasks and how to compile each task separately.
   
 
   
