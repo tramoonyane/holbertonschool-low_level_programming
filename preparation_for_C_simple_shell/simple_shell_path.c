@@ -30,6 +30,27 @@ char* read_command() {
     return command;
 }
 
+char** parse_arguments(const char *command) {
+    char *token;
+    int i;
+    char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok((char *)command, " ");
+    i = 0;
+    while (token != NULL) {
+        args[i] = token;
+        token = strtok(NULL, " ");
+        i++;
+    }
+    args[i] = NULL;
+
+    return args;
+}
+
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
