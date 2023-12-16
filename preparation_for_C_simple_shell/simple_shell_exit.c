@@ -69,6 +69,13 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         args = parse_arguments(command);
 
+        /* Check for the 'exit' command */
+        if (strcmp(args[0], "exit") == 0) {
+            free(args);
+            free(command);
+            exit(EXIT_SUCCESS);
+        }
+
         pid = fork();
 
         if (pid == -1) {
@@ -88,7 +95,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         free(args);
         free(command);
-    } while (strcmp(command, "exit") != 0);
+    } while (1);
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
