@@ -53,8 +53,8 @@ char** parse_arguments(const char *command) {
 
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
-    pid_t pid;
     char **args;
+    pid_t pid;
 
     do {
         display_prompt();
@@ -69,24 +69,22 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         args = parse_arguments(command);
 
+        /* Check for the 'exit' command */
         if (strcmp(args[0], "exit") == 0) {
             free(args);
             free(command);
             exit(EXIT_SUCCESS);
         }
-        if (access(args[0], X_OK) != -1) {
-            pid = fork();
-        } else {
-            /* PATH handling logic here */
-        }
+
+        pid = fork();
 
         if (pid == -1) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            if (execv(args[0], args) == -1) {
+            if (execvp(args[0], args) == -1) {
                 char error_buffer[BUFFER_SIZE];
-                snprintf(error_buffer, BUFFER_SIZE, "%s: 1: %s: not found\n", argv[0], command);
+                snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
                 write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
             }
