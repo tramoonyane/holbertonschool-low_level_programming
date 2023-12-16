@@ -4,9 +4,30 @@ void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
+char** parse_arguments(const char *command) {
+    char *token;
+     int i;
+    char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok((char *)command, " ");
+    i = 0;
+    while (token != NULL) {
+        args[i] = token;
+        token = strtok(NULL, " ");
+        i++;
+    }
+    args[i] = NULL;
+
+    return args;
+}
+
 char* read_command() {
-    char input[BUFFER_SIZE];
     char *command;
+    char input[BUFFER_SIZE];
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
@@ -30,27 +51,6 @@ char* read_command() {
     return command;
 }
 
-char** parse_arguments(const char *command) {
-    char *token;
-    int i;
-    char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
-    if (args == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-
-    token = strtok((char *)command, " ");
-    i = 0;
-    while (token != NULL) {
-        args[i] = token;
-        token = strtok(NULL, " ");
-        i++;
-    }
-    args[i] = NULL;
-
-    return args;
-}
-
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
@@ -68,13 +68,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         }
 
         args = parse_arguments(command);
-
-        /* Check for the 'exit' command */
-        if (strcmp(args[0], "exit") == 0) {
-            free(args);
-            free(command);
-            exit(EXIT_SUCCESS);
-        }
 
         pid = fork();
 
@@ -95,7 +88,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         free(args);
         free(command);
-    } while (1);
+    } while (strcmp(command, "exit") != 0);
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
