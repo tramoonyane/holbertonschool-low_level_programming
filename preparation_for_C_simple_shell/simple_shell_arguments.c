@@ -103,12 +103,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 perror("fork error");
                 exit(EXIT_FAILURE);
             } else if (pid == 0) {
-                if (execvp(args[0], args) == -1) {
-                    char error_buffer[BUFFER_SIZE];
-                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
-                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
-                    exit(EXIT_FAILURE);
-                }
+                execute_command(args); // Replaced execvp with execute_command
             } else {
                 int status;
                 waitpid(pid, &status, 0);
@@ -134,12 +129,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 perror("fork error");
                 exit(EXIT_FAILURE);
             } else if (pid == 0) {
-                if (execvp(args[0], args) == -1) {
-                    char error_buffer[BUFFER_SIZE];
-                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
-                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
-                    exit(EXIT_FAILURE);
-                }
+                execute_command(args); /* Replaced execvp with execute_command */
             } else {
                 int status;
                 waitpid(pid, &status, 0);
