@@ -19,6 +19,8 @@ char **parse_arguments(const char *command) {
     int i;
     char *token;
     char *input_command;
+    char *path;
+    char *program_name;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -38,6 +40,12 @@ char **parse_arguments(const char *command) {
         token = strtok(NULL, " ");
         i++;
     }
+if (strchr(args[0], '/') != NULL) {
+    path = strdup(args[0]);
+    program_name = strrchr(path, '/') + 1;
+    args[0] = program_name;
+    free(path);
+}
     args[i] = NULL; /* NULL-terminate the arguments array */
 
     free(input_command); /* Free the copy of the input command */
