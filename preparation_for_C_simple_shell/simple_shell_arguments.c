@@ -84,7 +84,7 @@ char **tokenize_command(char *command) {
             exit(EXIT_FAILURE);
         }
 
-        args[arg_count] = strdup(token); // Duplicate token to store in args
+        args[arg_count] = strdup(token);
         if (args[arg_count] == NULL) {
             perror("strdup error");
             exit(EXIT_FAILURE);
