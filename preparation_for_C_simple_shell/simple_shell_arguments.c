@@ -87,6 +87,7 @@ void execute_command(const char *program_name, char **args) {
         perror("fork error");
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
+        printf("Executing command: %s\n", args[0]);
         if (execve(args[0], args, envp) == -1) {
             char error_buffer[BUFFER_SIZE];
             snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", program_name);
