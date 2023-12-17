@@ -20,20 +20,31 @@ void display_prompt() {
 char **parse_arguments(const char *command) {
     int i = 0;
     char *token;
-    char *input_command;
-    char **args = (char **)malloc(MAX_ARGS * sizeof(char *));
+    int j;
+    char **args = (char **)malloc((MAX_ARGS + 1) * sizeof(char *)); /* Extra space for NULL terminator */
     if (args == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    input_command = strdup(command); /* Create a copy of the input command */
+    /* Create a copy of the input command */
+    char *input_command = strdup(command);
+    if (input_command == NULL) {
+        perror("strdup error");
+        free(args);
+        exit(EXIT_FAILURE);
+    }
 
     token = strtok(input_command, " ");
     while (token != NULL) {
         args[i] = strdup(token); /* Allocate memory for each argument */
         if (args[i] == NULL) {
             perror("malloc error");
+            for (j = 0; j < i; ++j) {
+                free(args[j]); /* Free memory allocated for previous arguments */
+            }
+            free(args);
+            free(input_command);
             exit(EXIT_FAILURE);
         }
         token = strtok(NULL, " ");
@@ -137,6 +148,14 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             display_prompt();
             command = read_command();
 
+            /* Trim leading and trailing spaces */
+            while (*command && (*command == ' ' || *command == '\t')) {
+                command++;
+            }
+            if (*command == '\0') {
+                continue; /* Empty command, skip processing */
+            }
+
             args = parse_arguments(command);
 
             if (check_command_exists(args[0])) {
@@ -161,6 +180,8 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             free(args);
             free(command);
         } while (strcmp(command, "exit") != 0);
+
+        free(command); /* Free memory allocated for the "exit" command */
     } else { /* Non-interactive mode */
         command = (char *)malloc(bufsize * sizeof(char));
         if (command == NULL) {
