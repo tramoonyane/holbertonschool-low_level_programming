@@ -16,7 +16,7 @@ void display_prompt(void);
 char **parse_arguments(const char *command);
 char *read_command(void);
 int check_command_exists(const char *command);
-void execute_command(char **args); // Updated function prototype
+void execute_command(char **args); /* Updated function prototype */
 char *get_command_path(const char *command);
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)));
 
