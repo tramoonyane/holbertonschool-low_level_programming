@@ -39,6 +39,65 @@ char* read_command() {
 }
 
 /**
+ * tokenize_command - Tokenizes the command into arguments.
+ *
+ * @command: The command string to be tokenized.
+ *
+ * Return: Returns an array of strings containing the command and arguments.
+ */
+char **tokenize_command(char *command) {
+    char **args = NULL;
+    char *token = strtok(command, " \t\n");
+    int arg_count = 0;
+
+    while (token != NULL) {
+        args = realloc(args, (arg_count + 1) * sizeof(char *));
+        if (args == NULL) {
+            perror("realloc error");
+            exit(EXIT_FAILURE);
+        }
+
+        args[arg_count++] = token;
+        token = strtok(NULL, " \t\n");
+    }
+
+    args = realloc(args, (arg_count + 1) * sizeof(char *));
+    if (args == NULL) {
+        perror("realloc error");
+        exit(EXIT_FAILURE);
+    }
+    args[arg_count] = NULL;
+
+    return args;
+}
+
+/**
+ * execute_command - Executes the command with arguments.
+ *
+ * @args: An array of strings containing the command and arguments.
+ */
+void execute_command(char **args) {
+    char *envp[] = { NULL };
+
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        if (execve(args[0], args, envp) == -1) {
+            char error_buffer[BUFFER_SIZE];
+            snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", argv[0]);
+            write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        int status;
+        waitpid(pid, &status, 0);
+    }
+}
+
+/**
  * main - Main function of the shell.
  *
  * @argc: The number of arguments passed to the program.
@@ -48,14 +107,10 @@ char* read_command() {
  */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
-    char **args; // Dynamically allocate memory to hold command and arguments
-    char *envp[] = { NULL }; // Environment variable not used here
-    pid_t pid;
     int status;
 
     do {
         display_prompt();
-
         command = read_command();
 
         if (feof(stdin)) {
@@ -64,47 +119,13 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             exit(EXIT_SUCCESS);
         }
 
-        char *token = strtok(command, " "); // Split command and arguments
-        int arg_count = 0;
-        args = (char **)malloc(sizeof(char *)); // Allocate memory for args
-        if (args == NULL) {
-            perror("malloc error");
-            exit(EXIT_FAILURE);
-        }
-
-        while (token != NULL) {
-            args[arg_count] = token;
-            arg_count++;
-            args = (char **)realloc(args, sizeof(char *) * (arg_count + 1)); // Reallocate memory for args
-            if (args == NULL) {
-                perror("realloc error");
-                exit(EXIT_FAILURE);
-            }
-            token = strtok(NULL, " ");
-        }
-        args[arg_count] = NULL; /* NULL-terminate the args array */
-
-        pid = fork();
-
-        if (pid == -1) {
-            perror("fork error");
-            exit(EXIT_FAILURE);
-        } else if (pid == 0) {
-            if (execve(args[0], args, envp) == -1) {
-                char error_buffer[BUFFER_SIZE];
-                snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", argv[0]);
-                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
-                exit(EXIT_FAILURE);
-            }
-        } else {
-            waitpid(pid, &status, 0);
-        }
+        char **args = tokenize_command(command);
+        execute_command(args);
 
         free(command);
-        free(args); /* Free dynamically allocated args memory */
+        free(args);
     } while (strcmp(command, "exit") != 0);
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
-
     return EXIT_SUCCESS;
 }
