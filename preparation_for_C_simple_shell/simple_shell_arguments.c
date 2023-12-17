@@ -7,6 +7,14 @@ void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
+/**
+ * parse_arguments - Parses the command string into arguments.
+ *
+ * @command: The input command to be parsed.
+ *
+ * Return: Returns an array of strings (arguments) parsed from the command.
+ *         Returns NULL on failure or if no arguments are found.
+ */
 char** parse_arguments(const char *command) {
     char *token;
      int i;
