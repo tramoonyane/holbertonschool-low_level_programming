@@ -83,7 +83,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         }
 
         args = parse_arguments(command);
-        }
 
         if (access(args[0], X_OK) != -1) {
             pid = fork();
@@ -131,6 +130,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 free(args[i]);
             }
             free(args);
+        }
         free(command);
     } while (strcmp(command, "exit") != 0);
 
