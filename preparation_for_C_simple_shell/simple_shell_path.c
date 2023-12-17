@@ -54,7 +54,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            // Check if the command is an absolute path
+            /* Check if the command is an absolute path */
             if (command[0] == '/') {
                 if (execv(args[0], args) == -1) {
                     char error_buffer[BUFFER_SIZE];
@@ -66,7 +66,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 /* Check the PATH for the command */
                 char *env_path = getenv("PATH");
                 char *path = strtok(env_path, ":");
-
                 while (path != NULL) {
                     char exec_path[BUFFER_SIZE];
                     snprintf(exec_path, BUFFER_SIZE, "%s/%s", path, args[0]);
