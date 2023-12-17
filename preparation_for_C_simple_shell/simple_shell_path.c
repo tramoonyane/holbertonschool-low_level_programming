@@ -20,13 +20,14 @@ void display_prompt() {
 char **parse_arguments(const char *command) {
     int i = 0;
     char *token;
+    char *input_command;
     char **args = (char **)malloc(MAX_ARGS * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    char *input_command = strdup(command); /* Create a copy of the input command */
+    input_command = strdup(command); /* Create a copy of the input command */
 
     token = strtok(input_command, " ");
     while (token != NULL) {
@@ -85,13 +86,15 @@ char *read_command() {
  */
 int check_command_exists(const char *command) {
     char *path = getenv("PATH");
+    char *path_copy;
+    char *token;
     if (path == NULL) {
         fprintf(stderr, "Unable to get PATH\n");
         exit(EXIT_FAILURE);
     }
 
-    char *path_copy = strdup(path);
-    char *token = strtok(path_copy, ":");
+    path_copy = strdup(path);
+    token = strtok(path_copy, ":");
 
     while (token != NULL) {
         char *full_path = (char *)malloc(strlen(token) + strlen(command) + 2);
