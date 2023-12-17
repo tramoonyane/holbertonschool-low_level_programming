@@ -173,12 +173,20 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             display_prompt();
             command = read_command();
 
+            if (strcmp(command, "") == 0) {
+                free(command);
+                continue;
+            }
+
             args = parse_arguments(command);
 
-            execute_command(args);
+            if (args != NULL && args[0] != NULL) {
+                execute_command(args);
+                free(args);
+            }
 
-            free(args);
             free(command);
+
         } while (strcmp(command, "exit") != 0);
     } else { /* Non-interactive mode */
         command = (char *)malloc(bufsize * sizeof(char));
@@ -189,11 +197,18 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         while (getline(&command, &bufsize, stdin) != -1) {
             command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
+
+            if (strcmp(command, "") == 0) {
+                free(command);
+                continue;
+            }
+
             args = parse_arguments(command);
 
-            execute_command(args);
-
-            free(args);
+            if (args != NULL && args[0] != NULL) {
+                execute_command(args);
+                free(args);
+            }
         }
 
         free(command);
