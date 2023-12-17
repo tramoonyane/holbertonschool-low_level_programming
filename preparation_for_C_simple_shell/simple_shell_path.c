@@ -64,6 +64,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 }
             } else {
                 /* Check the PATH for the command */
+                char error_buffer[BUFFER_SIZE];
                 char *env_path = getenv("PATH");
                 char *path = strtok(env_path, ":");
                 while (path != NULL) {
@@ -79,8 +80,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                     }
                     path = strtok(NULL, ":");
                 }
-
-                char error_buffer[BUFFER_SIZE];
                 snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
                 write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
