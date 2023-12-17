@@ -101,12 +101,12 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                     args[0] = path;
                     pid = fork();
                     break;
+                    fprintf(stderr, "%s: command not found\n", args[0]);
                 }
                 free(path);
                 token = strtok(NULL, ":");
             }
             if (token == NULL) {
-                fprintf(stderr, "%s: command not found\n", args[0]);
                 free(command);
                 free(args);
                 continue;
