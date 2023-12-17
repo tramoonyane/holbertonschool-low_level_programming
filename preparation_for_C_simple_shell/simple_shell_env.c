@@ -176,7 +176,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         free(command);
     } while (1);
 
-    write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
+    /* write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n")); */
 
     return EXIT_SUCCESS;
 }
