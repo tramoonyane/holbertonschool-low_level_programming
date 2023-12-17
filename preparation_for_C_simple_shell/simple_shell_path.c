@@ -124,13 +124,23 @@ int check_command_exists(const char *command) {
  */
 void execute_command(char **args) {
     if (check_command_exists(args[0])) {
-        if (execvp(args[0], args) == -1) {
-            perror("execvp error");
+        pid_t pid = fork();
+        if (pid == -1) {
+            perror("fork error");
             exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            /* Child process */
+            if (execvp(args[0], args) == -1) {
+                perror("execvp error");
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            /* Parent process */
+            int status;
+            waitpid(pid, &status, 0);
         }
     } else {
         fprintf(stderr, "%s: command not found\n", args[0]);
-        exit(EXIT_FAILURE);
     }
 }
 
