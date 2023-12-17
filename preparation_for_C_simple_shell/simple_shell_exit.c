@@ -4,6 +4,7 @@ int is_exit_command(const char *command) {
     return strcmp(command, "exit") == 0;
 }
 
+
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
