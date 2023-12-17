@@ -91,7 +91,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         free(args);
         free(command);
-    } while (strcmp(command, "exit") != 0);
+    } while (strcmp(command, "exit") != 0)
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
