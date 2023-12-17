@@ -4,36 +4,9 @@ void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
-char* read_command() {
-    char *command;
-    char input[BUFFER_SIZE];
-
-    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
-        if (feof(stdin)) {
-            write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
-        } else {
-            perror("fgets error");
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    input[strcspn(input, "\n")] = '\0';
-
-    command = (char *)malloc(strlen(input) + 1);
-    if (command == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-
-    strcpy(command, input);
-    return command;
-}
-
 char** parse_arguments(const char *command) {
     char *token;
     int i;
-    int j;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -43,16 +16,7 @@ char** parse_arguments(const char *command) {
     token = strtok((char *)command, " ");
     i = 0;
     while (token != NULL) {
-        args[i] = (char *)malloc(strlen(token) + 1);
-        if (args[i] == NULL) {
-            perror("malloc error");
-            for (j = 0; j < i; j++) {
-                free(args[j]);
-            }
-            free(args);
-            exit(EXIT_FAILURE);
-        }
-        strcpy(args[i], token);
+        args[i] = token;
         token = strtok(NULL, " ");
         i++;
     }
@@ -84,45 +48,54 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         args = parse_arguments(command);
 
-        if (access(args[0], X_OK) != -1) {
-            pid = fork();
-        } else {
-            /* Check the PATH for the command */
-            char *path;
-            char *env_path = getenv("PATH");
-            char *token = strtok(env_path, ":");
-            while (token != NULL) {
-                path = (char *)malloc(strlen(token) + strlen(args[0]) + 2);
-                strcpy(path, token);
-                strcat(path, "/");
-                strcat(path, args[0]);
-                if (access(path, X_OK) != -1) {
-                    args[0] = path;
-                    pid = fork();
-                    break;
-                }
-                free(path);
-                token = strtok(NULL, ":");
-            }
-            if (token == NULL) {
-                free(command);
-                free(args);
-                continue;
-            }
-        }
-        fprintf(stderr, "%s: command not found\n", args[0]);
+        pid = fork();
+
         if (pid == -1) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            if (execv(args[0], args) == -1) {
-                perror("execv error");
-                exit(EXIT_FAILURE);
+            // Check if the command is an absolute path
+            if (command[0] == '/') {
+                if (execv(args[0], args) == -1) {
+                    char error_buffer[BUFFER_SIZE];
+                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
+                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                /* Check the PATH for the command */
+                char *env_path = getenv("PATH");
+                char *token = strtok(env_path, ":");
+                int found = 0;
+
+                while (token != NULL) {
+                    char path[BUFFER_SIZE];
+                    snprintf(path, BUFFER_SIZE, "%s/%s", token, args[0]);
+                    if (access(path, X_OK) != -1) {
+                        found = 1;
+                        if (execv(path, args) == -1) {
+                            char error_buffer[BUFFER_SIZE];
+                            snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
+                            write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                            exit(EXIT_FAILURE);
+                        }
+                    }
+                    token = strtok(NULL, ":");
+                }
+
+                if (!found) {
+                    char error_buffer[BUFFER_SIZE];
+                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
+                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                    exit(EXIT_FAILURE);
+                }
             }
         } else {
             int status;
             waitpid(pid, &status, 0);
         }
+
+        free(args);
         free(command);
     } while (strcmp(command, "exit") != 0);
 
