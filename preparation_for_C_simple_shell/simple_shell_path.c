@@ -42,8 +42,8 @@ char **parse_arguments(const char *command) {
     program_name = strrchr(args[0], '/');
     if (program_name != NULL) {
         /* If '/' is found, the program name starts after the '/' character */
-        program_name++; // Move the pointer to the program name
-        args[0] = program_name; // Update the program name in the arguments array
+        program_name++; /* Move the pointer to the program name */
+        args[0] = program_name; /* Update the program name in the arguments array */
     }
 
     args[i] = NULL; /* NULL-terminate the arguments array */
