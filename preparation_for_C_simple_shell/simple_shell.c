@@ -50,6 +50,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
     char *command;
     pid_t pid;
     int status;
+    char *cmd_args[];
 
     do {
         display_prompt();
@@ -70,7 +71,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         } else if (pid == 0) {
             /* Check if the command is a path */
             if (access(command, X_OK) == 0) {
-                char *cmd_args[] = {command, NULL};
+                cmd_args[] = {command, NULL};
                 if (execv(command, cmd_args) == -1) {
                     perror("execv error");
                     exit(EXIT_FAILURE);
