@@ -15,7 +15,7 @@ void display_prompt() {
  * Return: Returns an array of strings (arguments) parsed from the command.
  *         Returns NULL on failure or if no arguments are found.
  */
-char** parse_arguments(const char *command) {
+char **parse_arguments(const char *command) {
     int i;
     char *token;
     char *input_command;
@@ -50,29 +50,29 @@ char** parse_arguments(const char *command) {
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char* read_command() {
-    char *command;
-    char input[BUFFER_SIZE];
+char *read_command() {
+    char *command = NULL;
+    size_t bufsize = 0;
 
-    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
+    if (getline(&command, &bufsize, stdin) == -1) {
         if (feof(stdin)) {
             write(STDOUT_FILENO, "\n", 1);
             exit(EXIT_SUCCESS);
         } else {
-            perror("fgets error");
+            perror("getline error");
             exit(EXIT_FAILURE);
         }
     }
 
-    input[strcspn(input, "\n")] = '\0';
-
-    command = (char *)malloc(strlen(input) + 1);
-    if (command == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
+    if (feof(stdin)) {
+        write(STDOUT_FILENO, "\n", 1);
+        free(command);
+        exit(EXIT_SUCCESS);
     }
 
-    strcpy(command, input);
+    /* Remove newline character from the command */
+    command[strcspn(command, "\n")] = '\0';
+
     return command;
 }
 
@@ -87,41 +87,70 @@ char* read_command() {
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
+    size_t bufsize = BUFFER_SIZE;
     pid_t pid;
 
-    do {
-        display_prompt();
+    if (isatty(STDIN_FILENO)) { /* Check if in interactive mode */
+        do {
+            display_prompt();
+            command = read_command();
 
-        command = read_command();
+            args = parse_arguments(command);
 
-        if (feof(stdin)) {
-            write(STDOUT_FILENO, "\n", 1);
-            free(command);
-            exit(EXIT_SUCCESS);
-        }
+            pid = fork();
 
-        args = parse_arguments(command);
-
-        pid = fork();
-
-        if (pid == -1) {
-            perror("fork error");
-            exit(EXIT_FAILURE);
-        } else if (pid == 0) {
-            if (execvp(args[0], args) == -1) {
-                char error_buffer[BUFFER_SIZE];
-                snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
-                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+            if (pid == -1) {
+                perror("fork error");
                 exit(EXIT_FAILURE);
+            } else if (pid == 0) {
+                if (execvp(args[0], args) == -1) {
+                    char error_buffer[BUFFER_SIZE];
+                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
+                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                int status;
+                waitpid(pid, &status, 0);
             }
-        } else {
-            int status;
-            waitpid(pid, &status, 0);
+
+            free(args);
+            free(command);
+        } while (strcmp(command, "exit") != 0);
+    } else { /* Non-interactive mode */
+        command = (char *)malloc(bufsize * sizeof(char));
+        if (command == NULL) {
+            perror("malloc error");
+            exit(EXIT_FAILURE);
         }
 
-        free(args);
+        while (getline(&command, &bufsize, stdin) != -1) {
+            command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
+            args = parse_arguments(command);
+
+            pid = fork();
+
+            if (pid == -1) {
+                perror("fork error");
+                exit(EXIT_FAILURE);
+            } else if (pid == 0) {
+                if (execvp(args[0], args) == -1) {
+                    char error_buffer[BUFFER_SIZE];
+                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
+                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                int status;
+                waitpid(pid, &status, 0);
+            }
+
+            free(args);
+        }
+
         free(command);
-    } while (strcmp(command, "exit") != 0);
+        exit(EXIT_SUCCESS);
+    }
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
