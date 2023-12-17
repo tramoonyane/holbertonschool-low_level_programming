@@ -48,6 +48,8 @@ char* read_command() {
  */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
+    char *args[2]; /* Array to hold command and NULL */
+    char *envp[] = { NULL }; // Environment variable not used here
     pid_t pid;
     int status;
 
@@ -69,7 +71,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
             args[0] = command;
-            args[1] = NULL; /* Environment variable not used here */
+            args[1] = NULL; /* Last element must be NULL as required by execve */
 
             if (execve(command, args, envp) == -1) {
                 char error_buffer[BUFFER_SIZE];
