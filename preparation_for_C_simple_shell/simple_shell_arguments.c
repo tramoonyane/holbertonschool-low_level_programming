@@ -17,6 +17,8 @@ void display_prompt() {
  */
 char** parse_arguments(const char *command) {
     int i;
+    char *token;
+    char *input_command;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -24,8 +26,7 @@ char** parse_arguments(const char *command) {
     }
 
     i = 0;
-    char *token;
-    char *input_command = strdup(command); /* Create a copy of the input command */
+    input_command = strdup(command); /* Create a copy of the input command */
 
     token = strtok(input_command, " ");
     while (token != NULL) {
