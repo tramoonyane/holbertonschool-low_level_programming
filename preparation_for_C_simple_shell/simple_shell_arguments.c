@@ -16,22 +16,29 @@ void display_prompt() {
  *         Returns NULL on failure or if no arguments are found.
  */
 char** parse_arguments(const char *command) {
-    char *token;
-     int i;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    token = strtok((char *)command, " ");
-    i = 0;
+    int i = 0;
+    char *token;
+    char *input_command = strdup(command); /* Create a copy of the input command */
+
+    token = strtok(input_command, " ");
     while (token != NULL) {
-        args[i] = token;
+        args[i] = strdup(token); /* Allocate memory for each argument */
+        if (args[i] == NULL) {
+            perror("malloc error");
+            exit(EXIT_FAILURE);
+        }
         token = strtok(NULL, " ");
         i++;
     }
-    args[i] = NULL;
+    args[i] = NULL; /* NULL-terminate the arguments array */
+
+    free(input_command); /* Free the copy of the input command */
 
     return args;
 }
