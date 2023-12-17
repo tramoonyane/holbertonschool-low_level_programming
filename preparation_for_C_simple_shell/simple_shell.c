@@ -9,6 +9,7 @@
  */
 char* read_command()
 {
+    char* command;
     char input[BUFFER_SIZE];
     printf("%s", PROMPT);
 
@@ -24,7 +25,7 @@ char* read_command()
 
     input[strcspn(input, "\n")] = '\0';
 
-    char* command = strdup(input);
+    command = strdup(input);
     if (command == NULL) {
         perror("strdup error");
         exit(EXIT_FAILURE);
