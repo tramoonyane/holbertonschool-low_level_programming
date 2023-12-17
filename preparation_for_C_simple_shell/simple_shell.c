@@ -50,7 +50,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
     char *command;
     pid_t pid;
     int status;
-    char *cmd_args[2];
 
     do {
         display_prompt();
@@ -69,27 +68,18 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            /* Check if the command is a path */
-            if (access(command, X_OK) == 0) {
-                cmd_args[0] = command;
-                cmd_args[1] = NULL;
-                if (execv(command, cmd_args) == -1) {
-                    perror("execv error");
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                /* Attempt to execute command from PATH */
-                if (execlp(command, command, NULL) == -1) {
-                    perror(command);
-                    exit(EXIT_FAILURE);
-                }
+            if (execlp(command, command, NULL) == -1) {
+                char error_buffer[BUFFER_SIZE];
+                snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", command);
+                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                exit(EXIT_FAILURE);
             }
         } else {
             waitpid(pid, &status, 0);
         }
 
         free(command);
-    } while (1);
+    } while (strcmp(command, "exit") != 0);
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
