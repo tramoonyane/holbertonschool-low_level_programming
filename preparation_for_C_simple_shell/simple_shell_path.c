@@ -42,7 +42,16 @@ char** parse_arguments(const char *command) {
     token = strtok((char *)command, " ");
     i = 0;
     while (token != NULL) {
-        args[i] = token;
+        args[i] = (char *)malloc(strlen(token) + 1);
+        if (args[i] == NULL) {
+            perror("malloc error");
+            for (int j = 0; j < i; j++) {
+                free(args[j]);
+            }
+            free(args);
+            exit(EXIT_FAILURE);
+        }
+        strcpy(args[i], token);
         token = strtok(NULL, " ");
         i++;
     }
@@ -54,7 +63,8 @@ char** parse_arguments(const char *command) {
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
-     pid_t pid;
+    pid_t pid;
+    int i;
 
     do {
         display_prompt();
@@ -69,9 +79,16 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
         args = parse_arguments(command);
 
+        if (args[0] == NULL) {
+            free(command);
+            free(args);
+            continue; /* Continue to the next iteration if an empty command is provided */
+        }
+
         if (access(args[0], X_OK) != -1) {
             pid = fork();
         } else {
+            /* Check the PATH for the command */
             char *path;
             char *env_path = getenv("PATH");
             char *token = strtok(env_path, ":");
@@ -109,6 +126,9 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             waitpid(pid, &status, 0);
         }
 
+        for (i = 0; args[i] != NULL; i++) {
+            free(args[i]);
+        }
         free(args);
         free(command);
     } while (strcmp(command, "exit") != 0);
