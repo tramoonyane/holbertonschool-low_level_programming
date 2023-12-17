@@ -51,6 +51,14 @@ char* read_command() {
     return command;
 }
 
+/**
+ * main - Main function of the shell.
+ *
+ * @argc: The number of arguments passed to the program.
+ * @argv: An array of pointers to the arguments.
+ *
+ * Return: Returns EXIT_SUCCESS upon successful execution.
+ */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
