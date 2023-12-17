@@ -16,5 +16,6 @@ void display_prompt();
 char** parse_arguments(const char *command);
 char* read_command();
 int is_exit_command(const char *command);
+void display_environment();
 
 #endif /* SIMPLE_SHELL_H */
