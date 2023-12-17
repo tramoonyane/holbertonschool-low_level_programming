@@ -65,7 +65,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
     char *command;
     char **args;
     pid_t pid;
-    int i;
 
     do {
         display_prompt();
