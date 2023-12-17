@@ -16,16 +16,16 @@ int execute_command(char *command)
     char **args;
     int arg_count = 1;  // Initial count for command itself
 
-    // Count the number of arguments (tokens)
+    /* Count the number of arguments (tokens) */
     for (char *p = command; *p != '\0'; ++p) {
         if (*p == ' ') {
             arg_count++;
-            while (*p == ' ')  // Skip consecutive spaces
+            while (*p == ' ')  /* Skip consecutive spaces */
                 p++;
         }
     }
 
-    // Allocate memory for the args array
+    /* Allocate memory for the args array */
     args = malloc((arg_count + 1) * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -33,7 +33,7 @@ int execute_command(char *command)
     }
 
     arg_count = 0;
-    args[arg_count++] = strtok(command, " \n");  // Get the command
+    args[arg_count++] = strtok(command, " \n");  /* Get the command */
 
     /* Get the arguments and store them in the args array */
     while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
