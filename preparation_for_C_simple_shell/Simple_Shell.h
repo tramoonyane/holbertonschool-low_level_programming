@@ -15,7 +15,6 @@
 void display_prompt();
 char** parse_arguments(const char *command);
 char* read_command();
-int check_command_exists;
 int check_command_exists(const char *command);
 
 #endif /* SIMPLE_SHELL_H */
