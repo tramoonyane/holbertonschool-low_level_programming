@@ -1,13 +1,31 @@
 #include "Simple_Shell.h"
 
+/**
+ * is_exit_command - Checks if the command is the exit command.
+ *
+ * @command: The command string to be checked.
+ *
+ * Return: Returns 1 if the command is "exit", 0 otherwise.
+ */
 int is_exit_command(const char *command) {
     return strcmp(command, "exit") == 0;
 }
 
+/**
+ * display_prompt - Displays the shell prompt.
+ */
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
+/**
+ * parse_arguments - Parses the command string into arguments.
+ *
+ * @command: The input command to be parsed.
+ *
+ * Return: Returns an array of strings (arguments) parsed from the command.
+ *         Returns NULL on failure or if no arguments are found.
+ */
 char** parse_arguments(const char *command) {
     char *token;
      int i;
@@ -29,6 +47,11 @@ char** parse_arguments(const char *command) {
     return args;
 }
 
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
 char* read_command() {
     char *command;
     char input[BUFFER_SIZE];
@@ -55,7 +78,14 @@ char* read_command() {
     return command;
 }
 
-
+/**
+ * main - Main function of the shell.
+ *
+ * @argc: The number of arguments passed to the program.
+ * @argv: An array of pointers to the arguments.
+ *
+ * Return: Returns EXIT_SUCCESS upon successful execution.
+ */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
