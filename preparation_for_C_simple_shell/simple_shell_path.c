@@ -21,6 +21,7 @@ char **parse_arguments(const char *command) {
     int i = 0;
     char *token;
     int j;
+    char *input_command;
     char **args = (char **)malloc((MAX_ARGS + 1) * sizeof(char *)); /* Extra space for NULL terminator */
     if (args == NULL) {
         perror("malloc error");
@@ -28,7 +29,7 @@ char **parse_arguments(const char *command) {
     }
 
     /* Create a copy of the input command */
-    char *input_command = strdup(command);
+    input_command = strdup(command);
     if (input_command == NULL) {
         perror("strdup error");
         free(args);
