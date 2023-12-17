@@ -1,5 +1,4 @@
 #include "Simple_Shell.h"
-#include <stdlib.h>
 
 /**
  * display_prompt - Displays the shell prompt.
@@ -38,40 +37,6 @@ char* read_command() {
     strcpy(command, input);
     return command;
 }
-
-/**
- * tokenize_command - Tokenizes the command into arguments.
- *
- * @command: The command string to be tokenized.
- *
- * Return: Returns an array of strings containing the command and arguments.
- */
-char **tokenize_command(char *command) {
-    char **args = NULL;
-    char *token = strtok(command, " \t\n");
-    int arg_count = 0;
-
-    while (token != NULL) {
-        args = realloc(args, (arg_count + 1) * sizeof(char *));
-        if (args == NULL) {
-            perror("realloc error");
-            exit(EXIT_FAILURE);
-        }
-
-        args[arg_count++] = token;
-        token = strtok(NULL, " \t\n");
-    }
-
-    args = realloc(args, (arg_count + 1) * sizeof(char *));
-    if (args == NULL) {
-        perror("realloc error");
-        exit(EXIT_FAILURE);
-    }
-    args[arg_count] = NULL;
-
-    return args;
-}
-
 /**
  * execute_command - Executes the command with arguments.
  *
@@ -87,7 +52,6 @@ void execute_command(const char *program_name, char **args) {
         perror("fork error");
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
-        printf("Executing command: %s\n", args[0]);
         if (execve(args[0], args, envp) == -1) {
             char error_buffer[BUFFER_SIZE];
             snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", program_name);
@@ -100,6 +64,45 @@ void execute_command(const char *program_name, char **args) {
     }
 }
 
+/**
+ * tokenize_command - Tokenizes the command into arguments.
+ *
+ * @command: The command string to be tokenized.
+ *
+ * Return: Returns an array of strings containing the command and arguments.
+ */
+char **tokenize_command(char *command) {
+    char **args = NULL;
+    char *token;
+    int arg_count = 0;
+
+    token = strtok(command, " \t\n");
+    while (token != NULL) {
+        args = realloc(args, (arg_count + 1) * sizeof(char *));
+        if (args == NULL) {
+            perror("realloc error");
+            exit(EXIT_FAILURE);
+        }
+
+        args[arg_count] = strdup(token); // Duplicate token to store in args
+        if (args[arg_count] == NULL) {
+            perror("strdup error");
+            exit(EXIT_FAILURE);
+        }
+
+        arg_count++;
+        token = strtok(NULL, " \t\n");
+    }
+
+    args = realloc(args, (arg_count + 1) * sizeof(char *));
+    if (args == NULL) {
+        perror("realloc error");
+        exit(EXIT_FAILURE);
+    }
+    args[arg_count] = NULL;
+
+    return args;
+}
 /**
  * main - Main function of the shell.
  *
