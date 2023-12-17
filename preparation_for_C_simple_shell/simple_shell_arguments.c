@@ -13,6 +13,30 @@ int execute_command(char *command)
 {
     pid_t pid;
     int status;
+    char **args;
+    int arg_count = 1;  // Initial count for command itself
+
+    // Count the number of arguments (tokens)
+    for (char *p = command; *p != '\0'; ++p) {
+        if (*p == ' ') {
+            arg_count++;
+            while (*p == ' ')  // Skip consecutive spaces
+                p++;
+        }
+    }
+
+    // Allocate memory for the args array
+    args = malloc((arg_count + 1) * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    arg_count = 0;
+    args[arg_count++] = strtok(command, " \n");  // Get the command
+
+    /* Get the arguments and store them in the args array */
+    while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
 
     pid = fork();
 
@@ -21,9 +45,8 @@ int execute_command(char *command)
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        char *args[] = { command, NULL };
-        if (execvp(command, args) == -1) {
-            fprintf(stderr, "%s: command not found\n", command);
+        if (execvp(args[0], args) == -1) {
+            fprintf(stderr, "%s: command not found\n", args[0]);
             exit(EXIT_FAILURE);
         }
     } else {
@@ -31,6 +54,7 @@ int execute_command(char *command)
         waitpid(pid, &status, 0);
     }
 
+    free(args);
     return EXIT_SUCCESS;
 }
 
