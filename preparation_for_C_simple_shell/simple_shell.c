@@ -68,8 +68,8 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            char *args[] = {command, NULL};
-            char *envp[] = {NULL}; // Environment variable not used here
+            args[0] = command;
+            args[1] = NULL; /* Environment variable not used here */
 
             if (execve(command, args, envp) == -1) {
                 char error_buffer[BUFFER_SIZE];
