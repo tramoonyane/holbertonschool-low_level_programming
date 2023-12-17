@@ -1,7 +1,5 @@
 #include "Simple_Shell.h"
 
-#define MAX_ARGS 64
-
 /**
  * display_prompt - Displays the shell prompt.
  */
@@ -18,34 +16,23 @@ void display_prompt() {
  *         Returns NULL on failure or if no arguments are found.
  */
 char **parse_arguments(const char *command) {
-    int i = 0;
+    int i;
     char *token;
-    int j;
     char *input_command;
-    char **args = (char **)malloc((MAX_ARGS + 1) * sizeof(char *)); /* Extra space for NULL terminator */
+    char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    /* Create a copy of the input command */
-    input_command = strdup(command);
-    if (input_command == NULL) {
-        perror("strdup error");
-        free(args);
-        exit(EXIT_FAILURE);
-    }
+    i = 0;
+    input_command = strdup(command); /* Create a copy of the input command */
 
     token = strtok(input_command, " ");
     while (token != NULL) {
         args[i] = strdup(token); /* Allocate memory for each argument */
         if (args[i] == NULL) {
             perror("malloc error");
-            for (j = 0; j < i; ++j) {
-                free(args[j]); /* Free memory allocated for previous arguments */
-            }
-            free(args);
-            free(input_command);
             exit(EXIT_FAILURE);
         }
         token = strtok(NULL, " ");
@@ -131,6 +118,23 @@ int check_command_exists(const char *command) {
 }
 
 /**
+ * execute_command - Executes the command if it exists in the PATH.
+ *
+ * @args: The array of command and arguments.
+ */
+void execute_command(char **args) {
+    if (check_command_exists(args[0])) {
+        if (execvp(args[0], args) == -1) {
+            perror("execvp error");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        fprintf(stderr, "%s: command not found\n", args[0]);
+        exit(EXIT_FAILURE);
+    }
+}
+
+/**
  * main - Main function of the shell.
  *
  * @argc: The number of arguments passed to the program.
@@ -142,47 +146,19 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
     char *command;
     char **args;
     size_t bufsize = BUFFER_SIZE;
-    pid_t pid;
 
     if (isatty(STDIN_FILENO)) { /* Check if in interactive mode */
         do {
             display_prompt();
             command = read_command();
 
-            /* Trim leading and trailing spaces */
-            while (*command && (*command == ' ' || *command == '\t')) {
-                command++;
-            }
-            if (*command == '\0') {
-                continue; /* Empty command, skip processing */
-            }
-
             args = parse_arguments(command);
 
-            if (check_command_exists(args[0])) {
-                pid = fork();
-
-                if (pid == -1) {
-                    perror("fork error");
-                    exit(EXIT_FAILURE);
-                } else if (pid == 0) {
-                    if (execvp(args[0], args) == -1) {
-                        perror("execvp error");
-                        exit(EXIT_FAILURE);
-                    }
-                } else {
-                    int status;
-                    waitpid(pid, &status, 0);
-                }
-            } else {
-                fprintf(stderr, "%s: command not found\n", args[0]);
-            }
+            execute_command(args);
 
             free(args);
             free(command);
         } while (strcmp(command, "exit") != 0);
-
-        free(command); /* Free memory allocated for the "exit" command */
     } else { /* Non-interactive mode */
         command = (char *)malloc(bufsize * sizeof(char));
         if (command == NULL) {
@@ -194,24 +170,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
             args = parse_arguments(command);
 
-            if (check_command_exists(args[0])) {
-                pid = fork();
-
-                if (pid == -1) {
-                    perror("fork error");
-                    exit(EXIT_FAILURE);
-                } else if (pid == 0) {
-                    if (execvp(args[0], args) == -1) {
-                        perror("execvp error");
-                        exit(EXIT_FAILURE);
-                    }
-                } else {
-                    int status;
-                    waitpid(pid, &status, 0);
-                }
-            } else {
-                fprintf(stderr, "%s: command not found\n", args[0]);
-            }
+            execute_command(args);
 
             free(args);
         }
