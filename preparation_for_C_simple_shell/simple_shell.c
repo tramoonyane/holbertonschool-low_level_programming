@@ -75,6 +75,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
 
             if (execve(command, args, envp) == -1) {
                 char error_buffer[BUFFER_SIZE];
+                /* modify the error message to include the program name (argv[0]) */
                 snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", argv[0]);
                 write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                 exit(EXIT_FAILURE);
