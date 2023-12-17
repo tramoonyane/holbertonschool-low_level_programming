@@ -58,7 +58,11 @@ int execute_command(char *command)
     free(args);
     return EXIT_SUCCESS;
 }
-
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
 char* read_command()
 {
     char* command;
