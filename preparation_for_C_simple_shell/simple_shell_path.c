@@ -6,7 +6,6 @@
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
-
 /**
  * parse_arguments - Parses the command string into arguments.
  *
@@ -19,7 +18,6 @@ char **parse_arguments(const char *command) {
     int i;
     char *token;
     char *input_command;
-    char *path;
     char *program_name;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
@@ -40,18 +38,21 @@ char **parse_arguments(const char *command) {
         token = strtok(NULL, " ");
         i++;
     }
-if (strchr(args[0], '/') != NULL) {
-    path = strdup(args[0]);
-    program_name = strrchr(path, '/') + 1;
-    args[0] = program_name;
-    free(path);
-}
+
+    program_name = strrchr(args[0], '/');
+    if (program_name != NULL) {
+        /* If '/' is found, the program name starts after the '/' character */
+        program_name++; // Move the pointer to the program name
+        args[0] = program_name; // Update the program name in the arguments array
+    }
+
     args[i] = NULL; /* NULL-terminate the arguments array */
 
     free(input_command); /* Free the copy of the input command */
 
     return args;
 }
+
 /**
  * read_command - Reads a command from standard input.
  *
