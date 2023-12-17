@@ -68,7 +68,10 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
-            if (execlp(command, command, NULL) == -1) {
+            char *args[] = {command, NULL};
+            char *envp[] = {NULL}; // Environment variable not used here
+
+            if (execve(command, args, envp) == -1) {
                 char error_buffer[BUFFER_SIZE];
                 snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", command);
                 write(STDERR_FILENO, error_buffer, strlen(error_buffer));
