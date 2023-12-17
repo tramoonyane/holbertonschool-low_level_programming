@@ -33,6 +33,7 @@ char* read_command() {
 char** parse_arguments(const char *command) {
     char *token;
     int i;
+    int j;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -45,7 +46,7 @@ char** parse_arguments(const char *command) {
         args[i] = (char *)malloc(strlen(token) + 1);
         if (args[i] == NULL) {
             perror("malloc error");
-            for (int j = 0; j < i; j++) {
+            for (j = 0; j < i; j++) {
                 free(args[j]);
             }
             free(args);
