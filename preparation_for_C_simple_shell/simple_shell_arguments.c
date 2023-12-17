@@ -59,6 +59,33 @@ int execute_command(char *command)
     return EXIT_SUCCESS;
 }
 
+char* read_command()
+{
+    char* command;
+    char input[BUFFER_SIZE];
+    printf("%s", PROMPT);
+
+    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
+        if (feof(stdin)) {
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        } else {
+            perror("fgets error");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    input[strcspn(input, "\n")] = '\0';
+
+    command = strdup(input);
+    if (command == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
+
+    return command;
+}
+
 /**
  * main - Main function of the shell.
  *
