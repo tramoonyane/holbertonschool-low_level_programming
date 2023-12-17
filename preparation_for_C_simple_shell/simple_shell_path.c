@@ -44,7 +44,6 @@ char **parse_arguments(const char *command) {
 
     return args;
 }
-
 /**
  * read_command - Reads a command from standard input.
  *
