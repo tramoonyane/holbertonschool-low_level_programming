@@ -140,8 +140,8 @@ void execute_command(char **args) {
         } else if (pid == 0) {
             /* Child process */
             path = getenv("PATH");
-            printf("PATH: %s\n", path);
-            printf("Executing: %s\n", args[0]);
+           /* printf("PATH: %s\n", path); */
+           /* printf("Executing: %s\n", args[0]); */
             if (execvp(args[0], args) == -1) {
                 perror("execvp error");
                 exit(EXIT_FAILURE);
