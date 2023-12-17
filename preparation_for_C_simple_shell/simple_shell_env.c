@@ -1,9 +1,16 @@
 #include "Simple_Shell.h"
-
+/**
+ * display_prompt - Displays the shell prompt.
+ */
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
 char* read_command() {
     char *command;
     char input[BUFFER_SIZE];
@@ -29,6 +36,7 @@ char* read_command() {
     strcpy(command, input);
     return command;
 }
+
 
 void print_environment() {
     extern char **environ;
