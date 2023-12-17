@@ -1,9 +1,17 @@
 #include "Simple_Shell.h"
 
+/**
+ * display_prompt - Displays the shell prompt.
+ */
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
 char* read_command() {
     char *command;
     char input[BUFFER_SIZE];
@@ -30,6 +38,14 @@ char* read_command() {
     return command;
 }
 
+/**
+ * main - Main function of the shell.
+ *
+ * @argc: The number of arguments passed to the program.
+ * @argv: An array of pointers to the arguments.
+ *
+ * Return: Returns EXIT_SUCCESS upon successful execution.
+ */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     pid_t pid;
