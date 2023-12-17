@@ -1,17 +1,9 @@
 #include "Simple_Shell.h"
 
-/**
- * display_prompt - Displays the shell prompt.
- */
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
-/**
- * read_command - Reads a command from standard input.
- *
- * Return: Returns the input command as a dynamically allocated string.
- */
 char* read_command() {
     char *command;
     char input[BUFFER_SIZE];
@@ -37,40 +29,7 @@ char* read_command() {
     strcpy(command, input);
     return command;
 }
-/**
- * execute_command - Executes the command with arguments.
- *
- * @program_name: The name of the program invoking the function.
- * @args: An array of strings containing the command and arguments.
- */
-void execute_command(const char *program_name, char **args) {
-    char *envp[] = { NULL };
 
-    pid_t pid = fork();
-
-    if (pid == -1) {
-        perror("fork error");
-        exit(EXIT_FAILURE);
-    } else if (pid == 0) {
-        if (execve(args[0], args, envp) == -1) {
-            char error_buffer[BUFFER_SIZE];
-            snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", program_name);
-            write(STDERR_FILENO, error_buffer, strlen(error_buffer));
-            exit(EXIT_FAILURE);
-        }
-    } else {
-        int status;
-        waitpid(pid, &status, 0);
-    }
-}
-
-/**
- * tokenize_command - Tokenizes the command into arguments.
- *
- * @command: The command string to be tokenized.
- *
- * Return: Returns an array of strings containing the command and arguments.
- */
 char **tokenize_command(char *command) {
     char **args = NULL;
     char *token;
@@ -103,14 +62,25 @@ char **tokenize_command(char *command) {
 
     return args;
 }
-/**
- * main - Main function of the shell.
- *
- * @argc: The number of arguments passed to the program.
- * @argv: An array of pointers to the arguments.
- *
- * Return: Returns EXIT_SUCCESS upon successful execution.
- */
+
+void execute_command(const char *program_name, char **args) {
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        char *envp[] = { NULL };
+        if (execve(args[0], args, envp) == -1) {
+            perror("execve error");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        int status;
+        waitpid(pid, &status, 0);
+    }
+}
+
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
