@@ -65,30 +65,26 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             } else {
                 /* Check the PATH for the command */
                 char *env_path = getenv("PATH");
-                char *token = strtok(env_path, ":");
-                int found = 0;
+                char *path = strtok(env_path, ":");
 
-                while (token != NULL) {
-                    char path[BUFFER_SIZE];
-                    snprintf(path, BUFFER_SIZE, "%s/%s", token, args[0]);
-                    if (access(path, X_OK) != -1) {
-                        found = 1;
-                        if (execv(path, args) == -1) {
+                while (path != NULL) {
+                    char exec_path[BUFFER_SIZE];
+                    snprintf(exec_path, BUFFER_SIZE, "%s/%s", path, args[0]);
+                    if (access(exec_path, X_OK) == 0) {
+                        if (execv(exec_path, args) == -1) {
                             char error_buffer[BUFFER_SIZE];
                             snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
                             write(STDERR_FILENO, error_buffer, strlen(error_buffer));
                             exit(EXIT_FAILURE);
                         }
                     }
-                    token = strtok(NULL, ":");
+                    path = strtok(NULL, ":");
                 }
 
-                if (!found) {
-                    char error_buffer[BUFFER_SIZE];
-                    snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
-                    write(STDERR_FILENO, error_buffer, strlen(error_buffer));
-                    exit(EXIT_FAILURE);
-                }
+                char error_buffer[BUFFER_SIZE];
+                snprintf(error_buffer, BUFFER_SIZE, "%s: command not found\n", args[0]);
+                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                exit(EXIT_FAILURE);
             }
         } else {
             int status;
