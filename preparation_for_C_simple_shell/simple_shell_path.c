@@ -132,27 +132,68 @@ int check_command_exists(const char *command) {
  */
 void execute_command(char **args) {
     if (check_command_exists(args[0])) {
-        char *path = NULL;
-        pid_t pid = fork();
-        if (pid == -1) {
-            perror("fork error");
-            exit(EXIT_FAILURE);
-        } else if (pid == 0) {
-            /* Child process */
-            path = getenv("PATH");
-            if (execvp(args[0], args) == -1) {
-                perror("execvp error");
+        char *full_path = get_command_path(args[0]);
+        if (full_path != NULL) {
+            pid_t pid = fork();
+            if (pid == -1) {
+                perror("fork error");
                 exit(EXIT_FAILURE);
+            } else if (pid == 0) {
+                /* Child process */
+                if (execve(full_path, args, NULL) == -1) {
+                    perror("execve error");
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                /* Parent process */
+                int status;
+                waitpid(pid, &status, 0);
             }
+            free(full_path);
         } else {
-            /* Parent process */
-            int status;
-            waitpid(pid, &status, 0);
+            fprintf(stderr, "%s: command not found\n", args[0]);
         }
-        free(path); /* Free allocated memory if used */
     } else {
         fprintf(stderr, "%s: command not found\n", args[0]);
     }
+}
+
+/**
+ * get_command_path - Retrieves the full path of a command from PATH.
+ *
+ * @command: The command to search for in PATH.
+ *
+ * Return: Returns the full path of the command if found in PATH, NULL otherwise.
+ */
+char *get_command_path(const char *command) {
+    char *path = getenv("PATH");
+    if (path == NULL) {
+        fprintf(stderr, "Unable to get PATH\n");
+        exit(EXIT_FAILURE);
+    }
+
+    char *path_copy = strdup(path);
+    char *token = strtok(path_copy, ":");
+
+    while (token != NULL) {
+        char *full_path = (char *)malloc(strlen(token) + strlen(command) + 2);
+        if (full_path == NULL) {
+            perror("malloc error");
+            exit(EXIT_FAILURE);
+        }
+        sprintf(full_path, "%s/%s", token, command);
+
+        if (access(full_path, X_OK) == 0) {
+            free(path_copy);
+            return full_path;
+        }
+
+        free(full_path);
+        token = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    return NULL;
 }
 
 /**
