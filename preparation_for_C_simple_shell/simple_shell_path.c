@@ -99,13 +99,13 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                 if (access(path, X_OK) != -1) {
                     args[0] = path;
                     pid = fork();
-                    fprintf(stderr, "%s: command not found\n", args[0]);
                     break;
                 }
                 free(path);
                 token = strtok(NULL, ":");
             }
             if (token == NULL) {
+                fprintf(stderr, "%s: command not found\n", args[0]);
                 free(command);
                 free(args);
                 continue;
