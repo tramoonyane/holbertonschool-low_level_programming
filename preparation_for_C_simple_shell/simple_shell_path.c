@@ -131,12 +131,16 @@ int check_command_exists(const char *command) {
  */
 void execute_command(char **args) {
     if (check_command_exists(args[0])) {
+        char *path = NULL;
         pid_t pid = fork();
         if (pid == -1) {
             perror("fork error");
             exit(EXIT_FAILURE);
         } else if (pid == 0) {
             /* Child process */
+            path = getenv("PATH");
+            printf("PATH: %s\n", path);
+            printf("Executing: %s\n", args[0]);
             if (execvp(args[0], args) == -1) {
                 perror("execvp error");
                 exit(EXIT_FAILURE);
@@ -146,6 +150,7 @@ void execute_command(char **args) {
             int status;
             waitpid(pid, &status, 0);
         }
+        free(path); /* Free allocated memory if used */
     } else {
         fprintf(stderr, "%s: command not found\n", args[0]);
     }
