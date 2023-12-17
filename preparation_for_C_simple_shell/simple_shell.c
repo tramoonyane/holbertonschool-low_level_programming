@@ -49,7 +49,7 @@ char* read_command() {
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char *args[2]; /* Array to hold command and NULL */
-    char *envp[] = { NULL }; // Environment variable not used here
+    char *envp[] = { NULL }; /* Environment variable not used here */
     pid_t pid;
     int status;
 
