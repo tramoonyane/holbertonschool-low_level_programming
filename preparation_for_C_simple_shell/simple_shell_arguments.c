@@ -8,71 +8,33 @@ void display_prompt() {
 }
 
 /**
- * parse_arguments - Parses the command string into arguments.
- *
- * @command: The input command to be parsed.
- *
- * Return: Returns an array of strings (arguments) parsed from the command.
- *         Returns NULL on failure or if no arguments are found.
- */
-char **parse_arguments(const char *command) {
-    int i;
-    char *token;
-    char *input_command;
-    char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
-    if (args == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-
-    i = 0;
-    input_command = strdup(command); /* Create a copy of the input command */
-
-    token = strtok(input_command, " ");
-    while (token != NULL) {
-        args[i] = strdup(token); /* Allocate memory for each argument */
-        if (args[i] == NULL) {
-            perror("malloc error");
-            exit(EXIT_FAILURE);
-        }
-        token = strtok(NULL, " ");
-        i++;
-    }
-    args[i] = NULL; /* NULL-terminate the arguments array */
-
-    free(input_command); /* Free the copy of the input command */
-
-    return args;
-}
-
-/**
  * read_command - Reads a command from standard input.
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char *read_command() {
-    char *command = NULL;
-    size_t bufsize = 0;
+char* read_command() {
+    char *command;
+    char input[BUFFER_SIZE];
 
-    if (getline(&command, &bufsize, stdin) == -1) {
+    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
             write(STDOUT_FILENO, "\n", 1);
             exit(EXIT_SUCCESS);
         } else {
-            perror("getline error");
+            perror("fgets error");
             exit(EXIT_FAILURE);
         }
     }
 
-    if (feof(stdin)) {
-        write(STDOUT_FILENO, "\n", 1);
-        free(command);
-        exit(EXIT_SUCCESS);
+    input[strcspn(input, "\n")] = '\0';
+
+    command = (char *)malloc(strlen(input) + 1);
+    if (command == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
     }
 
-    /* Remove newline character from the command */
-    command[strcspn(command, "\n")] = '\0';
-
+    strcpy(command, input);
     return command;
 }
 
@@ -86,61 +48,61 @@ char *read_command() {
  */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
-    char **args;
-    size_t bufsize = BUFFER_SIZE;
+    char **args; // Dynamically allocate memory to hold command and arguments
+    char *envp[] = { NULL }; // Environment variable not used here
     pid_t pid;
+    int status;
 
-    if (isatty(STDIN_FILENO)) { /* Check if in interactive mode */
-        do {
-            display_prompt();
-            command = read_command();
+    do {
+        display_prompt();
 
-            args = parse_arguments(command);
+        command = read_command();
 
-            pid = fork();
-
-            if (pid == -1) {
-                perror("fork error");
-                exit(EXIT_FAILURE);
-            } else if (pid == 0) {
-                execute_command(args); // Replaced execvp with execute_command
-            } else {
-                int status;
-                waitpid(pid, &status, 0);
-            }
-
-            free(args);
+        if (feof(stdin)) {
+            write(STDOUT_FILENO, "\n", 1);
             free(command);
-        } while (strcmp(command, "exit") != 0);
-    } else { /* Non-interactive mode */
-        command = (char *)malloc(bufsize * sizeof(char));
-        if (command == NULL) {
+            exit(EXIT_SUCCESS);
+        }
+
+        char *token = strtok(command, " "); // Split command and arguments
+        int arg_count = 0;
+        args = (char **)malloc(sizeof(char *)); // Allocate memory for args
+        if (args == NULL) {
             perror("malloc error");
             exit(EXIT_FAILURE);
         }
 
-        while (getline(&command, &bufsize, stdin) != -1) {
-            command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
-            args = parse_arguments(command);
-
-            pid = fork();
-
-            if (pid == -1) {
-                perror("fork error");
+        while (token != NULL) {
+            args[arg_count] = token;
+            arg_count++;
+            args = (char **)realloc(args, sizeof(char *) * (arg_count + 1)); // Reallocate memory for args
+            if (args == NULL) {
+                perror("realloc error");
                 exit(EXIT_FAILURE);
-            } else if (pid == 0) {
-                execute_command(args); /* Replaced execvp with execute_command */
-            } else {
-                int status;
-                waitpid(pid, &status, 0);
             }
+            token = strtok(NULL, " ");
+        }
+        args[arg_count] = NULL; /* NULL-terminate the args array */
 
-            free(args);
+        pid = fork();
+
+        if (pid == -1) {
+            perror("fork error");
+            exit(EXIT_FAILURE);
+        } else if (pid == 0) {
+            if (execve(args[0], args, envp) == -1) {
+                char error_buffer[BUFFER_SIZE];
+                snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", argv[0]);
+                write(STDERR_FILENO, error_buffer, strlen(error_buffer));
+                exit(EXIT_FAILURE);
+            }
+        } else {
+            waitpid(pid, &status, 0);
         }
 
         free(command);
-        exit(EXIT_SUCCESS);
-    }
+        free(args); /* Free dynamically allocated args memory */
+    } while (strcmp(command, "exit") != 0);
 
     write(STDOUT_FILENO, "Exiting...\n", strlen("Exiting...\n"));
 
