@@ -77,12 +77,12 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             exit(EXIT_SUCCESS);
         }
 
-        args = parse_arguments(command);
-
-        if (args[0] == NULL) {
+        if (command[0] == '\0') {
             free(command);
-            free(args);
             continue; /* Continue to the next iteration if an empty command is provided */
+        }
+
+        args = parse_arguments(command);
         }
 
         if (access(args[0], X_OK) != -1) {
@@ -126,10 +126,11 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             waitpid(pid, &status, 0);
         }
 
-        for (i = 0; args[i] != NULL; i++) {
-            free(args[i]);
-        }
-        free(args);
+        if (args != NULL) {
+            for (i = 0; args[i] != NULL; i++) {
+                free(args[i]);
+            }
+            free(args);
         free(command);
     } while (strcmp(command, "exit") != 0);
 
