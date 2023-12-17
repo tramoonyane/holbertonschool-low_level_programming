@@ -109,7 +109,7 @@ void execute_command(const char *program_name, char **args) {
  */
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
-    int status;
+    char **args;
 
     do {
         display_prompt();
@@ -121,7 +121,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             exit(EXIT_SUCCESS);
         }
 
-        char **args = tokenize_command(command);
+        args = tokenize_command(command);
         execute_command(argv[0], args);
 
         free(command);
