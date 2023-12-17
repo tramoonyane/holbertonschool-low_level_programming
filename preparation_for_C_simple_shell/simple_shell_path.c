@@ -125,13 +125,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
             int status;
             waitpid(pid, &status, 0);
         }
-
-        if (args != NULL) {
-            for (i = 0; args[i] != NULL; i++) {
-                free(args[i]);
-            }
-            free(args);
-        }
         free(command);
     } while (strcmp(command, "exit") != 0);
 
