@@ -1,16 +1,12 @@
 #include "Simple_Shell.h"
 
-int is_exit_command(const char *command) {
-    return strcmp(command, "exit") == 0;
-}
-
 void display_prompt() {
     write(STDOUT_FILENO, PROMPT, strlen(PROMPT));
 }
 
 char** parse_arguments(const char *command) {
     char *token;
-     int i;
+    int i;
     char **args = (char **)malloc(BUFFER_SIZE * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
@@ -55,7 +51,6 @@ char* read_command() {
     return command;
 }
 
-
 int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused))) {
     char *command;
     char **args;
@@ -75,11 +70,6 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         if (command[0] == '\0') {
             free(command);
             continue; /* Continue to the next iteration if an empty command is provided */
-        }
-
-        if (is_exit_command(command)) {
-            free(command);
-            break; /* Exit the shell */
         }
 
         args = parse_arguments(command);
