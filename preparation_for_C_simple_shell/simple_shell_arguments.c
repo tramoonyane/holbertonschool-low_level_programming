@@ -28,6 +28,11 @@ char** parse_arguments(const char *command) {
     return args;
 }
 
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
 char* read_command() {
     char *command;
     char input[BUFFER_SIZE];
