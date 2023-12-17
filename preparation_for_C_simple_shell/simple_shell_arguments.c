@@ -14,10 +14,11 @@ int execute_command(char *command)
     pid_t pid;
     int status;
     char **args;
-    int arg_count = 1;  // Initial count for command itself
+    char *p;
+    int arg_count = 1;  /* Initial count for command itself */
 
     /* Count the number of arguments (tokens) */
-    for (char *p = command; *p != '\0'; ++p) {
+    for (p = command; *p != '\0'; ++p) {
         if (*p == ' ') {
             arg_count++;
             while (*p == ' ')  /* Skip consecutive spaces */
