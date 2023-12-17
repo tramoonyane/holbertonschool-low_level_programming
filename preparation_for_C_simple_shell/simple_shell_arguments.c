@@ -1,4 +1,5 @@
 #include "Simple_Shell.h"
+#include <stdlib.h>
 
 /**
  * display_prompt - Displays the shell prompt.
@@ -74,9 +75,10 @@ char **tokenize_command(char *command) {
 /**
  * execute_command - Executes the command with arguments.
  *
+ * @program_name: The name of the program invoking the function.
  * @args: An array of strings containing the command and arguments.
  */
-void execute_command(char **args) {
+void execute_command(const char *program_name, char **args) {
     char *envp[] = { NULL };
 
     pid_t pid = fork();
@@ -87,7 +89,7 @@ void execute_command(char **args) {
     } else if (pid == 0) {
         if (execve(args[0], args, envp) == -1) {
             char error_buffer[BUFFER_SIZE];
-            snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", argv[0]);
+            snprintf(error_buffer, BUFFER_SIZE, "%s: No such file or directory\n", program_name);
             write(STDERR_FILENO, error_buffer, strlen(error_buffer));
             exit(EXIT_FAILURE);
         }
@@ -120,7 +122,7 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         }
 
         char **args = tokenize_command(command);
-        execute_command(args);
+        execute_command(argv[0], args);
 
         free(command);
         free(args);
