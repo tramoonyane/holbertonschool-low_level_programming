@@ -70,7 +70,8 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
         } else if (pid == 0) {
             /* Check if the command is a path */
             if (access(command, X_OK) == 0) {
-                if (execv(command, (char *[]){command, NULL}) == -1) {
+                char *cmd_args[] = {command, NULL};
+                if (execv(command, cmd_args) == -1) {
                     perror("execv error");
                     exit(EXIT_FAILURE);
                 }
@@ -80,9 +81,8 @@ int main(int argc __attribute__((unused)), char *argv[] __attribute__((unused)))
                     perror(command);
                     exit(EXIT_FAILURE);
                 }
-            } 
-
-        else {
+            }
+        } else {
             waitpid(pid, &status, 0);
         }
 
