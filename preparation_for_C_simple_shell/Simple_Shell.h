@@ -14,5 +14,6 @@ void display_prompt(void);
 char *read_command(void);
 char **tokenize_command(char *command);
 void execute_command(char **args);
+void execute_command(const char *program_name, char **args);
 
 #endif /* SIMPLE_SHELL_H */
