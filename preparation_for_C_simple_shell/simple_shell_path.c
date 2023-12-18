@@ -11,20 +11,32 @@ char **parse_path() {
     char *path = getenv("PATH");
     char *token;
     int count;
+    char *path_copy;
+    char **directories = malloc(sizeof(char *));
+    if (path == NULL || *path == '\0') {
+        fprintf(stderr, "No PATH variable found or empty.\n");
+        exit(EXIT_FAILURE);
+    }
+    path_copy = strdup(path);
+    if (path_copy == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(path_copy, ":");
+    int count = 0;
     char **directories = malloc(sizeof(char *));
     if (directories == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
-
-    token = strtok(path, ":");
-    count = 0;
     while (token != NULL) {
         directories = realloc(directories, (count + 1) * sizeof(char *));
         if (directories == NULL) {
             perror("realloc error");
             exit(EXIT_FAILURE);
         }
+        
         directories[count++] = token;
         token = strtok(NULL, ":");
     }
@@ -34,6 +46,7 @@ char **parse_path() {
         exit(EXIT_FAILURE);
     }
     directories[count] = NULL;
+    free(path_copy);
 
     return directories;
 }
