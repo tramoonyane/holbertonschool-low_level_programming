@@ -1,4 +1,4 @@
-/* simple_shell.c */
+/* simple_shell_path.c */
 
 #include "Simple_Shell.h"
 
