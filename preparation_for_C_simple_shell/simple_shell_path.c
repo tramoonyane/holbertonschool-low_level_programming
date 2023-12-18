@@ -9,14 +9,16 @@
  */
 char **parse_path() {
     char *path = getenv("PATH");
+    char *token;
+    int count;
     char **directories = malloc(sizeof(char *));
     if (directories == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    char *token = strtok(path, ":");
-    int count = 0;
+    token = strtok(path, ":");
+    count = 0;
     while (token != NULL) {
         directories = realloc(directories, (count + 1) * sizeof(char *));
         if (directories == NULL) {
@@ -50,6 +52,8 @@ int execute_command(char *command) {
     char *p;
     int arg_count = 1;  /* Initial count for command itself */
     char **directories = parse_path();
+    int found;
+    int i;
 
     /* Count the number of arguments (tokens) */
     for (p = command; *p != '\0'; ++p) {
@@ -73,8 +77,8 @@ int execute_command(char *command) {
     /* Get the arguments and store them in the args array */
     while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
 
-    int found = 0;
-    for (int i = 0; directories[i] != NULL; i++) {
+    found = 0;
+    for (i = 0; directories[i] != NULL; i++) {
         char path_command[BUFFER_SIZE];
         snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
         if (access(path_command, X_OK) == 0) {
