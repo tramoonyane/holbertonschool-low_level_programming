@@ -16,7 +16,8 @@ int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
     char **args;
-    int arg_count = 0;  /* Initialize count for command arguments */
+    int arg_count = 0; /* Initialize count for command arguments */
+    int i
     char *token;
     (void)command_number; /* Suppress the unused parameter warning */
     (void)program_name;   /* Suppress the unused parameter warning */
@@ -57,7 +58,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     }
 
     /* Free allocated memory for args */
-    for (int i = 0; i < arg_count; i++) {
+    for (i = 0; i < arg_count; i++) {
         free(args[i]);
     }
     free(args);
