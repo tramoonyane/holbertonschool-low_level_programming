@@ -70,10 +70,10 @@ char* read_command() {
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
 int main(int argc, char *argv[]) {
-    (void)argc;
     char *command;
     int command_number = 1;
     char *program_name = basename(argv[0]); /* Get the base name of the program */
+    (void)argc;
     
     /* Check if input is from terminal or redirected from file/pipe */
     if (isatty(STDIN_FILENO)) {
