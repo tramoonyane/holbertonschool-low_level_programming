@@ -24,8 +24,8 @@ char **parse_path() {
     }
 
     token = strtok(path_copy, ":");
-    int count = 0;
-    char **directories = malloc(sizeof(char *));
+    count = 0;
+    directories = malloc(sizeof(char *));
     if (directories == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
