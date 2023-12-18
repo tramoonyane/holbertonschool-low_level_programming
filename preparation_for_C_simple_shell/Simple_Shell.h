@@ -27,6 +27,6 @@ char **parse_path();
 int handle_builtin_commands(char *command);
 
 /* Main function of the shell */
-int main(int argc, char *argv[]);
+int main(void);
 
 #endif /* SIMPLE_SHELL_H */
