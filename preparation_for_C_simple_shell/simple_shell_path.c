@@ -58,7 +58,7 @@ char **parse_path() {
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int execute_command(char *command) {
+int execute_command(char *command, int command_number, char *program_name){
     pid_t pid;
     int status;
     char **args;
@@ -98,7 +98,7 @@ int execute_command(char *command) {
     for (i = 0; directories[i] != NULL; i++) {
         char path_command[BUFFER_SIZE];
         snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
-       /* printf("Attempting to execute: %s\n", path_command); */
+        
         if (access(path_command, X_OK) == 0) {
             found = 1;
             pid = fork();
@@ -108,7 +108,7 @@ int execute_command(char *command) {
             } else if (pid == 0) {
                 /* Child process */
                 if (execv(path_command, args) == -1) {
-                    fprintf(stderr, "%s: command execution error\n", args[0]);
+                    fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
                     exit(EXIT_FAILURE);
                 }
             } else {
@@ -120,7 +120,7 @@ int execute_command(char *command) {
     }
 
     if (!found) {
-        fprintf(stderr, "%s: command not found\n", args[0]);
+        fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
     }
 
     free(args);
