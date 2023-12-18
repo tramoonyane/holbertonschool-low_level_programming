@@ -68,6 +68,10 @@ int execute_command(char *command) {
     int found;
     int i;
 
+    if (command == NULL || *command == '\0') {
+        return EXIT_SUCCESS; /* Skip execution for empty commands */
+    }
+
     /* Count the number of arguments (tokens) */
     for (p = command; *p != '\0'; ++p) {
         if (*p == ' ') {
