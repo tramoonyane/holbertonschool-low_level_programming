@@ -11,7 +11,7 @@ int execute_command(char *command)
 {
     char **args = NULL;
     char *token;
-    int status;
+    char *path;
 
     /* Check for empty command */
     if (command == NULL || *command == '\0')
@@ -27,7 +27,7 @@ int execute_command(char *command)
     }
 
     /* Attempt to execute the command from PATH */
-    char *path = getenv("PATH");
+    path = getenv("PATH");
     token = strtok(path, ":");
     while (token != NULL) {
         char *full_path = malloc(strlen(token) + strlen(command) + 2);
