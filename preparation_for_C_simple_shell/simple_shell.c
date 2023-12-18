@@ -15,12 +15,6 @@ extern char **environ;
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
-    char *args[4]; /* Argument array for execve */
-
-    args[0] = "/bin/sh";
-    args[1] = "-c";
-    args[2] = command;
-    args[3] = NULL;
 
     pid = fork();
 
@@ -29,7 +23,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execve(args[0], args, environ) == -1) {
+        if (execlp(command, command, NULL) == -1) {
             fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
             exit(EXIT_FAILURE);
         }
@@ -40,7 +34,6 @@ int execute_command(char *command, int command_number, char *program_name) {
 
     return EXIT_SUCCESS;
 }
-
 /**
  * read_command - Reads a command from standard input.
  *
