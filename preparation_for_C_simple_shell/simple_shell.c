@@ -15,7 +15,36 @@ extern char **environ;
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
-    char *args[] = { command, NULL };
+    int args_count = 1;
+    char *token;
+    char *temp_command = strdup(command); /* Create a temporary copy of the command */
+    char **args;
+    int i;
+
+    /* Count the number of arguments in the command */
+    token = strtok(temp_command, " ");
+    while (token != NULL) {
+        args_count++;
+        token = strtok(NULL, " ");
+    }
+    free(temp_command); /* Free the temporary copy of the command */
+
+    /* Allocate memory for the args array based on the arguments count */
+    args = malloc(args_count * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    /* Tokenize the command and store arguments in the args array */
+    token = strtok(command, " ");
+    args[0] = token; /* The first argument is the command itself */
+    i = 1;
+    while (token != NULL && i < args_count) {
+        args[i++] = token;
+        token = strtok(NULL, " ");
+    }
+    args[i] = NULL; /* Null-terminate the argument list */
 
     pid = fork();
 
@@ -24,7 +53,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execve(command, args, environ) == -1) {
+        if (execve(args[0], args, environ) == -1) {
             fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
             exit(EXIT_FAILURE);
         }
@@ -33,6 +62,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         waitpid(pid, &status, 0);
     }
 
+    free(args); /* Free the allocated memory for args */
     return EXIT_SUCCESS;
 }
 
