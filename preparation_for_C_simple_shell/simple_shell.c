@@ -15,7 +15,12 @@ extern char **environ;
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
-    char *args[] = { "/bin/sh", "-c", command, NULL }; /* Argument array for execve */
+    char *args[4]; /* Argument array for execve */
+
+    args[0] = "/bin/sh";
+    args[1] = "-c";
+    args[2] = command;
+    args[3] = NULL;
 
     pid = fork();
 
