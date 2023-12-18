@@ -35,6 +35,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     }
     args[arg_count] = NULL; /* Null-terminate the argument list */
 
+    printf("Before fork\n");
     pid = fork();
 
     if (pid == -1) {
