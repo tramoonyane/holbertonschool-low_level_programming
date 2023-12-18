@@ -18,13 +18,22 @@ int execute_command(char *command, int command_number, char *program_name) {
     char *args[BUFFER_SIZE + 1];  /* Maximum buffer size for arguments */
     int arg_count = 0; /* Initialize count for command arguments */
     char *token;
+    int i;
     (void)command_number; /* Suppress the unused parameter warning */
     (void)program_name;   /* Suppress the unused parameter warning */
 
     /* Tokenize the command and store arguments in the args array */
     token = strtok(command, " \n");
     while (token != NULL && arg_count < BUFFER_SIZE) {
-        args[arg_count++] = token;
+        args[arg_count++] = strdup(token);
+        if (args[arg_count - 1] == NULL) {
+            perror("strdup error");
+            /* Free allocated memory before exiting */
+            for (int i = 0; i < arg_count - 1; ++i) {
+                free(args[i]);
+            }
+            exit(EXIT_FAILURE);
+        }
         token = strtok(NULL, " \n");
     }
     args[arg_count] = NULL; /* Null-terminate the argument list */
@@ -33,16 +42,29 @@ int execute_command(char *command, int command_number, char *program_name) {
 
     if (pid == -1) {
         perror("fork error");
+        /* Free allocated memory before exiting */
+        for (i = 0; i < arg_count; ++i) {
+            free(args[i]);
+        }
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
         if (execve(args[0], args, environ) == -1) {
             perror(args[0]);
+            /* Free allocated memory before exiting */
+            for (i = 0; i < arg_count; ++i) {
+                free(args[i]);
+            }
             exit(EXIT_FAILURE);
         }
     } else {
         /* Parent process */
         waitpid(pid, &status, 0);
+    }
+
+    /* Free allocated memory for arguments */
+    for (i = 0; i < arg_count; ++i) {
+        free(args[i]);
     }
 
     return EXIT_SUCCESS;
