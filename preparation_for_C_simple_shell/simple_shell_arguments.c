@@ -37,6 +37,7 @@ int execute_command(char *command, int command_number, char *program_name) {
 
     printf("Before fork\n");
     pid = fork();
+    printf("After fork\n");
 
     if (pid == -1) {
         perror("fork error");
