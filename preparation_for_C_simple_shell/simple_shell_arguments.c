@@ -100,7 +100,7 @@ int main()
     char *command;
 
     do {
-        printf("%s", PROMPT);
+       /* printf("%s", PROMPT); */
         command = read_command();
 
         if (feof(stdin)) {
