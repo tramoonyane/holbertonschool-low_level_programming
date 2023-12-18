@@ -163,8 +163,7 @@ char* read_command()
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int main()
-{
+int main() {
     char *command;
 
     do {
@@ -177,9 +176,12 @@ int main()
             exit(EXIT_SUCCESS);
         }
 
-        if (execute_command(command) == EXIT_FAILURE) {
-            free(command);
-            continue;
+        if (!handle_builtin_commands(command)) {
+            /* If not a built-in command, execute the command */
+            if (execute_command(command) == EXIT_FAILURE) {
+                free(command);
+                continue;
+            }
         }
 
         free(command);
