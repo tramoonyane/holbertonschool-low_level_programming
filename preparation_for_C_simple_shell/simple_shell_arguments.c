@@ -29,7 +29,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         if (args[arg_count - 1] == NULL) {
             perror("strdup error");
             /* Free allocated memory before exiting */
-            for (int i = 0; i < arg_count - 1; ++i) {
+            for (i = 0; i < arg_count - 1; ++i) {
                 free(args[i]);
             }
             exit(EXIT_FAILURE);
