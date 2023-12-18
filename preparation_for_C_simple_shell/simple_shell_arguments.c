@@ -12,38 +12,28 @@ extern char **environ;
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int execute_command(char *command, int command_number, char *program_name)
-{
+int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
     char **args;
-    char *p;
     int arg_count = 1;  /* Initial count for command itself */
+    char *token;
     (void)command_number; /* Suppress the unused parameter warning */
     (void)program_name;   /* Suppress the unused parameter warning */
 
-
-    /* Count the number of arguments (tokens) */
-    for (p = command; *p != '\0'; ++p) {
-        if (*p == ' ') {
-            arg_count++;
-            while (*p == ' ')  /* Skip consecutive spaces */
-                p++;
-        }
-    }
-
     /* Allocate memory for the args array */
-    args = malloc((arg_count + 1) * sizeof(char *));
+    args = malloc((BUFFER_SIZE + 1) * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    arg_count = 0;
-    args[arg_count++] = strtok(command, " \n");  /* Get the command */
-
-    /* Get the arguments and store them in the args array */
-    while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
+    token = strtok(command, " \n");
+    while (token != NULL) {
+        args[arg_count++] = token;
+        token = strtok(NULL, " \n");
+    }
+    args[arg_count] = NULL; /* Null-terminate the argument list */
 
     pid = fork();
 
