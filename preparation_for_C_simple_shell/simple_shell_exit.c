@@ -1,3 +1,4 @@
+/* simple_shell_exit.c */
 #include "Simple_Shell.h"
 
 /**
