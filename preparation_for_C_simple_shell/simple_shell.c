@@ -14,6 +14,7 @@
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
+    char *args[] = { "/bin/sh", "-c", command, NULL }; /* Argument array for execve */
 
     pid = fork();
 
@@ -22,7 +23,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execlp(command, command, NULL) == -1) {
+        if (execve(args[0], args, environ) == -1) {
             fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
             exit(EXIT_FAILURE);
         }
