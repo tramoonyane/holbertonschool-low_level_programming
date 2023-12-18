@@ -181,9 +181,9 @@ int main() {
             exit(EXIT_SUCCESS);
         }
 
-        if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
+        if (!handle_builtin_commands(command)) {
             /* If not a built-in command, execute the command */
-            if (execute_command(command) == EXIT_FAILURE) {
+            if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
                 free(command);
                 continue;
             }
