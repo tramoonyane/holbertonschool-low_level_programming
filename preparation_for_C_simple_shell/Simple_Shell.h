@@ -11,7 +11,7 @@
 #include <sys/wait.h>
 
 #define BUFFER_SIZE 1024
-#define PROMPT "#cisfun$ "
+#define PROMPT "$ "
 
 /* Reads a command from standard input */
 char* read_command();
