@@ -108,11 +108,13 @@ int main()
         /* Interactive mode */
         do {
             printf("%s", PROMPT);
+            fflush(stdout); /* Flush stdout to ensure prompt is printed immediately */
+            
             command = read_command();
 
             if (feof(stdin)) {
                 free(command);
-                write(STDOUT_FILENO, "\n", 1);
+                printf("\n");  /* Print newline for proper formatting */
                 exit(EXIT_SUCCESS);
             }
 
@@ -138,6 +140,7 @@ int main()
                 /* Handle error if needed */
                 /* Display error messages or perform necessary actions */
             }
+            printf("\n");  /* Print newline for proper formatting */
             command_number++; /* Increment command number for each command */
         }
     }
