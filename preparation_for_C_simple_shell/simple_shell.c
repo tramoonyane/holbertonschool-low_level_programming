@@ -20,6 +20,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     char *temp_command = strdup(command); /* Create a temporary copy of the command */
     char **args;
     int i;
+    char *path;
 
     /* Count the number of arguments in the command */
     token = strtok(temp_command, " ");
@@ -53,9 +54,22 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
+        /* Try to execute the command with full path */
         if (execve(args[0], args, environ) == -1) {
-            fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
-            exit(EXIT_FAILURE);
+            /* Try to execute the command in the current directory */
+            path = getenv("PWD");
+            if (path == NULL) {
+                perror("getenv error");
+                exit(EXIT_FAILURE);
+            }
+
+            char full_path[PATH_MAX];
+            snprintf(full_path, PATH_MAX, "%s/%s", path, args[0]);
+
+            if (execve(full_path, args, environ) == -1) {
+                fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
+                exit(EXIT_FAILURE);
+            }
         }
     } else {
         /* Parent process */
