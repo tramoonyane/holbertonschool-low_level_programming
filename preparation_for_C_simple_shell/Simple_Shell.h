@@ -22,6 +22,9 @@ int execute_command(char *command);
 /* Tokenizes the PATH environment variable */
 char **parse_path();
 
+/* Handles built-in commands like 'exit' */
+int handle_builtin_commands(char *command);
+
 /* Main function of the shell */
 int main();
 
