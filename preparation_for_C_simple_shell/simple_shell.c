@@ -69,11 +69,11 @@ char* read_command() {
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int main() {
+int main(int argc, char *argv[]) {
     char *command;
     int command_number = 1;
-    char *program_name = "./hsh"; /* Replace this with your program's name */
-
+    char *program_name = basename(argv[0]); /* Get the base name of the program */
+    
     /* Check if input is from terminal or redirected from file/pipe */
     if (isatty(STDIN_FILENO)) {
         /* Interactive mode */
