@@ -48,7 +48,35 @@ int execute_command(char *command, int command_number, char *program_name) {
     return EXIT_SUCCESS;
 }
 
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
+char* read_command() {
+    char* command;
+    char input[BUFFER_SIZE];
 
+    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
+        if (feof(stdin)) {
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        } else {
+            perror("fgets error");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    input[strcspn(input, "\n")] = '\0';
+
+    command = strdup(input);
+    if (command == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
+
+    return command;
+}
 
 /**
  * main - Main function of the shell.
