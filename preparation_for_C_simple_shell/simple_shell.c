@@ -3,30 +3,7 @@
 #include "Simple_Shell.h"
 
 /**
- * handle_builtin_commands - Handles built-in commands like 'exit' and 'env'.
- *
- * @command: The command to execute.
- *
- * Return: Returns 1 if a built-in command is executed, otherwise 0.
- */
-int handle_builtin_commands(char *command) {
-    if (strcmp(command, "exit") == 0) {
-        exit(EXIT_SUCCESS); /* Exit the shell */
-        return 1;            /* Return 1 to indicate the command was handled */
-    } else if (strcmp(command, "env") == 0) {
-        extern char **environ;
-        int i = 0;
-        while (environ[i] != NULL) {
-            printf("%s\n", environ[i]);
-            i++;
-        }
-        return 1; /* Return 1 to indicate the command was handled */
-    }
-    return 0; /* Return 0 for other commands */
-}
-
-/**
- * execute_command - Executes the command with arguments.
+ * execute_command - Executes the command provided by the user.
  *
  * @command: The command to execute.
  *
@@ -97,8 +74,7 @@ char* read_command() {
  */
 int main() {
     char *command;
-    
-    /* Interactive mode */    
+
     do {
         command = read_command();
 
@@ -108,12 +84,9 @@ int main() {
             exit(EXIT_SUCCESS);
         }
 
-        if (!handle_builtin_commands(command)) {
-            /* If not a built-in command, execute the command */
-            if (execute_command(command) == EXIT_FAILURE) {
-                free(command);
-                continue;
-            }
+        if (execute_command(command) == EXIT_FAILURE) {
+            free(command);
+            continue;
         }
 
         free(command);
