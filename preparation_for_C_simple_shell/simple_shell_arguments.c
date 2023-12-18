@@ -15,28 +15,16 @@ extern char **environ;
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
-    char **args;
+    char *args[BUFFER_SIZE + 1];  /* Maximum buffer size for arguments */
     int arg_count = 0; /* Initialize count for command arguments */
-    int i;
     char *token;
     (void)command_number; /* Suppress the unused parameter warning */
     (void)program_name;   /* Suppress the unused parameter warning */
 
-    /* Allocate memory for the args array */
-    args = malloc((BUFFER_SIZE + 1) * sizeof(char *));
-    if (args == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-
+    /* Tokenize the command and store arguments in the args array */
     token = strtok(command, " \n");
-    while (token != NULL) {
-        args[arg_count] = strdup(token);
-        if (args[arg_count] == NULL) {
-            perror("strdup error");
-            exit(EXIT_FAILURE);
-        }
-        arg_count++;
+    while (token != NULL && arg_count < BUFFER_SIZE) {
+        args[arg_count++] = token;
         token = strtok(NULL, " \n");
     }
     args[arg_count] = NULL; /* Null-terminate the argument list */
@@ -57,44 +45,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         waitpid(pid, &status, 0);
     }
 
-    /* Free allocated memory for args */
-    for (i = 0; i < arg_count; i++) {
-        free(args[i]);
-    }
-    free(args);
-
     return EXIT_SUCCESS;
-}
-
-/**
- * read_command - Reads a command from standard input.
- *
- * Return: Returns the input command as a dynamically allocated string.
- */
-char* read_command()
-{
-    char* command;
-    char input[BUFFER_SIZE];
-
-    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
-        if (feof(stdin)) {
-            write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
-        } else {
-            perror("fgets error");
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    input[strcspn(input, "\n")] = '\0';
-
-    command = strdup(input);
-    if (command == NULL) {
-        perror("strdup error");
-        exit(EXIT_FAILURE);
-    }
-
-    return command;
 }
 
 /**
