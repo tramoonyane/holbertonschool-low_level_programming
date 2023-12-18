@@ -165,6 +165,8 @@ char* read_command()
  */
 int main() {
     char *command;
+    int command_number = 1;
+    char *program_name = "hsh"; /* Replace this with your program's name */
     
     /* Check if input is from terminal or redirected from file/pipe */
     if (isatty(STDIN_FILENO)) {
