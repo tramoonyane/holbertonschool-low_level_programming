@@ -181,7 +181,7 @@ int main() {
             exit(EXIT_SUCCESS);
         }
 
-        if (!handle_builtin_commands(command)) {
+        if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
             /* If not a built-in command, execute the command */
             if (execute_command(command) == EXIT_FAILURE) {
                 free(command);
@@ -190,6 +190,7 @@ int main() {
         }
 
         free(command);
+        command_number++; /* Increment command number for each command */
     } while (1);
     } else {
         /* Non-interactive mode */
@@ -200,10 +201,11 @@ int main() {
             input[strcspn(input, "\n")] = '\0';
 
             /* Execute the command */
-            if (execute_command(input) == EXIT_FAILURE) {
+            if (execute_command(input, command_number, program_name) == EXIT_FAILURE) {
                 /* Handle error if needed */
                 /* Display error messages or perform necessary actions */
             }
+            command_number++; /* Increment command number for each command */
         }
     }
     return EXIT_SUCCESS;
