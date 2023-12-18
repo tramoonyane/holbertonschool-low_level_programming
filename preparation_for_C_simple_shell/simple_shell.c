@@ -1,6 +1,7 @@
 /* simple_shell.c */
 
 #include "Simple_Shell.h"
+extern char **environ;
 
 /**
  * execute_command - Executes the command with arguments.
