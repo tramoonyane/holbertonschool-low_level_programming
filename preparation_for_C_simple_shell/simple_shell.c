@@ -14,31 +14,6 @@
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
-    char **args;
-    char *p;
-    int arg_count = 1;  /* Initial count for command itself */
-
-    /* Count the number of arguments (tokens) */
-    for (p = command; *p != '\0'; ++p) {
-        if (*p == ' ') {
-            arg_count++;
-            while (*p == ' ')  /* Skip consecutive spaces */
-                p++;
-        }
-    }
-
-    /* Allocate memory for the args array */
-    args = malloc((arg_count + 1) * sizeof(char *));
-    if (args == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-
-    arg_count = 0;
-    args[arg_count++] = strtok(command, " \n");  /* Get the command */
-
-    /* Get the arguments and store them in the args array */
-    while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
 
     pid = fork();
 
@@ -47,8 +22,8 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execvp(args[0], args) == -1) {
-            fprintf(stderr, "%s: %d: %s: command not found\n", program_name, command_number, args[0]);
+        if (execlp(command, command, NULL) == -1) {
+            fprintf(stderr, "%s: %d: %s: command not found\n", program_name, command_number, command);
             exit(EXIT_FAILURE);
         }
     } else {
@@ -56,7 +31,6 @@ int execute_command(char *command, int command_number, char *program_name) {
         waitpid(pid, &status, 0);
     }
 
-    free(args);
     return EXIT_SUCCESS;
 }
 
@@ -98,7 +72,7 @@ char* read_command() {
 int main() {
     char *command;
     int command_number = 1;
-    char *program_name = "hsh"; /* Replace this with your program's name */
+    char *program_name = "simple_shell"; /* Replace this with your program's name */
 
     /* Check if input is from terminal or redirected from file/pipe */
     if (isatty(STDIN_FILENO)) {
