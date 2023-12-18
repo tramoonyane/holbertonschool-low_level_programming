@@ -67,7 +67,6 @@ char* read_command()
 {
     char* command;
     char input[BUFFER_SIZE];
-    printf("%s", PROMPT);
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
@@ -100,7 +99,7 @@ int main()
     char *command;
 
     do {
-       /* printf("%s", PROMPT); */
+        printf("%s", PROMPT);
         command = read_command();
 
         if (feof(stdin)) {
