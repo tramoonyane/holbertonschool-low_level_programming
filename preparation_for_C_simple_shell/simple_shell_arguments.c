@@ -104,6 +104,7 @@ int main(int argc, char *argv[]) {
     char *command;
     int command_number = 1;
     char *program_name = basename(argv[0]); /* Get the base name of the program */
+    (void)argc; /* Suppress the unused parameter warning */
 
     /* Check if input is from terminal or redirected from file/pipe */
     if (isatty(STDIN_FILENO)) {
