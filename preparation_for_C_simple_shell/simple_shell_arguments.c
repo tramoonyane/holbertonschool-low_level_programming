@@ -97,8 +97,7 @@ char* read_command()
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int main()
-{
+int main() {
     char *command;
     int command_number = 1;
     char *program_name = "hsh"; /* Replace this with your program's name */
@@ -140,7 +139,14 @@ int main()
                 /* Handle error if needed */
                 /* Display error messages or perform necessary actions */
             }
-            printf("\n");  /* Print newline for proper formatting */
+
+            if (feof(stdin)) {
+                printf("\n"); /* Print newline for proper formatting before exiting */
+                exit(EXIT_SUCCESS);
+            } else {
+                printf("\n"); /* Print newline for proper formatting between commands */
+            }
+
             command_number++; /* Increment command number for each command */
         }
     }
