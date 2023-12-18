@@ -17,7 +17,7 @@
 char *read_command();
 
 /* Executes the command with arguments */
-int execute_command(char *command);
+int execute_command(char *command, int command_number, char *program_name);
 
 /* Tokenizes the PATH environment variable */
 char **parse_path();
