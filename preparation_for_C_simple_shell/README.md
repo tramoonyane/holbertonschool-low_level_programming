@@ -37,10 +37,8 @@ Compile each file for the respective task using specific commands (similar to pr
 - Task 4. Simple shell 0.3
    gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_path.c simple_shell_exit.c -o hsh
 - Task 5. Simple shell 0.4
-  Implement the exit built-in, that exits the shell is addressed in simple_shell_exit.c
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_path.c simple_shell_exit.c -o hsh
 - Task 6. Simple shell 1.0
-  env built-in, that prints the current environment is addressed in simple_shell_exit.c
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_path.c simple_shell_exit.c -o hsh
   
 Replace `hsh`with relevant executable names for each task if you wish.
