@@ -1,4 +1,5 @@
 /* simple_shell_exit.c */
+
 #include "Simple_Shell.h"
 
 /**
@@ -21,36 +22,4 @@ int handle_builtin_commands(char *command) {
         return 1;     /* Return 1 to indicate the command was handled */
     }
     return 0; /* Return 0 for other commands */
-}
-
-/**
- * main - Main function of the shell.
- *
- * Return: Returns EXIT_SUCCESS upon successful execution.
- */
-int main() {
-    char *command;
-
-    do {
-        printf("%s", PROMPT);
-        command = read_command();
-
-        if (feof(stdin)) {
-            free(command);
-            write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
-        }
-
-        if (!handle_builtin_commands(command)) {
-            /* If not a built-in command, execute the command */
-            if (execute_command(command) == EXIT_FAILURE) {
-                free(command);
-                continue;
-            }
-        }
-
-        free(command);
-    } while (1);
-
-    return EXIT_SUCCESS;
 }
