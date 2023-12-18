@@ -26,7 +26,6 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        token;
         i = 0;
 
         token = strtok(command, " "); /* Tokenize the command */
