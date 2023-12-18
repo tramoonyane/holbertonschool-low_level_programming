@@ -94,7 +94,7 @@ int execute_command(char *command) {
     for (i = 0; directories[i] != NULL; i++) {
         char path_command[BUFFER_SIZE];
         snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
-        printf("Attempting to execute: %s\n", path_command);
+       /* printf("Attempting to execute: %s\n", path_command); */
         if (access(path_command, X_OK) == 0) {
             found = 1;
             pid = fork();
