@@ -23,7 +23,7 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execlp("sh", "sh", "-c", command, NULL) == -1) {
+        if (execlp(command, command, NULL) == -1) {
             fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
             exit(EXIT_FAILURE);
         }
