@@ -17,7 +17,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     int status;
     char **args;
     int arg_count = 0; /* Initialize count for command arguments */
-    int i
+    int i;
     char *token;
     (void)command_number; /* Suppress the unused parameter warning */
     (void)program_name;   /* Suppress the unused parameter warning */
