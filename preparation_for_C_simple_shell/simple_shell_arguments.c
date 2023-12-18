@@ -48,8 +48,8 @@ int execute_command(char *command, int command_number, char *program_name)
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execvp(args[0], args) == -1) {
-            fprintf(stderr, "%s: %d: %s: command not found\n", program_name, command_number, args[0]);
+        if (execve(args[0], args, environ) == -1) {
+            perror(args[0]);
             exit(EXIT_FAILURE);
         }
     } else {
@@ -60,7 +60,6 @@ int execute_command(char *command, int command_number, char *program_name)
     free(args);
     return EXIT_SUCCESS;
 }
-
 /**
  * read_command - Reads a command from standard input.
  *
