@@ -14,7 +14,13 @@
 #define PROMPT "$ "
 
 /* Reads a command from standard input */
-char* read_command();
+char *read_command();
+
+/* Executes the command with arguments */
+int execute_command(char *command);
+
+/* Tokenizes the PATH environment variable */
+char **parse_path();
 
 /* Main function of the shell */
 int main();
