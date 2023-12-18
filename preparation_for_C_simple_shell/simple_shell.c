@@ -21,7 +21,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     char **args;
     int i;
     char *path;
-    char full_path[PATH_MAX];
+    /* char full_path[PATH_MAX]; */
 
     /* Count the number of arguments in the command */
     token = strtok(temp_command, " ");
