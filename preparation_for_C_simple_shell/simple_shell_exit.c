@@ -22,3 +22,30 @@ int handle_builtin_commands(char *command) {
     }
     return 0; /* Return 0 for other commands */
 }
+
+int main() {
+    char *command;
+
+    do {
+        printf("%s", PROMPT);
+        command = read_command();
+
+        if (feof(stdin)) {
+            free(command);
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        }
+
+        if (!handle_builtin_commands(command)) {
+            // If not a built-in command, execute the command
+            if (execute_command(command) == EXIT_FAILURE) {
+                free(command);
+                continue;
+            }
+        }
+
+        free(command);
+    } while (1);
+
+    return EXIT_SUCCESS;
+}
