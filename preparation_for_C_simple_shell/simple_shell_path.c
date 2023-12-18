@@ -51,7 +51,27 @@ int execute_command(char *command) {
     int arg_count = 1;  /* Initial count for command itself */
     char **directories = parse_path();
 
-    /* ... existing code ... */
+    /* Count the number of arguments (tokens) */
+    for (p = command; *p != '\0'; ++p) {
+        if (*p == ' ') {
+            arg_count++;
+            while (*p == ' ')  /* Skip consecutive spaces */
+                p++;
+        }
+    }
+
+    /* Allocate memory for the args array */
+    args = malloc((arg_count + 1) * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    arg_count = 0;
+    args[arg_count++] = strtok(command, " \n");  /* Get the command */
+
+    /* Get the arguments and store them in the args array */
+    while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
 
     int found = 0;
     for (int i = 0; directories[i] != NULL; i++) {
@@ -85,7 +105,6 @@ int execute_command(char *command) {
     free(directories);
     return EXIT_SUCCESS;
 }
-
 /**
  * read_command - Reads a command from standard input.
  *
