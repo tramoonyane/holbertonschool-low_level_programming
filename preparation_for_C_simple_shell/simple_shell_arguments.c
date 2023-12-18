@@ -16,7 +16,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
     char **args;
-    int arg_count = 1;  /* Initial count for command itself */
+    int arg_count = 0;  /* Initialize count for command arguments */
     char *token;
     (void)command_number; /* Suppress the unused parameter warning */
     (void)program_name;   /* Suppress the unused parameter warning */
@@ -30,14 +30,17 @@ int execute_command(char *command, int command_number, char *program_name) {
 
     token = strtok(command, " \n");
     while (token != NULL) {
-        args[arg_count++] = token;
+        args[arg_count] = strdup(token);
+        if (args[arg_count] == NULL) {
+            perror("strdup error");
+            exit(EXIT_FAILURE);
+        }
+        arg_count++;
         token = strtok(NULL, " \n");
     }
     args[arg_count] = NULL; /* Null-terminate the argument list */
 
-    printf("Before fork\n");
     pid = fork();
-    printf("After fork\n");
 
     if (pid == -1) {
         perror("fork error");
@@ -53,9 +56,15 @@ int execute_command(char *command, int command_number, char *program_name) {
         waitpid(pid, &status, 0);
     }
 
+    /* Free allocated memory for args */
+    for (int i = 0; i < arg_count; i++) {
+        free(args[i]);
+    }
     free(args);
+
     return EXIT_SUCCESS;
 }
+
 /**
  * read_command - Reads a command from standard input.
  *
