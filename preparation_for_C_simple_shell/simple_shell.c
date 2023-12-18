@@ -2,16 +2,71 @@
 
 #include "Simple_Shell.h"
 
+/**
+ * handle_builtin_commands - Handles built-in commands like 'exit' and 'env'.
+ *
+ * @command: The command to execute.
+ *
+ * Return: Returns 1 if a built-in command is executed, otherwise 0.
+ */
+int handle_builtin_commands(char *command) {
+    if (strcmp(command, "exit") == 0) {
+        exit(EXIT_SUCCESS); /* Exit the shell */
+        return 1;            /* Return 1 to indicate the command was handled */
+    } else if (strcmp(command, "env") == 0) {
+        extern char **environ;
+        int i = 0;
+        while (environ[i] != NULL) {
+            printf("%s\n", environ[i]);
+            i++;
+        }
+        return 1; /* Return 1 to indicate the command was handled */
+    }
+    return 0; /* Return 0 for other commands */
+}
+
+/**
+ * execute_command - Executes the command with arguments.
+ *
+ * @command: The command to execute.
+ *
+ * Return: Returns EXIT_SUCCESS upon successful execution.
+ */
+int execute_command(char *command) {
+    pid_t pid;
+    int status;
+
+    if (command == NULL || *command == '\0') {
+        return EXIT_SUCCESS; /* Skip execution for empty commands */
+    }
+
+    pid = fork();
+    if (pid == -1) {
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* Child process */
+        if (execlp(command, command, NULL) == -1) {
+            fprintf(stderr, "%s: command not found\n", command);
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        /* Parent process */
+        waitpid(pid, &status, 0);
+    }
+
+    return EXIT_SUCCESS;
+}
 
 /**
  * read_command - Reads a command from standard input.
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char* read_command()
-{
+char* read_command() {
     char* command;
     char input[BUFFER_SIZE];
+
     printf("%s", PROMPT);
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
@@ -36,77 +91,33 @@ char* read_command()
 }
 
 /**
- * handle_builtin_commands - Handle built-in commands.
- *
- * @command: The command to execute.
- *
- * Return: Returns 1 if a built-in command is executed, 0 otherwise.
- */
-int handle_builtin_commands(char *command) {
-    /* Add your implementation of built-in commands handling here. */
-    /* For example, if "exit" is a built-in command, check and handle it. */
-    if (strcmp(command, "exit") == 0) {
-        exit(EXIT_SUCCESS);
-        return 1;
-    }
-    /* Add more built-in commands handling as needed. */
-
-    return 0;  // Indicate that the command is not a built-in command.
-}
-
-/**
  * main - Main function of the shell.
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
 int main() {
     char *command;
-    int command_number = 1;
-    char *program_name = "hsh"; /* Replace this with your program's name */
+    
+    /* Interactive mode */    
+    do {
+        command = read_command();
 
-    /* Check if input is from terminal or redirected from file/pipe */
-    if (isatty(STDIN_FILENO)) {
-        /* Interactive mode */
-        do {
-            printf("%s", PROMPT);
-            fflush(stdout); /* Flush stdout to ensure prompt is printed immediately */
-            
-            command = read_command();
-
-            if (feof(stdin)) {
-                free(command);
-                printf("\n");  /* Print newline for proper formatting */
-                exit(EXIT_SUCCESS);
-            }
-
-            if (!handle_builtin_commands(command)) {
-                /* If not a built-in command, execute the command */
-                if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
-                    free(command);
-                    continue;
-                }
-            }
-
+        if (feof(stdin)) {
             free(command);
-            command_number++; /* Increment command number for each command */
-        } while (1);
-    } else {
-        /* Non-interactive mode */
-        char input[BUFFER_SIZE];
-
-        while (fgets(input, BUFFER_SIZE, stdin)) {
-            /* Process the command in the non-interactive mode */
-            /* Remove the newline character from input, if any */
-            input[strcspn(input, "\n")] = '\0';
-
-            /* Execute the command */
-            if (execute_command(input, command_number, program_name) == EXIT_FAILURE) {
-                /* Handle error if needed */
-                /* Display error messages or perform necessary actions */
-            }
-            printf("\n");  /* Print newline for proper formatting */
-            command_number++; /* Increment command number for each command */
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
         }
-    }
+
+        if (!handle_builtin_commands(command)) {
+            /* If not a built-in command, execute the command */
+            if (execute_command(command) == EXIT_FAILURE) {
+                free(command);
+                continue;
+            }
+        }
+
+        free(command);
+    } while (1);
+
     return EXIT_SUCCESS;
 }
