@@ -1,4 +1,40 @@
+/* simple_shell.c */
+
 #include "Simple_Shell.h"
+
+/**
+ * parse_path - Tokenizes the PATH environment variable.
+ *
+ * Return: Returns an array of directories.
+ */
+char **parse_path() {
+    char *path = getenv("PATH");
+    char **directories = malloc(sizeof(char *));
+    if (directories == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    char *token = strtok(path, ":");
+    int count = 0;
+    while (token != NULL) {
+        directories = realloc(directories, (count + 1) * sizeof(char *));
+        if (directories == NULL) {
+            perror("realloc error");
+            exit(EXIT_FAILURE);
+        }
+        directories[count++] = token;
+        token = strtok(NULL, ":");
+    }
+    directories = realloc(directories, (count + 1) * sizeof(char *));
+    if (directories == NULL) {
+        perror("realloc error");
+        exit(EXIT_FAILURE);
+    }
+    directories[count] = NULL;
+
+    return directories;
+}
 
 /**
  * execute_command - Executes the command with arguments.
@@ -7,56 +43,47 @@
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int execute_command(char *command)
-{
-    char **args = NULL;
-    char *token;
-    char *path;
+int execute_command(char *command) {
+    pid_t pid;
+    int status;
+    char **args;
+    char *p;
+    int arg_count = 1;  /* Initial count for command itself */
+    char **directories = parse_path();
 
-    /* Check for empty command */
-    if (command == NULL || *command == '\0')
-        return EXIT_SUCCESS;
+    /* ... existing code ... */
 
-    /* Check if command exists in PATH */
-    if (access(command, X_OK) == 0) {
-        /* Execute command directly if it exists */
-        if (execve(command, &command, NULL) == -1) {
-            perror("execve error");
-            exit(EXIT_FAILURE);
+    int found = 0;
+    for (int i = 0; directories[i] != NULL; i++) {
+        char path_command[BUFFER_SIZE];
+        snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+        if (access(path_command, X_OK) == 0) {
+            found = 1;
+            pid = fork();
+            if (pid == -1) {
+                perror("fork error");
+                exit(EXIT_FAILURE);
+            } else if (pid == 0) {
+                /* Child process */
+                if (execv(path_command, args) == -1) {
+                    fprintf(stderr, "%s: command execution error\n", args[0]);
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                /* Parent process */
+                waitpid(pid, &status, 0);
+            }
+            break;
         }
     }
 
-    /* Attempt to execute the command from PATH */
-    path = getenv("PATH");
-    token = strtok(path, ":");
-    while (token != NULL) {
-        char *full_path = malloc(strlen(token) + strlen(command) + 2);
-        if (full_path == NULL) {
-            perror("malloc error");
-            exit(EXIT_FAILURE);
-        }
-        sprintf(full_path, "%s/%s", token, command);
-
-        if (access(full_path, X_OK) == 0) {
-            args = malloc(2 * sizeof(char *));
-            if (args == NULL) {
-                perror("malloc error");
-                exit(EXIT_FAILURE);
-            }
-            args[0] = full_path;
-            args[1] = NULL;
-
-            if (execve(args[0], args, NULL) == -1) {
-                perror("execve error");
-                exit(EXIT_FAILURE);
-            }
-        }
-        free(full_path);
-        token = strtok(NULL, ":");
+    if (!found) {
+        fprintf(stderr, "%s: command not found\n", args[0]);
     }
 
-    fprintf(stderr, "%s: command not found\n", command);
-    return EXIT_FAILURE;
+    free(args);
+    free(directories);
+    return EXIT_SUCCESS;
 }
 
 /**
@@ -64,11 +91,10 @@ int execute_command(char *command)
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char *read_command()
+char* read_command()
 {
+    char* command;
     char input[BUFFER_SIZE];
-
-    printf("%s", PROMPT);
 
     if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
         if (feof(stdin)) {
@@ -82,7 +108,13 @@ char *read_command()
 
     input[strcspn(input, "\n")] = '\0';
 
-    return strdup(input);
+    command = strdup(input);
+    if (command == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
+
+    return command;
 }
 
 /**
@@ -95,6 +127,7 @@ int main()
     char *command;
 
     do {
+        printf("%s", PROMPT);
         command = read_command();
 
         if (feof(stdin)) {
