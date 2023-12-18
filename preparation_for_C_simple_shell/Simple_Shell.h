@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <libgen.h>  /* Include the library to use basename() */
 
 #define BUFFER_SIZE 1024
 #define PROMPT "$ "
@@ -26,6 +27,6 @@ char **parse_path();
 int handle_builtin_commands(char *command);
 
 /* Main function of the shell */
-int main();
+int main(int argc, char *argv[]);
 
 #endif /* SIMPLE_SHELL_H */
