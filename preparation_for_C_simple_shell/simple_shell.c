@@ -21,6 +21,7 @@ int execute_command(char *command, int command_number, char *program_name) {
     char **args;
     int i;
     char *path;
+    char full_path[PATH_MAX];
 
     /* Count the number of arguments in the command */
     token = strtok(temp_command, " ");
@@ -62,8 +63,6 @@ int execute_command(char *command, int command_number, char *program_name) {
                 perror("getenv error");
                 exit(EXIT_FAILURE);
             }
-
-            char full_path[PATH_MAX];
             snprintf(full_path, PATH_MAX, "%s/%s", path, args[0]);
 
             if (execve(full_path, args, environ) == -1) {
