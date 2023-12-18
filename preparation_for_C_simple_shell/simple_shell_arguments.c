@@ -1,6 +1,7 @@
 /* simple_shell_arguments.c */
 
 #include "Simple_Shell.h"
+extern char **environ;
 
 /**
  * execute_command - Executes the command with arguments.
@@ -18,6 +19,9 @@ int execute_command(char *command, int command_number, char *program_name)
     char **args;
     char *p;
     int arg_count = 1;  /* Initial count for command itself */
+    (void)command_number; /* Suppress the unused parameter warning */
+    (void)program_name;   /* Suppress the unused parameter warning */
+
 
     /* Count the number of arguments (tokens) */
     for (p = command; *p != '\0'; ++p) {
