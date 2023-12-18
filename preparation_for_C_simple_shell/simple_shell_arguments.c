@@ -103,24 +103,44 @@ int main()
     int command_number = 1;
     char *program_name = "hsh"; /* Replace this with your program's name */
 
-    do {
-        printf("%s", PROMPT);
-        command = read_command();
+    /* Check if input is from terminal or redirected from file/pipe */
+    if (isatty(STDIN_FILENO)) {
+        /* Interactive mode */
+        do {
+            printf("%s", PROMPT);
+            command = read_command();
 
-        if (feof(stdin)) {
+            if (feof(stdin)) {
+                free(command);
+                write(STDOUT_FILENO, "\n", 1);
+                exit(EXIT_SUCCESS);
+            }
+
+            if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
+                free(command);
+                continue;
+            }
+
             free(command);
-            write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
-        }
+            command_number++; /* Increment command number for each command */
+        } while (1);
+    } else {
+        /* Non-interactive mode */
+        char input[BUFFER_SIZE];
 
-        if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
-            free(command);
-            continue;
-        }
+        /* Process the command in the non-interactive mode */
+        while (fgets(input, BUFFER_SIZE, stdin)) {
+            /* Remove the newline character from input, if any */
+            input[strcspn(input, "\n")] = '\0';
 
-        free(command);
-        command_number++; /* Increment command number for each command */
-    } while (1);
+            /* Execute the command */
+            if (execute_command(input, command_number, program_name) == EXIT_FAILURE) {
+                /* Handle error if needed */
+                /* Display error messages or perform necessary actions */
+            }
+            command_number++; /* Increment command number for each command */
+        }
+    }
 
     return EXIT_SUCCESS;
 }
