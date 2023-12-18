@@ -165,7 +165,10 @@ char* read_command()
  */
 int main() {
     char *command;
-
+    
+    /* Check if input is from terminal or redirected from file/pipe */
+    if (isatty(STDIN_FILENO)) {
+    /* Interactive mode */    
     do {
         printf("%s", PROMPT);
         command = read_command();
@@ -186,6 +189,20 @@ int main() {
 
         free(command);
     } while (1);
+    } else {
+        /* Non-interactive mode */
+            char input[BUFFER_SIZE];
+        while (fgets(input, BUFFER_SIZE, stdin)) {
+            /* Process the command in the non-interactive mode */
+            /* Remove the newline character from input, if any */
+            input[strcspn(input, "\n")] = '\0';
 
+            /* Execute the command */
+            if (execute_command(input) == EXIT_FAILURE) {
+                /* Handle error if needed */
+                /* Display error messages or perform necessary actions */
+            }
+        }
+    }
     return EXIT_SUCCESS;
 }
