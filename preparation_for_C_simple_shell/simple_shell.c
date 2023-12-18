@@ -15,6 +15,9 @@ extern char **environ;
 int execute_command(char *command, int command_number, char *program_name) {
     pid_t pid;
     int status;
+    char *args[32]; /* Assuming a maximum of 32 arguments, adjust if needed */
+    char *token;
+    int i = 0;
 
     pid = fork();
 
@@ -23,7 +26,18 @@ int execute_command(char *command, int command_number, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (pid == 0) {
         /* Child process */
-        if (execlp(command, command, NULL) == -1) {
+        token;
+        i = 0;
+
+        token = strtok(command, " "); /* Tokenize the command */
+
+        while (token != NULL && i < 31) {
+            args[i++] = token;
+            token = strtok(NULL, " ");
+        }
+        args[i] = NULL; /* Null-terminate the argument list */
+
+        if (execve(args[0], args, environ) == -1) {
             fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
             exit(EXIT_FAILURE);
         }
@@ -34,7 +48,6 @@ int execute_command(char *command, int command_number, char *program_name) {
 
     return EXIT_SUCCESS;
 }
-
 /**
  * read_command - Reads a command from standard input.
  *
