@@ -7,48 +7,53 @@
  *
  * Return: Returns an array of directories.
  */
-char **parse_path() {
-    char *path = getenv("PATH");
-    char *token;
-    int count;
-    char *path_copy;
-    char **directories = malloc(sizeof(char *));
-    if (path == NULL || *path == '\0') {
-        fprintf(stderr, "No PATH variable found or empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    path_copy = strdup(path);
-    if (path_copy == NULL) {
-        perror("strdup error");
-        exit(EXIT_FAILURE);
-    }
+char **parse_path()
+{
+char *path = getenv("PATH");
+char *token;
+int count;
+char *path_copy;
+char **directories = malloc(sizeof(char *));
 
-    token = strtok(path_copy, ":");
-    count = 0;
-    directories = malloc(sizeof(char *));
-    if (directories == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-    while (token != NULL) {
-        directories = realloc(directories, (count + 1) * sizeof(char *));
-        if (directories == NULL) {
-            perror("realloc error");
-            exit(EXIT_FAILURE);
-        }
-        
-        directories[count++] = token;
-        token = strtok(NULL, ":");
-    }
-    directories = realloc(directories, (count + 1) * sizeof(char *));
-    if (directories == NULL) {
-        perror("realloc error");
-        exit(EXIT_FAILURE);
-    }
-    directories[count] = NULL;
-    free(path_copy);
-
-    return directories;
+if (path == NULL || *path == '\0')
+{
+fprintf(stderr, "No PATH variable found or empty.\n");
+exit(EXIT_FAILURE);
+}
+path_copy = strdup(path);
+if (path_copy == NULL)
+{
+perror("strdup error");
+exit(EXIT_FAILURE);
+}
+token = strtok(path_copy, ":");
+count = 0;
+directories = malloc(sizeof(char *));
+if (directories == NULL)
+{
+perror("malloc error");
+exit(EXIT_FAILURE);
+}
+while (token != NULL)
+{
+directories = realloc(directories, (count + 1) * sizeof(char *));
+if (directories == NULL)
+{
+perror("realloc error");
+exit(EXIT_FAILURE);
+}
+directories[count++] = token;
+token = strtok(NULL, ":");
+}
+directories = realloc(directories, (count + 1) * sizeof(char *));
+if (directories == NULL)
+{
+perror("realloc error");
+exit(EXIT_FAILURE);
+}
+directories[count] = NULL;
+free(path_copy);
+return directories;
 }
 
 /**
@@ -60,21 +65,20 @@ char **parse_path() {
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int execute_command(char *command, int command_number, char *program_name) {
-    char **args;
-    int arg_count;
+int execute_command(char *command, int command_number, char *program_name)
+{
+char **args;
+int arg_count;
 
-    if (command == NULL || *command == '\0') {
-        return EXIT_SUCCESS; /* Skip execution for empty commands */
-    }
-
-    arg_count = count_arguments(command);
-    args = get_command_arguments(command, arg_count);
-
-    execute_command_with_path(args, command_number, program_name);
-
-    free(args);
-    return EXIT_SUCCESS;
+if (command == NULL || *command == '\0')
+{
+return EXIT_SUCCESS; /* Skip execution for empty commands */
+}
+arg_count = count_arguments(command);
+args = get_command_arguments(command, arg_count);
+execute_command_with_path(args, command_number, program_name);
+free(args);
+return (EXIT_SUCCESS);
 }
 
 /**
@@ -84,19 +88,21 @@ int execute_command(char *command, int command_number, char *program_name) {
  *
  * Return: Returns the number of arguments.
  */
-int count_arguments(char *command) {
-    int arg_count = 1; /* Initial count for command itself */
-    char *p;
+int count_arguments(char *command)
+{
+int arg_count = 1; /* Initial count for command itself */
+char *p;
 
-    for (p = command; *p != '\0'; ++p) {
-        if (*p == ' ') {
-            arg_count++;
-            while (*p == ' ') /* Skip consecutive spaces */
-                p++;
-        }
-    }
-
-    return arg_count;
+for (p = command; *p != '\0'; ++p)
+{
+if (*p == ' ')
+{
+arg_count++;
+while (*p == ' ') /* Skip consecutive spaces */
+p++;
+}
+}
+return arg_count;
 }
 
 /**
@@ -107,21 +113,20 @@ int count_arguments(char *command) {
  *
  * Return: Returns an array of command arguments.
  */
-char **get_command_arguments(char *command, int arg_count) {
-    char **args;
-    int i = 0;
+char **get_command_arguments(char *command, int arg_count)
+{
+char **args;
+int i = 0;
 
-    args = malloc((arg_count + 1) * sizeof(char *));
-    if (args == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
-
-    args[i++] = strtok(command, " \n"); /* Get the command */
-
-    while ((args[i++] = strtok(NULL, " \n")) != NULL);
-
-    return args;
+args = malloc((arg_count + 1) * sizeof(char *));
+if (args == NULL)
+{
+perror("malloc error");
+exit(EXIT_FAILURE);
+}
+args[i++] = strtok(command, " \n"); /* Get the command */
+while ((args[i++] = strtok(NULL, " \n")) != NULL);
+return (args);
 }
 
 /**
@@ -131,43 +136,51 @@ char **get_command_arguments(char *command, int arg_count) {
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args, int command_number, char *program_name) {
-    pid_t pid;
-    int status;
-    char **directories = parse_path();
-    int found = 0;
-    int i;
+void execute_command_with_path(char **args, int command_number, char *program_name)
+{
+pid_t pid;
+int status;
+char **directories = parse_path();
+int found = 0;
+int i;
 
-    for (i = 0; directories[i] != NULL; i++) {
-        char path_command[BUFFER_SIZE];
-        snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+for (i = 0; directories[i] != NULL; i++)
+{
+char path_command[BUFFER_SIZE];
 
-        /* Check if the command is executable at the given path */
-        if (access(path_command, X_OK) == 0) {
-            found = 1;
-            pid = fork();
-            if (pid == -1) {
-                perror("fork error");
-                exit(EXIT_FAILURE);
-            } else if (pid == 0) {
-                /* Child process */
-                if (execv(path_command, args) == -1) {
-                    fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
-                    exit(EXIT_FAILURE);
-                }
-            } else {
-                /* Parent process */
-                waitpid(pid, &status, 0);
-            }
-            break;
-        }
-    }
-
-    if (!found) {
-        fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
-    }
-
-    free(directories);
+snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+/* Check if the command is executable at the given path */
+if (access(path_command, X_OK) == 0)
+{
+found = 1;
+pid = fork();
+if (pid == -1)
+{
+perror("fork error");
+exit(EXIT_FAILURE);
+}
+else if (pid == 0)
+{
+/* Child process */
+if (execv(path_command, args) == -1)
+{
+fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+exit(EXIT_FAILURE);
+}
+}
+else
+{
+/* Parent process */
+waitpid(pid, &status, 0)
+}
+break;
+}
+}
+if (!found)
+{
+fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+}
+free(directories);
 }
 
 /**
@@ -177,26 +190,28 @@ void execute_command_with_path(char **args, int command_number, char *program_na
  */
 char* read_command()
 {
-    char* command;
-    char input[BUFFER_SIZE];
+char* command;
+char input[BUFFER_SIZE];
 
-    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
-        if (feof(stdin)) {
-            write(STDOUT_FILENO, "\n", 1);
-            exit(EXIT_SUCCESS);
-        } else {
-            perror("fgets error");
-            exit(EXIT_FAILURE);
-        }
-    }
-
-    input[strcspn(input, "\n")] = '\0';
-
-    command = strdup(input);
-    if (command == NULL) {
-        perror("strdup error");
-        exit(EXIT_FAILURE);
-    }
-
-    return command;
+if (fgets(input, BUFFER_SIZE, stdin) == NULL)
+{
+if (feof(stdin))
+{
+write(STDOUT_FILENO, "\n", 1);
+exit(EXIT_SUCCESS);
+}
+else
+{
+perror("fgets error");
+exit(EXIT_FAILURE);
+}
+}
+input[strcspn(input, "\n")] = '\0';
+command = strdup(input);
+if (command == NULL)
+{
+perror("strdup error");
+exit(EXIT_FAILURE);
+}
+return (command);
 }
