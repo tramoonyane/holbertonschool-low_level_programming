@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
     int status;
     int interactive = is_input_terminal(); /* Check if input is interactive */
     char *program_name = argv[0]; /* Set the program name from argv[0] */
+    int i;
     (void)argc;  /* Acknowledge the unused parameter to prevent the warning */
 
     if (interactive) {
@@ -77,7 +78,7 @@ int main(int argc, char *argv[]) {
         if (fgets(input_from_pipe, sizeof(input_from_pipe), stdin) != NULL) {
             input_from_pipe[strcspn(input_from_pipe, "\n")] = '\0'; /* Remove newline character */
 
-            int i = 0;
+            i = 0;
             tokens[i] = strtok(input_from_pipe, " "); /* Tokenize input */
 
             while (tokens[i] != NULL && i < MAX_TOKENS - 1) {
