@@ -14,6 +14,7 @@ int main(void)
 {
     char command[MAX_COMMAND_LENGTH];
     int status;
+    pid_t pid;
 
     while (1)
     {
@@ -28,7 +29,7 @@ int main(void)
         command[strcspn(command, "\n")] = '\0';
 
         /* Forking a child process */
-        pid_t pid = fork();
+        pid = fork();
 
         if (pid < 0)
         {
@@ -78,7 +79,7 @@ void execute_command(char *command)
         perror("Fork failed");
         exit(EXIT_FAILURE);
     }
-    else if (pid == 0) // Child process
+    else if (pid == 0) /* Child process */
     {
         char *args[] = {command, NULL};
         if (execve(command, args, environ) == -1)
