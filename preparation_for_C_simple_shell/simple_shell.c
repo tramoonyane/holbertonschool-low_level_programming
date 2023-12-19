@@ -9,8 +9,10 @@
  *
  * Return: Always 0 upon successful execution.
  *
- * Description: This function acts as the entry point of the simple shell program.
- * It determines if the input is from a terminal or not and executes accordingly.
+ * Description: This function acts as the entry point
+ * of the simple shell program.
+ * It determines if the input is from a terminal
+ * or not and executes accordingly.
  */
 int main(int argc, char *argv[])
 {
@@ -141,10 +143,8 @@ exit(EXIT_FAILURE);
 }
 else
 {
-do
-{
+do {
 waitpid(child_pid, &status, WUNTRACED);
-}
-while (!WIFEXITED(status) && !WIFSIGNALED(status));
+} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 }
 }
