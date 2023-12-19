@@ -76,7 +76,6 @@ char **parse_path() {
 int execute_command(char *command, int command_number, char *program_name) {
     char **args;
     int arg_count;
-    char *p;
 
     if (command == NULL || *command == '\0') {
         return EXIT_SUCCESS; /* Skip execution for empty commands */
