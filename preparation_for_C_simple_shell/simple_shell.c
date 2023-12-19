@@ -32,7 +32,7 @@ int main(void)
             if (feof(stdin))
             {
                 printf("\n"); /* Print newline after Ctrl+D */
-                break; /* Exit on EOF */
+                break;        /* Exit on EOF */
             }
         }
 
@@ -60,6 +60,7 @@ int main(void)
 
             if (execve(tokens[0], tokens, environ) == -1)
             {
+                fprintf(stderr, "%s: ", tokens[0]); /* Print program name */
                 perror("Command execution failed");
                 exit(EXIT_FAILURE);
             }
