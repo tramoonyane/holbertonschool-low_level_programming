@@ -15,12 +15,14 @@ extern char **environ;  /* Access to the environment variables */
  *
  * Return: Always 0
  */
-int main(void)
+int main(int argc, char *argv[])
 {
     char input[MAX_INPUT_LENGTH];
     char *tokens[MAX_TOKENS];
     pid_t child_pid;
     int status;
+
+    char *program_name = argv[0]; /* Set the program name from argv[0] */
 
     while (1)
     {
@@ -60,7 +62,7 @@ int main(void)
 
             if (execve(tokens[0], tokens, environ) == -1)
             {
-                fprintf(stderr, "%s: ", tokens[0]); /* Print program name */
+                fprintf(stderr, "%s: ", program_name); /* Print program name */
                 perror("Command execution failed");
                 exit(EXIT_FAILURE);
             }
