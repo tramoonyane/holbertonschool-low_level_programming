@@ -7,9 +7,9 @@
  *
  * Return: 1 if input is from a terminal, 0 otherwise
  */
-int is_input_terminal()
+int is_input_terminal(void)
 {
-return isatty(fileno((stdin)));
+return (isatty(fileno((stdin))));
 }
 
 /**
