@@ -42,6 +42,7 @@ return (tokens);
  */
 void execute_with_arguments(char **tokens, char *program_name)
 {
+    printf("Command: %s\n", tokens[0]); /* Debug print */
     pid_t child_pid;
     int status;
 
@@ -67,9 +68,11 @@ void execute_with_arguments(char **tokens, char *program_name)
         {
             if (execve(tokens[0], tokens, environ) == -1)
             {
+                 printf("Command: %s\n", tokens[0]); /* Debug print */
                 fprintf(stderr, "%s: ", program_name);
                 perror("Command execution failed");
                 exit(EXIT_FAILURE);
+                 printf("Command: %s\n", tokens[0]); /* Debug print */
             }
         }
         else
@@ -81,8 +84,10 @@ void execute_with_arguments(char **tokens, char *program_name)
     else
     {
         do {
+             printf("Command: %s\n", tokens[0]); /* Debug print */
             waitpid(child_pid, &status, WUNTRACED);
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+         printf("Command: %s\n", tokens[0]); /* Debug print */
     }
 }
 
