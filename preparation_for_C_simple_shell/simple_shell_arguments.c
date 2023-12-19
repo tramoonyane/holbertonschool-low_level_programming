@@ -36,14 +36,31 @@ char **parse_arguments(char *input) {
  * variable pointers and iterates through them to print each variable.
  */
 void execute_env_command() {
-    extern char **environ;
-    char **env = environ;
+    char *env_cmd = "/bin/env";
+    char *env_argv[] = { env_cmd, NULL };
+    
+    pid_t child_pid;
+    int status;
 
-    while (*env) {
-        printf("%s\n", *env);
-        env++;
+    printf("Executing command: %s\n", env_cmd);
+
+    child_pid = fork();
+    if (child_pid < 0) {
+        perror("Fork failed");
+        exit(EXIT_FAILURE);
+    } else if (child_pid == 0) {
+        if (execve(env_cmd, env_argv, environ) == -1) {
+            fprintf(stderr, "Error executing command: %s\n", env_cmd);
+            perror("Command execution failed");
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        do {
+            waitpid(child_pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 }
+
 
 /**
  * execute_with_arguments - Executes a command with arguments using execve.
