@@ -228,3 +228,10 @@ int main() {
     }
     return EXIT_SUCCESS;
 }
+
+/**
+ * exit_shell - Exits the shell.
+ */
+void exit_shell() {
+    exit(EXIT_SUCCESS);
+}
