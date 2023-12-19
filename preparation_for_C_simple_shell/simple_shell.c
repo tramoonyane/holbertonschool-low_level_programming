@@ -9,7 +9,7 @@
  */
 int is_input_terminal()
 {
-return isatty(fileno(stdin));
+return isatty(fileno((stdin)));
 }
 
 /**
