@@ -23,4 +23,8 @@ void interactive_mode(char *program_name);
 void non_interactive_mode(char *program_name);
 void process_command(char *command, int *command_number, char *program_name);
 
+int count_arguments(char *command);
+char **get_command_arguments(char *command, int arg_count);
+void execute_command_with_path(char **args, int command_number, char *program_name);
+
 #endif /* SHELL_H */
