@@ -3,6 +3,19 @@
 #include "Shell.h"
 
 /**
+ * print_environment - Prints the current environment variables.
+ */
+void print_environment() {
+    extern char **environ;
+    int i = 0;
+    while (environ[i] != NULL) {
+        printf("%s\n", environ[i]);
+        i++;
+    }
+}
+
+
+/**
  * parse_path - Tokenizes the PATH environment variable.
  *
  * Return: Returns an array of directories.
