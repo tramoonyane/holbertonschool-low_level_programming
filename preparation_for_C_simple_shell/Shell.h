@@ -17,5 +17,7 @@ char **parse_path();
 int execute_command(char *command, int command_number, char *program_name);
 char* read_command();
 int handle_builtin_commands(char *command);
+void exit_shell();
+
 
 #endif /* SHELL_H */
