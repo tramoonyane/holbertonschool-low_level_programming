@@ -53,6 +53,9 @@ exit(EXIT_FAILURE);
 }
 else if (child_pid == 0)
 {
+/* Check if the command exists in PATH */
+if (access(tokens[0], F_OK) == 0)
+{
 if (execve(tokens[0], tokens, environ) == -1)
 {
 fprintf(stderr, "%s: ", program_name);
@@ -62,6 +65,10 @@ exit(EXIT_FAILURE);
 }
 else
 {
+fprintf(stderr, "%s: command not found\n", tokens[0]);
+exit(EXIT_FAILURE);
+}
+else {
 do {
 waitpid(child_pid, &status, WUNTRACED);
 } while (!WIFEXITED(status) && !WIFSIGNALED(status));
