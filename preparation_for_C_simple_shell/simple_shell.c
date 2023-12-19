@@ -91,7 +91,7 @@ void execute_command(char *command) {
     } else if (pid == 0) { /* Child process */
         char *token, *path, *full_path;
         path = getenv("PATH");
-        full_path = malloc(strlen(path) + strlen(command) + 2); // +2 for '/' and null terminator
+        full_path = malloc(strlen(path) + strlen(command) + 2); /* +2 for '/' and null terminator */
         if (full_path == NULL) {
             perror("Memory allocation failed");
             exit(EXIT_FAILURE);
