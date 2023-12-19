@@ -2,8 +2,6 @@
 
 #include "Shell.h"
 
-#include "Simple_Shell.h"
-
 /**
  * parse_path - Tokenizes the PATH environment variable.
  *
