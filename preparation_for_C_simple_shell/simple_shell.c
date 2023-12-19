@@ -1,16 +1,6 @@
 /* simple_shell.c */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#define MAX_INPUT_LENGTH 1024
-#define MAX_TOKENS 100
-
-extern char **environ;  /* Access to the environment variables */
+#include "Simple_Shell.h"
 
 /* Function to check if input is coming from a terminal */
 int is_input_terminal() {
