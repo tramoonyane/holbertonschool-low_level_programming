@@ -109,31 +109,51 @@ return (tokens);
  * using the execve system call
  * with the given tokens and program name.
  * It forks a child process to execute the command.
+ * It also handles command execution when PATH is present.
  */
-void execute_command(char **tokens, char *program_name)
-{
-pid_t child_pid;
-int status;
+void execute_command(char **tokens, char *program_name) {
+    pid_t child_pid;
+    int status;
 
-child_pid = fork();
-if (child_pid < 0)
-{
-perror("Fork failed");
-exit(EXIT_FAILURE);
-}
-else if (child_pid == 0)
-{
-if (execve(tokens[0], tokens, environ) == -1)
-{
-fprintf(stderr, "%s: ", program_name);
-perror("Command execution failed");
-exit(EXIT_FAILURE);
-}
-}
-else
-{
-do {
-waitpid(child_pid, &status, WUNTRACED);
-} while (!WIFEXITED(status) && !WIFSIGNALED(status));
-}
+    child_pid = fork();
+    if (child_pid < 0) {
+        perror("Fork failed");
+        exit(EXIT_FAILURE);
+    } else if (child_pid == 0) {
+        if (execvp(tokens[0], tokens) == -1) {
+            /* If execvp fails, attempt to search in PATH directories */
+            char *path = getenv("PATH");
+            if (path != NULL) {
+                char *token;
+                char *command = tokens[0];
+                token = strtok(path, ":");
+                while (token != NULL) {
+                    char *executable = malloc(strlen(token) + strlen(command) + 2);
+                    if (executable == NULL) {
+                        perror("Memory allocation failed");
+                        exit(EXIT_FAILURE);
+                    }
+                    strcpy(executable, token);
+                    strcat(executable, "/");
+                    strcat(executable, command);
+                    if (access(executable, X_OK) == 0) {
+                        free(tokens[0]); /* Free original token */
+                        tokens[0] = executable; /* Update token to full path */
+                        if (execve(executable, tokens, environ) == -1) {
+                            perror("Command execution failed");
+                            exit(EXIT_FAILURE);
+                        }
+                    }
+                    free(executable);
+                    token = strtok(NULL, ":");
+                }
+            }
+            fprintf(stderr, "%s: command not found\n", command);
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        do {
+            waitpid(child_pid, &status, WUNTRACED);
+        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+    }
 }
