@@ -24,7 +24,6 @@ void execute_non_interactively(char *program_name);
 char *get_user_input();
 char **tokenize_input(char *input);
 void execute_command(char **tokens, char *program_name);
-void execute_command(char **tokens);
 char **parse_arguments(char *input);
 void execute_with_arguments(char **tokens, char *program_name);
 
