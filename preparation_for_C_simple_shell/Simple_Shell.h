@@ -24,5 +24,6 @@ void execute_non_interactively(char *program_name);
 char *get_user_input();
 char **tokenize_input(char *input);
 void execute_command(char **tokens, char *program_name);
+char **parse_arguments(char *input);
 
 #endif /* SIMPLE_SHELL_H */
