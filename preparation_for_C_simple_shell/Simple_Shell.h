@@ -5,13 +5,17 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
-#include <sys/wait.h>
 #include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-#define MAX_COMMAND_LENGTH 100
+#define MAX_INPUT_LENGTH 1024
+#define MAX_TOKENS 100
 
+extern char **environ;  /* Access to the environment variables */
 
-void execute_command(char *command);
+/* Function to check if input is coming from a terminal */
+int is_input_terminal();
 
 #endif /* SIMPLE_SHELL_H */
