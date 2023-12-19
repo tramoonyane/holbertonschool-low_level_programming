@@ -104,8 +104,13 @@ return (NULL);
 char **tokenize_input(char *input)
 {
 int i = 0;
-char *tokens[MAX_TOKENS];
+char **tokens = malloc(MAX_TOKENS * sizeof(char *));
 
+if (tokens == NULL)
+{
+perror("Memory allocation failed");
+exit(EXIT_FAILURE);
+}
 tokens[i] = strtok(input, " "); /* Tokenize input */
 while (tokens[i] != NULL && i < MAX_TOKENS - 1)
 {
@@ -113,7 +118,7 @@ i++;
 tokens[i] = strtok(NULL, " ");
 }
 tokens[i + 1] = NULL;
-return (strdup(tokens));
+return (tokens);
 }
 
 /**
