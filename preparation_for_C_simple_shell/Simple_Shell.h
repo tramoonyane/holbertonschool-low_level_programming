@@ -25,5 +25,6 @@ char *get_user_input();
 char **tokenize_input(char *input);
 void execute_command(char **tokens, char *program_name);
 char **parse_arguments(char *input);
+void execute_with_arguments(char **tokens, char *program_name);
 
 #endif /* SIMPLE_SHELL_H */
