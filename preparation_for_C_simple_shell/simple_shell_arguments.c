@@ -68,50 +68,95 @@ char **parse_path() {
  * execute_command - Executes the command with arguments.
  *
  * @command: The command to execute.
+ * @command_number: Number of the command in the shell session.
+ * @program_name: The name of the shell program.
  *
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int execute_command(char *command, int command_number, char *program_name){
-    pid_t pid;
-    int status;
+int execute_command(char *command, int command_number, char *program_name) {
     char **args;
+    int arg_count;
     char *p;
-    int arg_count = 1;  /* Initial count for command itself */
-    char **directories = parse_path();
-    int found;
-    int i;
 
     if (command == NULL || *command == '\0') {
         return EXIT_SUCCESS; /* Skip execution for empty commands */
     }
 
-    /* Count the number of arguments (tokens) */
+    arg_count = count_arguments(command);
+    args = get_command_arguments(command, arg_count);
+
+    execute_command_with_path(args, command_number, program_name);
+
+    free(args);
+    return EXIT_SUCCESS;
+}
+
+/**
+ * count_arguments - Counts the number of arguments in a command.
+ *
+ * @command: The command to analyze.
+ *
+ * Return: Returns the number of arguments.
+ */
+int count_arguments(char *command) {
+    int arg_count = 1; /* Initial count for command itself */
+    char *p;
+
     for (p = command; *p != '\0'; ++p) {
         if (*p == ' ') {
             arg_count++;
-            while (*p == ' ')  /* Skip consecutive spaces */
+            while (*p == ' ') /* Skip consecutive spaces */
                 p++;
         }
     }
 
-    /* Allocate memory for the args array */
+    return arg_count;
+}
+
+/**
+ * get_command_arguments - Splits the command into arguments.
+ *
+ * @command: The command to split.
+ * @arg_count: Number of arguments in the command.
+ *
+ * Return: Returns an array of command arguments.
+ */
+char **get_command_arguments(char *command, int arg_count) {
+    char **args;
+    int i = 0;
+
     args = malloc((arg_count + 1) * sizeof(char *));
     if (args == NULL) {
         perror("malloc error");
         exit(EXIT_FAILURE);
     }
 
-    arg_count = 0;
-    args[arg_count++] = strtok(command, " \n");  /* Get the command */
+    args[i++] = strtok(command, " \n"); /* Get the command */
 
-    /* Get the arguments and store them in the args array */
-    while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
+    while ((args[i++] = strtok(NULL, " \n")) != NULL);
 
-    found = 0;
+    return args;
+}
+
+/**
+ * execute_command_with_path - Executes the command with full path.
+ *
+ * @args: Array of command arguments.
+ * @command_number: Number of the command in the shell session.
+ * @program_name: The name of the shell program.
+ */
+void execute_command_with_path(char **args, int command_number, char *program_name) {
+    pid_t pid;
+    int status;
+    char **directories = parse_path();
+    int found = 0;
+    int i;
+
     for (i = 0; directories[i] != NULL; i++) {
         char path_command[BUFFER_SIZE];
         snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
-        
+
+        /* Check if the command is executable at the given path */
         if (access(path_command, X_OK) == 0) {
             found = 1;
             pid = fork();
@@ -136,10 +181,9 @@ int execute_command(char *command, int command_number, char *program_name){
         fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
     }
 
-    free(args);
     free(directories);
-    return EXIT_SUCCESS;
 }
+
 /**
  * read_command - Reads a command from standard input.
  *
