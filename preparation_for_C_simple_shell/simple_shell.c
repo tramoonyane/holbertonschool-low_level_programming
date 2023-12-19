@@ -19,6 +19,8 @@ int is_input_terminal() {
 
 /**
  * main - Simple Shell
+ * @argc: The number of arguments.
+ * @argv: Array of arguments passed to the program.
  *
  * Return: Always 0
  */
