@@ -44,8 +44,7 @@ void execute_with_arguments(char **tokens, char *program_name)
 {
     pid_t child_pid;
     int status;
-    int found = 0;
-    
+
     child_pid = fork();
     if (child_pid < 0)
     {
@@ -54,31 +53,26 @@ void execute_with_arguments(char **tokens, char *program_name)
     }
     else if (child_pid == 0)
     {
-        /* Check if the command exists in PATH */
-        char *path = getenv("PATH");
-        char *path_copy = strdup(path);
-        char *dir = strtok(path_copy, ":");
-        while (dir != NULL)
+        if (strcmp(tokens[0], "env") == 0)
         {
-            char *command_path = malloc(strlen(dir) + strlen(tokens[0]) + 2);
-            sprintf(command_path, "%s/%s", dir, tokens[0]);
-            if (access(command_path, F_OK) == 0)
+            char **env = environ;
+            while (*env)
             {
-                found = 1;
-                if (execve(command_path, tokens, environ) == -1)
-                {
-                    fprintf(stderr, "%s: ", program_name);
-                    perror("Command execution failed");
-                    exit(EXIT_FAILURE);
-                }
+                printf("%s\n", *env);
+                env++;
             }
-            free(command_path);
-            dir = strtok(NULL, ":");
+            exit(EXIT_SUCCESS);
         }
-        free(path_copy);
-        
-        /* Command not found in PATH */
-        if (!found)
+        else if (access(tokens[0], F_OK) == 0)
+        {
+            if (execve(tokens[0], tokens, environ) == -1)
+            {
+                fprintf(stderr, "%s: ", program_name);
+                perror("Command execution failed");
+                exit(EXIT_FAILURE);
+            }
+        }
+        else
         {
             fprintf(stderr, "%s: command not found\n", tokens[0]);
             exit(EXIT_FAILURE);
