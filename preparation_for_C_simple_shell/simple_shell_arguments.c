@@ -16,17 +16,16 @@
  */
 int main(int argc, char *argv[])
 {
-char *program_name = argv[0]; /* Set the program name from argv[0] */
-(void)argc;
-if (is_input_terminal())
-{
-execute_interactively(program_name);
-}
-else
-{
-execute_non_interactively(program_name);
-}
-return ((EXIT_SUCCESS));
+    (void)argc;
+    if (is_input_terminal())
+    {
+        execute_interactively(argv[0]);
+    }
+    else
+    {
+        execute_non_interactively(argv[0]);
+    }
+    return EXIT_SUCCESS;
 }
 
 /**
@@ -111,7 +110,7 @@ return (tokens);
  * It forks a child process to execute the command.
  * It also handles command execution when PATH is present.
  */
-void execute_command(char **tokens, char *program_name) {
+void execute_command(char **tokens) {
     pid_t child_pid;
     int status;
 
@@ -121,24 +120,22 @@ void execute_command(char **tokens, char *program_name) {
         exit(EXIT_FAILURE);
     } else if (child_pid == 0) {
         if (execvp(tokens[0], tokens) == -1) {
-            /* If execvp fails, attempt to search in PATH directories */
             char *path = getenv("PATH");
             if (path != NULL) {
                 char *token;
-                char *command = tokens[0];
                 token = strtok(path, ":");
                 while (token != NULL) {
-                    char *executable = malloc(strlen(token) + strlen(command) + 2);
+                    char *executable = malloc(strlen(token) + strlen(tokens[0]) + 2);
                     if (executable == NULL) {
                         perror("Memory allocation failed");
                         exit(EXIT_FAILURE);
                     }
                     strcpy(executable, token);
                     strcat(executable, "/");
-                    strcat(executable, command);
+                    strcat(executable, tokens[0]);
                     if (access(executable, X_OK) == 0) {
-                        free(tokens[0]); /* Free original token */
-                        tokens[0] = executable; /* Update token to full path */
+                        free(tokens[0]);
+                        tokens[0] = executable;
                         if (execve(executable, tokens, environ) == -1) {
                             perror("Command execution failed");
                             exit(EXIT_FAILURE);
@@ -148,7 +145,7 @@ void execute_command(char **tokens, char *program_name) {
                     token = strtok(NULL, ":");
                 }
             }
-            fprintf(stderr, "%s: command not found\n", command);
+            fprintf(stderr, "%s: command not found\n", tokens[0]);
             exit(EXIT_FAILURE);
         }
     } else {
