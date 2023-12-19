@@ -68,7 +68,9 @@ else
 fprintf(stderr, "%s: command not found\n", tokens[0]);
 exit(EXIT_FAILURE);
 }
-else {
+}
+else
+{
 do {
 waitpid(child_pid, &status, WUNTRACED);
 } while (!WIFEXITED(status) && !WIFSIGNALED(status));
