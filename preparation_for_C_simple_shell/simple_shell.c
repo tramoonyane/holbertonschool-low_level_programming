@@ -14,16 +14,17 @@
  */
 int main(int argc, char *argv[])
 {
-    char *program_name = argv[0]; /* Set the program name from argv[0] */
-    (void)argc;
-
-    if (is_input_terminal()) {
-        execute_interactively(program_name);
-    } else {
-        execute_non_interactively(program_name);
-    }
-
-    return ((EXIT_SUCCESS));
+char *program_name = argv[0]; /* Set the program name from argv[0] */
+(void)argc;
+if (is_input_terminal())
+{
+execute_interactively(program_name);
+}
+else
+{
+execute_non_interactively(program_name);
+}
+return ((EXIT_SUCCESS));
 }
 
 /**
@@ -35,20 +36,20 @@ int main(int argc, char *argv[])
  */
 void execute_interactively(char *program_name)
 {
-    char *input;
-    while (1) {
-        printf("$ "); /* Display prompt only in interactive mode */
-        fflush(stdout);
+char *input;
 
-        input = get_user_input();
-
-        if (input == NULL) {
-            printf("\n"); /* Print newline after Ctrl+D */
-            break;        /* Exit on EOF */
-        }
-
-        execute_command(tokenize_input(input), program_name);
-    }
+while (1)
+{
+printf("$ "); /* Display prompt only in interactive mode */
+fflush(stdout);
+input = get_user_input();
+if (input == NULL)
+{
+printf("\n"); /* Print newline after Ctrl+D */
+break;        /* Exit on EOF */
+}
+execute_command(tokenize_input(input), program_name);
+}
 }
 
 /**
@@ -60,11 +61,11 @@ void execute_interactively(char *program_name)
  */
 void execute_non_interactively(char *program_name)
 {
-    char *input_from_pipe = get_user_input();
-
-    if (input_from_pipe != NULL) {
-        execute_command(tokenize_input(input_from_pipe), program_name);
-    }
+char *input_from_pipe = get_user_input();
+if (input_from_pipe != NULL)
+{
+execute_command(tokenize_input(input_from_pipe), program_name);
+}
 }
 
 /**
@@ -77,14 +78,13 @@ void execute_non_interactively(char *program_name)
  */
 char *get_user_input()
 {
-    char input[MAX_INPUT_LENGTH];
-
-    if (fgets(input, sizeof(input), stdin) != NULL) {
-        input[strcspn(input, "\n")] = '\0'; /* Remove newline character */
-        return (strdup(input));
-    }
-
-    return NULL;
+char input[MAX_INPUT_LENGTH];
+if (fgets(input, sizeof(input), stdin) != NULL)
+{
+input[strcspn(input, "\n")] = '\0'; /* Remove newline character */
+return (strdup(input));
+}
+return (NULL);
 }
 
 /**
@@ -98,18 +98,17 @@ char *get_user_input()
  */
 char **tokenize_input(char *input)
 {
-    int i = 0;
-    char *tokens[MAX_TOKENS];
+int i = 0;
+char *tokens[MAX_TOKENS];
 
-    tokens[i] = strtok(input, " "); /* Tokenize input */
-
-    while (tokens[i] != NULL && i < MAX_TOKENS - 1) {
-        i++;
-        tokens[i] = strtok(NULL, " ");
-    }
-
-    tokens[i + 1] = NULL;
-    return (strdup(tokens));
+tokens[i] = strtok(input, " "); /* Tokenize input */
+while (tokens[i] != NULL && i < MAX_TOKENS - 1)
+{
+i++;
+tokens[i] = strtok(NULL, " ");
+}
+tokens[i + 1] = NULL;
+return (strdup(tokens));
 }
 
 /**
@@ -122,22 +121,30 @@ char **tokenize_input(char *input)
  */
 void execute_command(char **tokens, char *program_name)
 {
-    pid_t child_pid;
-    int status;
+pid_t child_pid;
+int status;
 
-    child_pid = fork();
-    if (child_pid < 0) {
-        perror("Fork failed");
-        exit(EXIT_FAILURE);
-    } else if (child_pid == 0) {
-        if (execve(tokens[0], tokens, environ) == -1) {
-            fprintf(stderr, "%s: ", program_name);
-            perror("Command execution failed");
-            exit(EXIT_FAILURE);
-        }
-    } else {
-        do {
-            waitpid(child_pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-    }
+child_pid = fork();
+if (child_pid < 0)
+{
+perror("Fork failed");
+exit(EXIT_FAILURE);
+}
+else if (child_pid == 0)
+{
+if (execve(tokens[0], tokens, environ) == -1)
+{
+fprintf(stderr, "%s: ", program_name);
+perror("Command execution failed");
+exit(EXIT_FAILURE);
+}
+}
+else
+{
+do
+{
+waitpid(child_pid, &status, WUNTRACED);
+}
+while (!WIFEXITED(status) && !WIFSIGNALED(status));
+}
 }
