@@ -21,6 +21,7 @@ int main(int argc, char *argv[])
     char *tokens[MAX_TOKENS];
     pid_t child_pid;
     int status;
+    void (argc);
 
     char *program_name = argv[0]; /* Set the program name from argv[0] */
 
