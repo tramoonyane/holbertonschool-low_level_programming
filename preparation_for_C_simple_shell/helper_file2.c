@@ -1,4 +1,4 @@
-/* helper_file1.c */
+/* helper_file2.c */
 
 #include "Simple_Shell.h"
 
