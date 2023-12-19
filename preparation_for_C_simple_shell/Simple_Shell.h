@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <string.h>
+#include <limits.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <libgen.h>  /* Include the library to use basename() */
