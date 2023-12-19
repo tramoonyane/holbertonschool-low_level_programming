@@ -1,124 +1,98 @@
 /* simple_shell.c */
 
-#include "Simple_Shell.h"
-extern char **environ;
-
 /**
- * execute_command - Executes the command.
+ * main - Entry point for the simple shell
  *
- * @command: The command to execute.
- * @command_number: The number of the command.
- * @program_name: The name of the program.
+ * Description: Displays a prompt, reads a command from the user, and executes
+ *              it using execve. This shell handles single-word commands without arguments.
+ *              It uses fork(), execve(), and waits for the child process to finish.
  *
- * Return: Returns EXIT_SUCCESS upon successful execution.
+ * Return: Always returns 0.
  */
-int execute_command(char *command, int command_number, char *program_name) {
-    pid_t pid;
+int main(void)
+{
+    char command[MAX_COMMAND_LENGTH];
     int status;
-    int args_count = 1;
-    int i;
-    char *token;
-    char **args;
-    char *path;
-    char full_path[PATH_MAX];
 
-    /* Count the number of arguments in the command */
-    token = strtok(command, " ");
-    while (token != NULL) {
-        args_count++;
-        token = strtok(NULL, " ");
-    }
+    while (1)
+    {
+        printf("$ ");
+        if (fgets(command, MAX_COMMAND_LENGTH, stdin) == NULL)
+        {
+            printf("\n");
+            break; /* Ctrl+D (EOF) is pressed */
+        }
 
-    /* Allocate memory for the args array based on the arguments count */
-    args = malloc((args_count + 1) * sizeof(char *));
-    if (args == NULL) {
-        perror("malloc error");
-        exit(EXIT_FAILURE);
-    }
+        /* Remove newline character */
+        command[strcspn(command, "\n")] = '\0';
 
-    /* Tokenize the command and store arguments in the args array */
-    token = strtok(command, " ");
-    args[0] = token; /* The first argument is the command itself */
-    for (i = 1; i < args_count; i++) {
-        token = strtok(NULL, " ");
-        args[i] = token;
-    }
-    args[args_count] = NULL; /* Null-terminate the argument list */
+        /* Forking a child process */
+        pid_t pid = fork();
 
-    pid = fork();
-
-    if (pid == -1) {
-        perror("fork error");
-        exit(EXIT_FAILURE);
-    } else if (pid == 0) {
-        /* Child process */
-        path = getenv("PWD");
-        if (path == NULL) {
-            perror("getenv error");
+        if (pid < 0)
+        {
+            perror("Fork failed");
             exit(EXIT_FAILURE);
         }
-        snprintf(full_path, PATH_MAX, "%s/%s", path, args[0]);
+        else if (pid == 0) /* Child process */
+        {
+            char *args[] = {command, NULL};
+            if (execve(command, args, environ) == -1)
+            {
+                fprintf(stderr, "Error: Command not found: %s\n", command);
+                exit(EXIT_FAILURE);
+            }
+        }
+        else /* Parent process */
+        {
+            waitpid(pid, &status, 0);
 
-        if (execve(args[0], args, environ) == -1 && execve(full_path, args, environ) == -1) {
-            fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
+            if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+            {
+                fprintf(stderr, "Error: Command execution failed\n");
+            }
+        }
+    }
+
+    return 0;
+}
+
+/**
+ * execute_command - Executes the command entered by the user
+ * @command: The command to be executed
+ *
+ * Description: This function executes the specified command using fork(),
+ *              execve(), and waits for the child process to finish.
+ *              It displays error messages if the command execution fails.
+ *
+ * Return: Void
+ */
+void execute_command(char *command)
+{
+    int status;
+    pid_t pid = fork();
+
+    if (pid < 0)
+    {
+        perror("Fork failed");
+        exit(EXIT_FAILURE);
+    }
+    else if (pid == 0) // Child process
+    {
+        char *args[] = {command, NULL};
+        if (execve(command, args, environ) == -1)
+        {
+            fprintf(stderr, "Error: Command not found: %s\n", command);
             exit(EXIT_FAILURE);
         }
-    } else {
-        /* Parent process */
+    }
+    else /* Parent process */
+    {
         waitpid(pid, &status, 0);
-    }
 
-    free(args); /* Free the allocated memory for args */
-    return EXIT_SUCCESS;
-}
-
-/**
- * read_command - Reads a command from standard input.
- *
- * Return: Returns the input command as a dynamically allocated string.
- */
-char *read_command() {
-    char *command = NULL;
-    size_t bufsize = 0;
-    ssize_t characters;
-
-    printf("%s", PROMPT);
-    fflush(stdout);
-
-    characters = getline(&command, &bufsize, stdin);
-    if (characters == -1) {
-        if (feof(stdin)) {
-            free(command);
-            exit(EXIT_SUCCESS);
-        } else {
-            perror("getline error");
-            exit(EXIT_FAILURE);
+        if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
+        {
+            fprintf(stderr, "Error: Command execution failed\n");
         }
     }
-
-    command[strcspn(command, "\n")] = '\0'; /* Remove newline character */
-    return command;
-}
-
-/**
- * main - Main function of the shell.
- *
- * Return: Returns EXIT_SUCCESS upon successful execution.
- */
-int main(void) {
-    char *command;
-
-    /* Interactive mode */
-    do {
-        command = read_command();
-
-        if (execute_command(command, 1, "hsh") == EXIT_FAILURE) {
-            free(command);
-            continue;
-        }
-
-        free(command);
-    } while (1);
-
-    return EXIT_SUCCESS;
 }
