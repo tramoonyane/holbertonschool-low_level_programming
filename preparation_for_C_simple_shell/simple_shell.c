@@ -81,41 +81,53 @@ int main(void)
  *
  * Return: Void
  */
-void execute_command(char *command)
-{
+void execute_command(char *command) {
     int status;
     pid_t pid = fork();
 
-    if (pid < 0)
-    {
+    if (pid < 0) {
         perror("Fork failed");
         exit(EXIT_FAILURE);
-    }
-    else if (pid == 0) /* Child process */
-    {
-        char **args = malloc(sizeof(char *) * 2);
-        if (args == NULL)
-        {
+    } else if (pid == 0) { // Child process
+        char *token, *path, *full_path;
+        path = getenv("PATH");
+        full_path = malloc(strlen(path) + strlen(command) + 2); // +2 for '/' and null terminator
+        if (full_path == NULL) {
             perror("Memory allocation failed");
             exit(EXIT_FAILURE);
         }
-        args[0] = command;
-        args[1] = NULL;
+        
+        token = strtok(path, ":");
+        while (token != NULL) {
+            strcpy(full_path, token);
+            strcat(full_path, "/");
+            strcat(full_path, command);
+            if (access(full_path, X_OK) == 0) {
+                char **args = malloc(sizeof(char *) * 2);
+                if (args == NULL) {
+                    perror("Memory allocation failed");
+                    exit(EXIT_FAILURE);
+                }
+                args[0] = full_path;
+                args[1] = NULL;
 
-        if (execve(command, args, environ) == -1)
-        {
-            fprintf(stderr, "Error: Command not found: %s\n", command);
-            free(args);
-            exit(EXIT_FAILURE);
+                if (execve(full_path, args, environ) == -1) {
+                    fprintf(stderr, "Error: Command execution failed\n");
+                    free(args);
+                    exit(EXIT_FAILURE);
+                }
+                free(args);
+            }
+            token = strtok(NULL, ":");
         }
-        free(args);
-    }
-    else /* Parent process */
-    {
+
+        fprintf(stderr, "Error: Command not found: %s\n", command);
+        free(full_path);
+        exit(EXIT_FAILURE);
+    } else { /* Parent process */
         waitpid(pid, &status, 0);
 
-        if (WIFEXITED(status) && WEXITSTATUS(status) != 0)
-        {
+        if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
             fprintf(stderr, "Error: Command execution failed\n");
         }
     }
