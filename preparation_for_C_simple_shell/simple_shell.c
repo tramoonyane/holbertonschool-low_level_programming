@@ -1,7 +1,6 @@
 /* simple_shell.c */
 
 #include "Simple_Shell.h"
-#include "helper_file1.h"
 
 /**
  * main - Entry point of the simple shell program
