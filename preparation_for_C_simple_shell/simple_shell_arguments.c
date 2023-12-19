@@ -40,11 +40,11 @@ void execute_env_command() {
 
     pid_t child_pid;
     int status;
-    char env_argv[2];
 
     printf("Executing command: %s\n", env_cmd);
 
-    env_argv[2] = { env_cmd, NULL }; /* Initialize env_argv inside the function */
+    /* Initialize env_argv inside the function */
+    char *env_argv[] = { env_cmd, NULL };
 
     child_pid = fork();
     if (child_pid < 0) {
