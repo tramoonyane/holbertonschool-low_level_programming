@@ -1,6 +1,8 @@
 /* simple_shell.c */
 #include "Simple_Shell.h"
 
+extern char **environ; /* Declaration of environ variable */
+
 /**
  * main - Entry point for the simple shell
  *
