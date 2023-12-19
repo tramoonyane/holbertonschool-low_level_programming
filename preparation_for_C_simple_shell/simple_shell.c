@@ -88,7 +88,7 @@ void execute_command(char *command) {
     if (pid < 0) {
         perror("Fork failed");
         exit(EXIT_FAILURE);
-    } else if (pid == 0) { // Child process
+    } else if (pid == 0) { /* Child process */
         char *token, *path, *full_path;
         path = getenv("PATH");
         full_path = malloc(strlen(path) + strlen(command) + 2); // +2 for '/' and null terminator
