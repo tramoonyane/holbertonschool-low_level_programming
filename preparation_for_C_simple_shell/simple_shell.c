@@ -21,20 +21,24 @@ int main(int argc, char *argv[])
     char *tokens[MAX_TOKENS];
     pid_t child_pid;
     int status;
-
+    int interactive = is_input_terminal(); /* Check if input is interactive */
     char *program_name = argv[0]; /* Set the program name from argv[0] */
     (void)argc;  /* Acknowledge the unused parameter to prevent the warning */
-
-    while (1)
-    {
-        printf("$ "); /* Display prompt */
+    
+    interactive = is_input_terminal(); /* Check if input is interactive */
+    while (1){
+    if (interactive){
+        printf("$ "); /* Display prompt only in interactive mode*/
         fflush(stdout);
+    }
 
         if (fgets(input, sizeof(input), stdin) == NULL)
         {
             if (feof(stdin))
             {
+                if (interactive) {
                 printf("\n"); /* Print newline after Ctrl+D */
+                }
                 break;        /* Exit on EOF */
             }
         }
@@ -63,8 +67,10 @@ int main(int argc, char *argv[])
 
             if (execve(tokens[0], tokens, environ) == -1)
             {
+                if (interactive) {
                 fprintf(stderr, "%s: ", program_name); /* Print program name */
                 perror("Command execution failed");
+                }
                 exit(EXIT_FAILURE);
             }
         }
