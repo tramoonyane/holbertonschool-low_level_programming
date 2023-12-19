@@ -117,8 +117,7 @@ exit(EXIT_FAILURE);
 }
 else
 {
-do
-{
+do {
 waitpid(child_pid, &status, WUNTRACED);
 }
 while (!WIFEXITED(status) && !WIFSIGNALED(status));
