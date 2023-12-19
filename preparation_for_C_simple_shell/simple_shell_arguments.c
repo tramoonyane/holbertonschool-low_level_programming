@@ -48,13 +48,22 @@ void execute_env_command() {
         perror("Fork failed");
         exit(EXIT_FAILURE);
     } else if (child_pid == 0) {
-        char *env_argv[] = { env_cmd, NULL };
+        char **env_argv = malloc(2 * sizeof(char *));
+        if (env_argv == NULL) {
+            perror("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        
+        env_argv[0] = env_cmd;
+        env_argv[1] = NULL;
         
         if (execve(env_cmd, env_argv, environ) == -1) {
             fprintf(stderr, "Error executing command: %s\n", env_cmd);
             perror("Command execution failed");
             exit(EXIT_FAILURE);
         }
+        
+        free(env_argv); /* Free allocated memory */
     } else {
         do {
             waitpid(child_pid, &status, WUNTRACED);
