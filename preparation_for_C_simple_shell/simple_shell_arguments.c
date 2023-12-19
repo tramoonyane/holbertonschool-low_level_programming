@@ -12,23 +12,37 @@
  * based on space delimiter and returns an array of tokens
  * obtained from the input (command and arguments).
  */
-char **parse_arguments(char *input)
-{
-int i = 0;
-char **tokens = malloc(MAX_TOKENS * sizeof(char *));
-if (tokens == NULL)
-{
-perror("Memory allocation failed");
-exit(EXIT_FAILURE);
+char **parse_arguments(char *input) {
+    int i = 0;
+    char **tokens = malloc(MAX_TOKENS * sizeof(char *));
+    if (tokens == NULL) {
+        perror("Memory allocation failed");
+        exit(EXIT_FAILURE);
+    }
+    tokens[i] = strtok(input, " "); /* Tokenize input */
+    while (tokens[i] != NULL && i < MAX_TOKENS - 1) {
+        i++;
+        tokens[i] = strtok(NULL, " ");
+    }
+    tokens[i + 1] = NULL;
+    return tokens;
 }
-tokens[i] = strtok(input, " "); /* Tokenize input */
-while (tokens[i] != NULL && i < MAX_TOKENS - 1)
-{
-i++;
-tokens[i] = strtok(NULL, " ");
-}
-tokens[i + 1] = NULL;
-return (tokens);
+
+/**
+ * execute_env_command - Print the current environment variables.
+ *
+ * Description: This function prints the current environment variables.
+ * It accesses the global variable 'environ' containing the environment
+ * variable pointers and iterates through them to print each variable.
+ */
+void execute_env_command() {
+    extern char **environ;
+    char **env = environ;
+
+    while (*env) {
+        printf("%s\n", *env);
+        env++;
+    }
 }
 
 /**
@@ -40,77 +54,33 @@ return (tokens);
  * using the execve system call with the given tokens and program name.
  * It forks a child process to execute the command.
  */
-void execute_with_arguments(char **tokens, char *program_name)
-{
-    
+void execute_with_arguments(char **tokens, char *program_name) {
     pid_t child_pid;
     int status;
 
     printf("Command: %s\n", tokens[0]); /* Debug print */
+
     child_pid = fork();
-    if (child_pid < 0)
-    {
+    if (child_pid < 0) {
         perror("Fork failed");
         exit(EXIT_FAILURE);
-    }
-    else if (child_pid == 0)
-    {
-        if (strcmp(tokens[0], "env") == 0)
-        {
-            char **env = environ;
-            while (*env)
-            {
-                printf("%s\n", *env);
-                env++;
-            }
-            exit(EXIT_SUCCESS);
-        }
-        else if (access(tokens[0], F_OK) == 0)
-        {
-            if (execve(tokens[0], tokens, environ) == -1)
-            {
-                 printf("Command: %s\n", tokens[0]); /* Debug print */
+    } else if (child_pid == 0) {
+        if (strcmp(tokens[0], "env") == 0) {
+            execute_env_command(); /* Call the function to handle 'env' command */
+            exit(EXIT_SUCCESS); /* Exit the child process after executing 'env' */
+        } else if (access(tokens[0], F_OK) == 0) {
+            if (execve(tokens[0], tokens, environ) == -1) {
                 fprintf(stderr, "%s: ", program_name);
                 perror("Command execution failed");
                 exit(EXIT_FAILURE);
-                 printf("Command: %s\n", tokens[0]); /* Debug print */
             }
-        }
-        else
-        {
+        } else {
             fprintf(stderr, "%s: command not found\n", tokens[0]);
             exit(EXIT_FAILURE);
         }
-    }
-    else
-    {
+    } else {
         do {
-             printf("Command: %s\n", tokens[0]); /* Debug print */
             waitpid(child_pid, &status, WUNTRACED);
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
-         printf("Command: %s\n", tokens[0]); /* Debug print */
-    }
-}
-
-/**
- * execute_env_command - Print the current environment variables.
- *
- * Description: This function prints the current environment variables.
- * It accesses the global variable 'environ' containing the environment
- * variable pointers and iterates through them to print each variable.
- */
-void execute_env_command()
-{
-    extern char **environ; /* External environment variable list */
-    char **env = environ;  /* Pointer to environment variables */
-
-    /*
-     * Iterate through the environment variables and print each variable.
-     * Prints each environment variable followed by a newline character.
-     */
-    while (*env)
-    {
-        printf("%s\n", *env);
-        env++;
     }
 }
