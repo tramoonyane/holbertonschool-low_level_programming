@@ -33,9 +33,9 @@ Compile each file for the respective task using specific commands (similar to pr
 - Task 2. Simple shell 0.1
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.c helper_file1.c -o hsh
 - Task 3. Simple shell 0.2
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_arguments.c helper_file2.c -o hsh
+  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_arguments.c -o hsh
 - Task 4. Simple shell 0.3
-   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_path.c simple_shell_exit.c -o hsh
+   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_exit.c -o hsh
 - Task 5. Simple shell 0.4
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_path.c simple_shell_exit.c -o hsh
 - Task 6. Simple shell 1.0
