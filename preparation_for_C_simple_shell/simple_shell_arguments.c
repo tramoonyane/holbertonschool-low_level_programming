@@ -42,10 +42,11 @@ return (tokens);
  */
 void execute_with_arguments(char **tokens, char *program_name)
 {
-    printf("Command: %s\n", tokens[0]); /* Debug print */
+    
     pid_t child_pid;
     int status;
 
+    printf("Command: %s\n", tokens[0]); /* Debug print */
     child_pid = fork();
     if (child_pid < 0)
     {
