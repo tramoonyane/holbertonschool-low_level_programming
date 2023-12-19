@@ -43,14 +43,13 @@ void execute_env_command() {
 
     printf("Executing command: %s\n", env_cmd);
 
-    /* Initialize env_argv inside the function */
-    char *env_argv[] = { env_cmd, NULL };
-
     child_pid = fork();
     if (child_pid < 0) {
         perror("Fork failed");
         exit(EXIT_FAILURE);
     } else if (child_pid == 0) {
+        char *env_argv[] = { env_cmd, NULL };
+        
         if (execve(env_cmd, env_argv, environ) == -1) {
             fprintf(stderr, "Error executing command: %s\n", env_cmd);
             perror("Command execution failed");
