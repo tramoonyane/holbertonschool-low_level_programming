@@ -75,8 +75,10 @@ execute_command(tokenize_input(input_from_pipe), program_name);
  *
  * Return: A pointer to the user input string.
  *
- * Description: This function reads user input from standard input (stdin)
- * and returns the input as a string, removing the newline character if present.
+ * Description: This function reads user input
+ * from standard input (stdin)
+ * and returns the input as a string,
+ * removing the newline character if present.
  */
 char *get_user_input()
 {
@@ -95,7 +97,8 @@ return (NULL);
  *
  * Return: A pointer to an array of tokens (strings).
  *
- * Description: This function tokenizes the input string based on space delimiter
+ * Description: This function tokenizes the input string
+ * based on space delimiter
  * and returns an array of tokens (strings) obtained from the input.
  */
 char **tokenize_input(char *input)
@@ -118,8 +121,10 @@ return (strdup(tokens));
  * @tokens: An array of command tokens.
  * @program_name: The name of the program.
  *
- * Description: This function executes a command using the execve system call
- * with the given tokens and program name. It forks a child process to execute the command.
+ * Description: This function executes a command
+ * using the execve system call
+ * with the given tokens and program name.
+ * It forks a child process to execute the command.
  */
 void execute_command(char **tokens, char *program_name)
 {
