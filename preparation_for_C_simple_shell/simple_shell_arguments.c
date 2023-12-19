@@ -37,12 +37,14 @@ char **parse_arguments(char *input) {
  */
 void execute_env_command() {
     char *env_cmd = "/bin/env";
-    char *env_argv[] = { env_cmd, NULL };
-    
+
     pid_t child_pid;
     int status;
 
     printf("Executing command: %s\n", env_cmd);
+
+    // Initialize env_argv inside the function
+    char *env_argv[] = { env_cmd, NULL };
 
     child_pid = fork();
     if (child_pid < 0) {
@@ -60,7 +62,6 @@ void execute_env_command() {
         } while (!WIFEXITED(status) && !WIFSIGNALED(status));
     }
 }
-
 
 /**
  * execute_with_arguments - Executes a command with arguments using execve.
