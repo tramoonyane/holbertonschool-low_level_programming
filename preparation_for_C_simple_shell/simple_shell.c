@@ -8,7 +8,7 @@
 #define MAX_INPUT_LENGTH 1024
 #define MAX_TOKENS 100
 
-extern char **environ;  // Access to the environment variables
+extern char **environ;  /* Access to the environment variables */
 
 /**
  * main - Simple Shell
