@@ -20,8 +20,7 @@ int is_input_terminal() {
  *
  * Return: Always 0
  */
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     char input[MAX_INPUT_LENGTH];
     char *tokens[MAX_TOKENS];
     pid_t child_pid;
@@ -29,62 +28,81 @@ int main(int argc, char *argv[])
     int interactive = is_input_terminal(); /* Check if input is interactive */
     char *program_name = argv[0]; /* Set the program name from argv[0] */
     (void)argc;  /* Acknowledge the unused parameter to prevent the warning */
-    
-    interactive = is_input_terminal(); /* Check if input is interactive */
-    while (1){
-    if (interactive){
-        printf("$ "); /* Display prompt only in interactive mode*/
-        fflush(stdout);
-    }
 
-        if (fgets(input, sizeof(input), stdin) == NULL)
-        {
-            if (feof(stdin))
-            {
-                if (interactive) {
-                printf("\n"); /* Print newline after Ctrl+D */
+    if (interactive) {
+        while (1) {
+            printf("$ "); /* Display prompt only in interactive mode*/
+            fflush(stdout);
+
+            if (fgets(input, sizeof(input), stdin) == NULL) {
+                if (feof(stdin)) {
+                    printf("\n"); /* Print newline after Ctrl+D */
+                    break;        /* Exit on EOF */
                 }
-                break;        /* Exit on EOF */
+            }
+
+            input[strcspn(input, "\n")] = '\0'; /* Remove newline character */
+
+            child_pid = fork();
+
+            if (child_pid < 0) {
+                perror("Fork failed");
+                exit(EXIT_FAILURE);
+            } else if (child_pid == 0) {
+                int i = 0;
+                tokens[i] = strtok(input, " "); /* Tokenize input */
+
+                while (tokens[i] != NULL && i < MAX_TOKENS - 1) {
+                    i++;
+                    tokens[i] = strtok(NULL, " ");
+                }
+
+                tokens[i + 1] = NULL;
+
+                if (execve(tokens[0], tokens, environ) == -1) {
+                    fprintf(stderr, "%s: ", program_name);
+                    perror("Command execution failed");
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                do {
+                    waitpid(child_pid, &status, WUNTRACED);
+                } while (!WIFEXITED(status) && !WIFSIGNALED(status));
             }
         }
+    } else {
+        /* Non-interactive mode: Read input from pipes or redirected input */
+        char input_from_pipe[MAX_INPUT_LENGTH];
 
-        input[strcspn(input, "\n")] = '\0'; /* Remove newline character */
+        if (fgets(input_from_pipe, sizeof(input_from_pipe), stdin) != NULL) {
+            input_from_pipe[strcspn(input_from_pipe, "\n")] = '\0'; /* Remove newline character */
 
-        child_pid = fork();
-
-        if (child_pid < 0)
-        {
-            perror("Fork failed");
-            exit(EXIT_FAILURE);
-        }
-        else if (child_pid == 0)
-        {
             int i = 0;
-            tokens[i] = strtok(input, " "); /* Tokenize input */
+            tokens[i] = strtok(input_from_pipe, " "); /* Tokenize input */
 
-            while (tokens[i] != NULL && i < MAX_TOKENS - 1)
-            {
+            while (tokens[i] != NULL && i < MAX_TOKENS - 1) {
                 i++;
                 tokens[i] = strtok(NULL, " ");
             }
 
             tokens[i + 1] = NULL;
 
-            if (execve(tokens[0], tokens, environ) == -1)
-            {
-                if (interactive) {
-                fprintf(stderr, "%s: ", program_name); /* Print program name */
-                perror("Command execution failed");
-                }
+            child_pid = fork();
+
+            if (child_pid < 0) {
+                perror("Fork failed");
                 exit(EXIT_FAILURE);
+            } else if (child_pid == 0) {
+                if (execve(tokens[0], tokens, environ) == -1) {
+                    fprintf(stderr, "%s: ", program_name);
+                    perror("Command execution failed");
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                do {
+                    waitpid(child_pid, &status, WUNTRACED);
+                } while (!WIFEXITED(status) && !WIFSIGNALED(status));
             }
-        }
-        else
-        {
-            do
-            {
-                waitpid(child_pid, &status, WUNTRACED);
-            } while (!WIFEXITED(status) && !WIFSIGNALED(status));
         }
     }
 
