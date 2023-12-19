@@ -3,16 +3,6 @@
 #include "Simple_Shell.h"
 
 /**
- * is_input_terminal - Checks if input is coming from a terminal
- *
- * Return: 1 if input is from a terminal, 0 otherwise
- */
-int is_input_terminal(void)
-{
-return (isatty(fileno((stdin))));
-}
-
-/**
  * main - Entry point of the simple shell program
  * @argc: The number of arguments.
  * @argv: Array of arguments passed to the program.
