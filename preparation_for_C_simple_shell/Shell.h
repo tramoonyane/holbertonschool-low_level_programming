@@ -15,9 +15,12 @@
 
 char **parse_path();
 int execute_command(char *command, int command_number, char *program_name);
-char* read_command();
+char *read_command();
 int handle_builtin_commands(char *command);
 void exit_shell();
 
+void interactive_mode(char *program_name);
+void non_interactive_mode(char *program_name);
+void process_command(char *command, int *command_number, char *program_name);
 
 #endif /* SHELL_H */
