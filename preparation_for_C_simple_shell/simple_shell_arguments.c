@@ -3,154 +3,210 @@
 #include "Simple_Shell.h"
 
 /**
- * main - Entry point of the simple shell program
- * @argc: The number of arguments.
- * @argv: Array of arguments passed to the program.
+ * parse_path - Tokenizes the PATH environment variable.
  *
- * Return: Always 0 upon successful execution.
- *
- * Description: This function acts as the entry point
- * of the simple shell program.
- * It determines if the input is from a terminal
- * or not and executes accordingly.
+ * Return: Returns an array of directories.
  */
-int main(int argc, char *argv[])
-{
-    (void)argc;
-    if (is_input_terminal())
-    {
-        execute_interactively(argv[0]);
-    }
-    else
-    {
-        execute_non_interactively(argv[0]);
-    }
-    return EXIT_SUCCESS;
-}
-
-/**
- * execute_interactively - Executes commands interactively from the terminal
- * @program_name: The name of the program.
- *
- * Description: This function handles the interactive mode of the shell.
- * It displays a prompt and waits for user input to execute commands.
- */
-void execute_interactively(char *program_name)
-{
-char *input;
-
-while (1)
-{
-printf("$ "); /* Display prompt only in interactive mode */
-fflush(stdout);
-input = get_user_input();
-if (input == NULL)
-{
-printf("\n"); /* Print newline after Ctrl+D */
-break;        /* Exit on EOF */
-}
-execute_command(tokenize_input(input), program_name);
-}
-}
-
-/**
- * execute_non_interactively - Executes commands non-interactively
- * @program_name: The name of the program.
- *
- * Description: This function handles the non-interactive mode of the shell.
- * It reads input from pipes or redirected input to execute commands.
- */
-void execute_non_interactively(char *program_name)
-{
-char *input_from_pipe = get_user_input();
-if (input_from_pipe != NULL)
-{
-execute_command(tokenize_input(input_from_pipe), program_name);
-}
-}
-
-/**
- * tokenize_input - Tokenizes the input string into individual tokens
- * @input: The input string to tokenize.
- *
- * Return: A pointer to an array of tokens (strings).
- *
- * Description: This function tokenizes the input string
- * based on space delimiter
- * and returns an array of tokens (strings) obtained from the input.
- */
-char **tokenize_input(char *input)
-{
-int i = 0;
-char **tokens = malloc(MAX_TOKENS * sizeof(char *));
-
-if (tokens == NULL)
-{
-perror("Memory allocation failed");
-exit(EXIT_FAILURE);
-}
-tokens[i] = strtok(input, " "); /* Tokenize input */
-while (tokens[i] != NULL && i < MAX_TOKENS - 1)
-{
-i++;
-tokens[i] = strtok(NULL, " ");
-}
-tokens[i + 1] = NULL;
-return (tokens);
-}
-
-/**
- * execute_command - Executes a command using execve
- * @tokens: An array of command tokens.
- * @program_name: The name of the program.
- *
- * Description: This function executes a command
- * using the execve system call
- * with the given tokens and program name.
- * It forks a child process to execute the command.
- * It also handles command execution when PATH is present.
- */
-void execute_command(char **tokens) {
-    pid_t child_pid;
-    int status;
-
-    child_pid = fork();
-    if (child_pid < 0) {
-        perror("Fork failed");
+char **parse_path() {
+    char *path = getenv("PATH");
+    char *token;
+    int count;
+    char *path_copy;
+    char **directories = malloc(sizeof(char *));
+    if (path == NULL || *path == '\0') {
+        fprintf(stderr, "No PATH variable found or empty.\n");
         exit(EXIT_FAILURE);
-    } else if (child_pid == 0) {
-        if (execvp(tokens[0], tokens) == -1) {
-            char *path = getenv("PATH");
-            if (path != NULL) {
-                char *token;
-                token = strtok(path, ":");
-                while (token != NULL) {
-                    char *executable = malloc(strlen(token) + strlen(tokens[0]) + 2);
-                    if (executable == NULL) {
-                        perror("Memory allocation failed");
-                        exit(EXIT_FAILURE);
-                    }
-                    strcpy(executable, token);
-                    strcat(executable, "/");
-                    strcat(executable, tokens[0]);
-                    if (access(executable, X_OK) == 0) {
-                        free(tokens[0]);
-                        tokens[0] = executable;
-                        if (execve(executable, tokens, environ) == -1) {
-                            perror("Command execution failed");
-                            exit(EXIT_FAILURE);
-                        }
-                    }
-                    free(executable);
-                    token = strtok(NULL, ":");
-                }
-            }
-            fprintf(stderr, "%s: command not found\n", tokens[0]);
+    }
+    path_copy = strdup(path);
+    if (path_copy == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(path_copy, ":");
+    count = 0;
+    directories = malloc(sizeof(char *));
+    if (directories == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+    while (token != NULL) {
+        directories = realloc(directories, (count + 1) * sizeof(char *));
+        if (directories == NULL) {
+            perror("realloc error");
             exit(EXIT_FAILURE);
         }
-    } else {
-        do {
-            waitpid(child_pid, &status, WUNTRACED);
-        } while (!WIFEXITED(status) && !WIFSIGNALED(status));
+        
+        directories[count++] = token;
+        token = strtok(NULL, ":");
     }
+    directories = realloc(directories, (count + 1) * sizeof(char *));
+    if (directories == NULL) {
+        perror("realloc error");
+        exit(EXIT_FAILURE);
+    }
+    directories[count] = NULL;
+    free(path_copy);
+
+    return directories;
+}
+
+/**
+ * execute_command - Executes the command with arguments.
+ *
+ * @command: The command to execute.
+ *
+ * Return: Returns EXIT_SUCCESS upon successful execution.
+ */
+int execute_command(char *command, int command_number, char *program_name){
+    pid_t pid;
+    int status;
+    char **args;
+    char *p;
+    int arg_count = 1;  /* Initial count for command itself */
+    char **directories = parse_path();
+    int found;
+    int i;
+
+    if (command == NULL || *command == '\0') {
+        return EXIT_SUCCESS; /* Skip execution for empty commands */
+    }
+
+    /* Count the number of arguments (tokens) */
+    for (p = command; *p != '\0'; ++p) {
+        if (*p == ' ') {
+            arg_count++;
+            while (*p == ' ')  /* Skip consecutive spaces */
+                p++;
+        }
+    }
+
+    /* Allocate memory for the args array */
+    args = malloc((arg_count + 1) * sizeof(char *));
+    if (args == NULL) {
+        perror("malloc error");
+        exit(EXIT_FAILURE);
+    }
+
+    arg_count = 0;
+    args[arg_count++] = strtok(command, " \n");  /* Get the command */
+
+    /* Get the arguments and store them in the args array */
+    while ((args[arg_count++] = strtok(NULL, " \n")) != NULL);
+
+    found = 0;
+    for (i = 0; directories[i] != NULL; i++) {
+        char path_command[BUFFER_SIZE];
+        snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+        
+        if (access(path_command, X_OK) == 0) {
+            found = 1;
+            pid = fork();
+            if (pid == -1) {
+                perror("fork error");
+                exit(EXIT_FAILURE);
+            } else if (pid == 0) {
+                /* Child process */
+                if (execv(path_command, args) == -1) {
+                    fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                /* Parent process */
+                waitpid(pid, &status, 0);
+            }
+            break;
+        }
+    }
+
+    if (!found) {
+        fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+    }
+
+    free(args);
+    free(directories);
+    return EXIT_SUCCESS;
+}
+/**
+ * read_command - Reads a command from standard input.
+ *
+ * Return: Returns the input command as a dynamically allocated string.
+ */
+char* read_command()
+{
+    char* command;
+    char input[BUFFER_SIZE];
+
+    if (fgets(input, BUFFER_SIZE, stdin) == NULL) {
+        if (feof(stdin)) {
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        } else {
+            perror("fgets error");
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    input[strcspn(input, "\n")] = '\0';
+
+    command = strdup(input);
+    if (command == NULL) {
+        perror("strdup error");
+        exit(EXIT_FAILURE);
+    }
+
+    return command;
+}
+
+/**
+ * main - Main function of the shell.
+ *
+ * Return: Returns EXIT_SUCCESS upon successful execution.
+ */
+int main() {
+    char *command;
+    int command_number = 1;
+    char *program_name = "hsh"; /* Replace this with your program's name */
+    
+    /* Check if input is from terminal or redirected from file/pipe */
+    if (isatty(STDIN_FILENO)) {
+    /* Interactive mode */    
+    do {
+        printf("%s", PROMPT);
+        command = read_command();
+
+        if (feof(stdin)) {
+            free(command);
+            write(STDOUT_FILENO, "\n", 1);
+            exit(EXIT_SUCCESS);
+        }
+
+        if (!handle_builtin_commands(command)) {
+            /* If not a built-in command, execute the command */
+            if (execute_command(command, command_number, program_name) == EXIT_FAILURE) {
+                free(command);
+                continue;
+            }
+        }
+
+        free(command);
+        command_number++; /* Increment command number for each command */
+    } while (1);
+    } else {
+        /* Non-interactive mode */
+            char input[BUFFER_SIZE];
+        while (fgets(input, BUFFER_SIZE, stdin)) {
+            /* Process the command in the non-interactive mode */
+            /* Remove the newline character from input, if any */
+            input[strcspn(input, "\n")] = '\0';
+
+            /* Execute the command */
+            if (execute_command(input, command_number, program_name) == EXIT_FAILURE) {
+                /* Handle error if needed */
+                /* Display error messages or perform necessary actions */
+            }
+            command_number++; /* Increment command number for each command */
+        }
+    }
+    return EXIT_SUCCESS;
 }
