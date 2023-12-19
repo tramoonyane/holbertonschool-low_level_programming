@@ -10,6 +10,11 @@
 
 extern char **environ;  /* Access to the environment variables */
 
+/* Function to check if input is coming from a terminal */
+int is_input_terminal() {
+    return isatty(fileno(stdin));
+}
+
 /**
  * main - Simple Shell
  *
