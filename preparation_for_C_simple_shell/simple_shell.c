@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
     int status;
 
     char *program_name = argv[0]; /* Set the program name from argv[0] */
+    (void)argc;  /* Acknowledge the unused parameter to prevent the warning */
 
     while (1)
     {
