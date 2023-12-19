@@ -40,12 +40,22 @@ int main(void)
         }
         else if (pid == 0) /* Child process */
         {
-            char *args[] = {command, NULL};
+            char **args = malloc(sizeof(char *) * 2);
+            if (args == NULL)
+            {
+                perror("Memory allocation failed");
+                exit(EXIT_FAILURE);
+            }
+            args[0] = command;
+            args[1] = NULL;
+
             if (execve(command, args, environ) == -1)
             {
                 fprintf(stderr, "Error: Command not found: %s\n", command);
+                free(args);
                 exit(EXIT_FAILURE);
             }
+            free(args);
         }
         else /* Parent process */
         {
@@ -83,12 +93,22 @@ void execute_command(char *command)
     }
     else if (pid == 0) /* Child process */
     {
-        char *args[] = {command, NULL};
+        char **args = malloc(sizeof(char *) * 2);
+        if (args == NULL)
+        {
+            perror("Memory allocation failed");
+            exit(EXIT_FAILURE);
+        }
+        args[0] = command;
+        args[1] = NULL;
+
         if (execve(command, args, environ) == -1)
         {
             fprintf(stderr, "Error: Command not found: %s\n", command);
+            free(args);
             exit(EXIT_FAILURE);
         }
+        free(args);
     }
     else /* Parent process */
     {
