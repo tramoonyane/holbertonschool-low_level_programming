@@ -18,4 +18,11 @@ extern char **environ;  /* Access to the environment variables */
 /* Function to check if input is coming from a terminal */
 int is_input_terminal();
 
+/* Function prototypes for additional functions */
+void execute_interactively(char *program_name);
+void execute_non_interactively(char *program_name);
+char *get_user_input();
+char **tokenize_input(char *input);
+void execute_command(char **tokens, char *program_name);
+
 #endif /* SIMPLE_SHELL_H */
