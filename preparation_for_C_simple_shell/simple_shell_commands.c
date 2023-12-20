@@ -72,24 +72,26 @@ return (EXIT_SUCCESS);
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args, int command_number, char *program_name) {
-    char **directories = parse_path();
-    int found = 0;
-    int i;
+void execute_command_with_path(char **args, int command_number, char *program_name)
+{
+char **directories = parse_path();
+int found = 0;
+int i;
 
-    for (i = 0; directories[i] != NULL; i++) {
-        char path_command[BUFFER_SIZE];
-        snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+for (i = 0; directories[i] != NULL; i++)
+{
+char path_command[BUFFER_SIZE];
 
-        if (access(path_command, X_OK) == 0) {
-            found = 1;
-            execute_found_command(args, command_number, program_name, path_command);
-            break;
-        }
-    }
-
-    handle_command_not_found(found, args[0], command_number, program_name);
-    free(directories);
+snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+if (access(path_command, X_OK) == 0)
+{
+found = 1;
+execute_found_command(args, command_number, program_name, path_command);
+break;
+}
+}
+handle_command_not_found(found, args[0], command_number, program_name);
+free(directories);
 }
 
 /**
@@ -104,24 +106,31 @@ void execute_command_with_path(char **args, int command_number, char *program_na
  * @program_name: The name of the shell program.
  * @path_command: The path to the command to be executed.
  */
-void execute_found_command(char **args, int command_number, char *program_name, const char *path_command) {
-    pid_t pid;
-    int status;
+void execute_found_command(char **args, int command_number, char *program_name, const char *path_command)
+{
+pid_t pid;
+int status;
 
-    pid = fork();
-    if (pid == -1) {
-        perror("fork error");
-        exit(EXIT_FAILURE);
-    } else if (pid == 0) {
-        /* Child process */
-        if (execv(path_command, args) == -1) {
-            fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
-            exit(EXIT_FAILURE);
-        }
-    } else {
-        /* Parent process */
-        waitpid(pid, &status, 0);
-    }
+pid = fork();
+if (pid == -1)
+{
+perror("fork error");
+exit(EXIT_FAILURE);
+}
+else if (pid == 0)
+{
+/* Child process */
+if (execv(path_command, args) == -1)
+{
+fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+exit(EXIT_FAILURE);
+}
+}
+else
+{
+/* Parent process */
+waitpid(pid, &status, 0);
+}
 }
 
 /**
@@ -135,8 +144,10 @@ void execute_found_command(char **args, int command_number, char *program_name, 
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void handle_command_not_found(int found, const char *command, int command_number, const char *program_name) {
-    if (!found) {
-        fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
-    }
+void handle_command_not_found(int found, const char *command, int command_number, const char *program_name)
+{
+if (!found)
+{
+fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
+}
 }
