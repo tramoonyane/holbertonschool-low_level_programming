@@ -2,7 +2,7 @@
 
 ## Description
 
-This is a simple Unix command line interpreter created as a project for Holberton School. The shell is capable of handling basic commands, tokenizing user input, executing commands, and displaying a prompt. It includes functionalities developed across multiple files to meet different task requirements.
+This project is a Unix command line interpreter created as a Holberton School assignment. The shell can handle basic commands, tokenize user input, execute commands, and display a prompt. It encompasses functionalities developed across multiple files to meet various task requirements.
 
 ## How to Use
 
@@ -32,18 +32,10 @@ This is a simple Unix command line interpreter created as a project for Holberto
 Compile each file for the respective task using specific commands (similar to provided examples):
 - Simple shell 0.1 version
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.c helper_file1.c -o hsh
-- Simple shell 0.2 version
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
-- Simple shell 0.3 version
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
-- Simple shell 0.4 version
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
-- Simple shell 1.0 version
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
-  
-Replace `hsh`with relevant executable names for each task if you wish.
+- ... (continue for each version)
+
+Replace `hsh` with relevant executable names for each task if needed.
 
 ## Authors
 
-This project was done by [Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe] for Holberton School.
-  
+This project was completed by Thetele Ramoonyane, Makhothi Tlali, and Relebohile Ramoshabe for Holberton School.
