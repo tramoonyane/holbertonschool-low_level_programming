@@ -33,7 +33,7 @@ Compile each file for the respective task using specific commands (similar to pr
 - Simple shell 0.1
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.c helper_file1.c -o hsh
 - Simple shell 0.2
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_arguments.c -o hsh
+  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_arguments.c helper_file2.c main.c -o hsh
 - Simple shell 0.3
    gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_exit.c helper_file2.c -o hsh
 - Simple shell 0.4
