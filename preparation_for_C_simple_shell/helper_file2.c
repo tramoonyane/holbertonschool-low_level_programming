@@ -21,7 +21,7 @@ i++;
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char* read_command(void)
+char *read_command(void)
 {
 char *command;
 char input[BUFFER_SIZE];
