@@ -17,39 +17,6 @@ i++;
 }
 
 /**
- * read_command - Reads a command from standard input.
- *
- * Return: Returns the input command as a dynamically allocated string.
- */
-char *read_command(void)
-{
-char *command;
-char input[BUFFER_SIZE];
-
-if (fgets(input, BUFFER_SIZE, stdin) == NULL)
-{
-if (feof(stdin))
-{
-write(STDOUT_FILENO, "\n", 1);
-exit(EXIT_SUCCESS);
-}
-else
-{
-perror("fgets error");
-exit(EXIT_FAILURE);
-}
-}
-input[strcspn(input, "\n")] = '\0';
-command = strdup(input);
-if (command == NULL)
-{
-perror("strdup error");
-exit(EXIT_FAILURE);
-}
-return (command);
-}
-
-/**
  * handle_builtin_commands - Handles built-in commands like 'exit' and 'env'.
  *
  * @command: The command to execute.
