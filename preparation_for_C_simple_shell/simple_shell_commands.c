@@ -1,3 +1,7 @@
+/* simple_shell_commands.c */ 
+
+#include "Shell.h"
+
 /**
  * execute_command - Executes the command with arguments.
  *
