@@ -1,4 +1,4 @@
-/* simple_shell_commands.c */ 
+/* simple_shell_commands.c */
 
 #include "Shell.h"
 
@@ -61,11 +61,12 @@ return (EXIT_SUCCESS);
 }
 
 /**
- * execute_command_with_path - Execute command by searching through directories in PATH
- *
+ * execute_command_with_path - Execute command by searching through
+ * directories in PATH
  * This function attempts to execute a command by searching through directories
- * listed in the PATH environment variable. It constructs the full path to the command
- * and checks if it is executable. If found, it executes the command using 
+ * listed in the PATH environment variable. It constructs
+ * the full path to the command
+ * and checks if it is executable. If found, it executes the command using
  * execute_found_command(); otherwise, it handles the command not being found.
  *
  * @args: Array of command arguments.
