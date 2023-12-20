@@ -25,36 +25,24 @@ char **parse_path(void) {
  *
  * Return: Returns an array of directories.
  */
-char **tokenize_path(const char *path)
-{
-char *path_copy = strdup(path);
-char **directories;
-char *token;
+char **tokenize_path(const char *path) {
+    char *path_copy = strdup(path);
+    char **directories = NULL;
+    char *token;
 
-if (path_copy == NULL)
-{
-handle_allocation_error("strdup error");
-}
-directories = malloc(sizeof(char *));
-if (directories == NULL)
-{
-handle_allocation_error("malloc error");
-}
-token = strtok(path_copy, ":");
+    if (path_copy == NULL) {
+        handle_allocation_error("strdup error");
+    }
 
-while (token != NULL)
-{
-append_directory(&directories, token);
-token = strtok(NULL, ":");
-}
-directories = realloc(directories, sizeof(char *) * 2);
-if (directories == NULL)
-{
-handle_allocation_error("realloc error");
-}
-directories[1] = NULL;
-free(path_copy);
-return (directories);
+    token = strtok(path_copy, ":");
+
+    while (token != NULL) {
+        append_directory(&directories, token);
+        token = strtok(NULL, ":");
+    }
+
+    free(path_copy);
+    return directories;
 }
 
 /**
@@ -64,17 +52,44 @@ return (directories);
  * @token: The directory string to append.
  */
 void append_directory(char ***directories, const char *token) {
-    static int count = 0;
-    *directories = realloc(*directories, sizeof(char *) * (count + 2));
     if (*directories == NULL) {
-        handle_allocation_error("realloc error");
+        *directories = malloc(sizeof(char *));
+        if (*directories == NULL) {
+            handle_allocation_error("malloc error");
+        }
+    } else {
+        *directories = realloc(*directories, (count_directories(*directories) + 2) * sizeof(char *));
+        if (*directories == NULL) {
+            handle_allocation_error("realloc error");
+        }
     }
 
-    (*directories)[count++] = strdup(token);
-    if ((*directories)[count - 1] == NULL) {
+    (*directories)[count_directories(*directories)] = strdup(token);
+    if ((*directories)[count_directories(*directories)] == NULL) {
         handle_allocation_error("strdup error");
     }
-    (*directories)[count] = NULL;
+
+    (*directories)[count_directories(*directories) + 1] = NULL;
+}
+
+/**
+ * count_directories - Counts the number of directories in the array.
+ *
+ * @directories: Pointer to the array of directories.
+ *
+ * Return: Returns the number of directories.
+ */
+int count_directories(char **directories) {
+    int count = 0;
+    if (directories == NULL) {
+        return count;
+    }
+
+    while (directories[count] != NULL) {
+        count++;
+    }
+
+    return count;
 }
 
 /**
