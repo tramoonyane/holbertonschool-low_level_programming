@@ -5,9 +5,9 @@
 /**
  * print_environment - Prints the current environment variables.
  */
-void print_environment()
+void print_environment(void)
 {
-extern char **environ;
+/* extern char **environ; */
 int i = 0;
 while (environ[i] != NULL)
 {
@@ -21,9 +21,9 @@ i++;
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char* read_command()
+char *read_command()
 {
-char* command;
+char *command;
 char input[BUFFER_SIZE];
 
 if (fgets(input, BUFFER_SIZE, stdin) == NULL)
