@@ -14,11 +14,11 @@
 #define PROMPT "$ " /* You can change the prompt as needed */
 extern char **environ;
 
-char **parse_path();
+char **parse_path(void);
 int execute_command(char *command, int command_number, char *program_name);
-char *read_command();
+char *read_command(void);
 int handle_builtin_commands(char *command);
-void exit_shell();
+void exit_shell(void);
 
 void interactive_mode(char *program_name);
 void non_interactive_mode(char *program_name);
