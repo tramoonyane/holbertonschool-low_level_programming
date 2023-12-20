@@ -167,34 +167,52 @@ return (args);
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args, int command_number, char *program_name) {
-    char **directories = parse_path();
-    int found = 0;
+void execute_command_with_path(char **args,
+int command_number, char *program_name)
+{
+pid_t pid;
+int status;
+char **directories = parse_path();
+int found = 0;
+int i;
 
-    found = execute_command_from_directories(args, command_number, program_name, directories);
+for (i = 0; directories[i] != NULL; i++)
+{
+char path_command[BUFFER_SIZE];
 
-    handle_command_not_found(found, args[0], command_number, program_name);
-
-    free(directories);
+snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+/* Check if the command is executable at the given path */
+if (access(path_command, X_OK) == 0)
+{
+found = 1;
+pid = fork();
+if (pid == -1)
+{
+perror("fork error");
+exit(EXIT_FAILURE);
 }
-
-int execute_command_from_directories(char **args, int command_number, char *program_name, char **directories) {
-    int found = 0;
-    int i;
-
-    for (i = 0; directories[i] != NULL; i++) {
-        char path_command[BUFFER_SIZE];
-
-        construct_path_command(directories[i], args[0], path_command);
-
-        if (is_command_executable(path_command)) {
-            found = 1;
-            execute_command(path_command, command_number, program_name); /* Change this line */
-            break;
-        }
-    }
-
-    return found;
+else if (pid == 0)
+{
+/* Child process */
+if (execv(path_command, args) == -1)
+{
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, args[0]);
+exit(EXIT_FAILURE);
 }
-
-/* The rest of the functions remain the same as previously defined */
+}
+else
+{
+/* Parent process */
+waitpid(pid, &status, 0);
+}
+break;
+}
+}
+if (!found)
+{
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, args[0]);
+}
+free(directories);
+}
