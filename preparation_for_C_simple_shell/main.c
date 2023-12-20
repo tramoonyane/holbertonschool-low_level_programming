@@ -44,7 +44,7 @@ process_command(command, &command_number, program_name);
 }
 free(command);
 command_number++;
-}while (1);
+} while (1);
 }
 
 /**
