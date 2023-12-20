@@ -178,16 +178,6 @@ void execute_command_with_path(char **args, int command_number, char *program_na
     free(directories);
 }
 
-/**
- * execute_command_from_directories - Executes the command from available directories.
- *
- * @args: Array of command arguments.
- * @command_number: Number of the command in the shell session.
- * @program_name: The name of the shell program.
- * @directories: Array of directories where commands might reside.
- * 
- * Return: Returns 1 if the command is found and executed, else returns 0.
- */
 int execute_command_from_directories(char **args, int command_number, char *program_name, char **directories) {
     int found = 0;
     int i;
@@ -199,7 +189,7 @@ int execute_command_from_directories(char **args, int command_number, char *prog
 
         if (is_command_executable(path_command)) {
             found = 1;
-            execute_command(args, command_number, program_name, path_command);
+            execute_command(path_command, command_number, program_name); // Change this line
             break;
         }
     }
