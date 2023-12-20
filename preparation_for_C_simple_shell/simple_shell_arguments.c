@@ -160,3 +160,59 @@ while
 return (args);
 }
 
+/**
+ * execute_command_with_path - Executes the command with full path.
+ *
+ * @args: Array of command arguments.
+ * @command_number: Number of the command in the shell session.
+ * @program_name: The name of the shell program.
+ */
+void execute_command_with_path(char **args,
+int command_number, char *program_name)
+{
+pid_t pid;
+int status;
+char **directories = parse_path();
+int found = 0;
+int i;
+
+for (i = 0; directories[i] != NULL; i++)
+{
+char path_command[BUFFER_SIZE];
+
+snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
+/* Check if the command is executable at the given path */
+if (access(path_command, X_OK) == 0)
+{
+found = 1;
+pid = fork();
+if (pid == -1)
+{
+perror("fork error");
+exit(EXIT_FAILURE);
+}
+else if (pid == 0)
+{
+/* Child process */
+if (execv(path_command, args) == -1)
+{
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, args[0]);
+exit(EXIT_FAILURE);
+}
+}
+else
+{
+/* Parent process */
+waitpid(pid, &status, 0);
+}
+break;
+}
+}
+if (!found)
+{
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, args[0]);
+}
+free(directories);
+}
