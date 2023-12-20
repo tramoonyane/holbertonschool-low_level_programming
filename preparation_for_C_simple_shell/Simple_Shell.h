@@ -1,5 +1,3 @@
-/* Simple_Shell.h */
-
 #ifndef SIMPLE_SHELL_H
 #define SIMPLE_SHELL_H
 
@@ -16,7 +14,7 @@
 extern char **environ;  /* Access to the environment variables */
 
 /* Function to check if input is coming from a terminal */
-int is_input_terminal();
+int is_input_terminal(void);
 
 /* Function prototypes for additional functions */
 void execute_interactively(char *program_name);
