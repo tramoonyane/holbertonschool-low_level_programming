@@ -195,7 +195,8 @@ int search_and_execute_command(char **args, int command_number, char *program_na
 
         if (is_command_executable(path_command)) {
             found = 1;
-            execute_command(args, command_number, program_name, path_command);
+            /* Change this line to execute_command(args[0], ...) */
+            execute_command(args[0], command_number, program_name);
             break;
         }
     }
