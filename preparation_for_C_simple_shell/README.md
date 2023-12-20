@@ -30,20 +30,20 @@ This is a simple Unix command line interpreter created as a project for Holberto
 ## Compilation
 
 Compile each file for the respective task using specific commands (similar to provided examples):
-- Simple shell 0.1
+- Simple shell 0.1 version
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.c helper_file1.c -o hsh
-- Simple shell 0.2
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_arguments.c helper_file2.c main.c -o hsh
-- Simple shell 0.3
-   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_exit.c helper_file2.c -o hsh
-- Simple shell 0.4
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_path.c simple_shell_exit.c helper_file2.c -o hsh
-- Simple shell 1.0
-  gcc -Wall -Werror -Wextra -pedantic -std=gnu89  helper_file2.c -o hsh
+- Simple shell 0.2 version
+  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
+- Simple shell 0.3 version
+  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
+- Simple shell 0.4 version
+  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
+- Simple shell 1.0 version
+  gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c main.c -o hsh
   
 Replace `hsh`with relevant executable names for each task if you wish.
 
 ## Authors
 
-This project was created by [Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe] for Holberton School.
+This project was done by [Thetele Ramoonyane, Makhothi Tlali, Relebohile Ramoshabe] for Holberton School.
   
