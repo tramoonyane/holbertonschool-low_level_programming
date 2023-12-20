@@ -220,7 +220,7 @@ exit(EXIT_FAILURE);
 else
 {
 /* Parent process */
-waitpid(pid, &status, 0)
+waitpid(pid, &status, 0);
 }
 break;
 }
