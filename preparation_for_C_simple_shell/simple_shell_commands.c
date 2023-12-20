@@ -126,7 +126,8 @@ else if (pid == 0)
 /* Child process */
 if (execv(path_command, args) == -1)
 {
-fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+fprintf(stderr, "%s: %d: %s: not found\n", program_name,
+command_number, args[0]);
 exit(EXIT_FAILURE);
 }
 }
@@ -148,10 +149,12 @@ waitpid(pid, &status, 0);
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void handle_command_not_found(int found, const char *command, int command_number, const char *program_name)
+void handle_command_not_found(int found, const char *command,
+int command_number, const char *program_name)
 {
 if (!found)
 {
-fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, command);
 }
 }
