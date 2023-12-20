@@ -1,7 +1,6 @@
 /* simple_shell_arguments.c */
 
 #include "Shell.h"
-#include "helper_file2.h"
 
 /**
  * parse_path - Tokenizes the PATH environment variable into directories.
