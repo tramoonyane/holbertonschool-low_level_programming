@@ -189,7 +189,7 @@ int execute_command_from_directories(char **args, int command_number, char *prog
 
         if (is_command_executable(path_command)) {
             found = 1;
-            execute_command(path_command, command_number, program_name); // Change this line
+            execute_command(path_command, command_number, program_name); /* Change this line */
             break;
         }
     }
