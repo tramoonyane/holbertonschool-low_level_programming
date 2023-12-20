@@ -21,7 +21,7 @@ i++;
  *
  * Return: Returns the input command as a dynamically allocated string.
  */
-char *read_command()
+char* read_command(void)
 {
 char *command;
 char input[BUFFER_SIZE];
@@ -75,7 +75,7 @@ return (0); /* Return 0 for other commands */
 /**
  * exit_shell - Exits the shell.
  */
-void exit_shell()
+void exit_shell(void)
 {
 exit(EXIT_SUCCESS);
 }
