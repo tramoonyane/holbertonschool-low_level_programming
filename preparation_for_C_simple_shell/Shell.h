@@ -32,4 +32,9 @@ char *get_path(void);
 char **allocate_directories(int size);
 void add_directory(char ***directories, char *token, int count);
 
+void create_path_command(const char *directory, const char *command, char *path_command);
+int is_command_executable(const char *path_command);
+void execute_command(char **args, int command_number, const char *program_name, const char *path_command);
+void handle_command_not_found(int found, const char *command, int command_number, const char *program_name);
+
 #endif /* SHELL_H */
