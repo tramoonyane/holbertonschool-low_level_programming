@@ -30,7 +30,8 @@ This project is a Unix command line interpreter created as a Holberton School as
 Compile each file for the respective task using specific commands (similar to provided examples):
 - Simple shell 0.1 version
   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 simple_shell.c helper_file1.c -o hsh
-- ... (continue for each version)
+- Simple shell 0.2 version
+   gcc -Wall -Werror -Wextra -pedantic -std=gnu89 main.c simple_shell_commands.c simple_shell_arguments.c simple_shell_path.c Shell_built-in.c -o hsh
 
 Replace `hsh` with relevant executable names for each task if needed.
 
