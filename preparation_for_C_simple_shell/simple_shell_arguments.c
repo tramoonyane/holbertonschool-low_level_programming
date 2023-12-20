@@ -167,52 +167,44 @@ return (args);
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args,
-int command_number, char *program_name)
-{
-pid_t pid;
-int status;
-char **directories = parse_path();
-int found = 0;
-int i;
+void execute_command_with_path(char **args, int command_number, char *program_name) {
+    char **directories = parse_path();
+    int found = 0;
 
-for (i = 0; directories[i] != NULL; i++)
-{
-char path_command[BUFFER_SIZE];
+    found = execute_command_from_directories(args, command_number, program_name, directories);
 
-snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
-/* Check if the command is executable at the given path */
-if (access(path_command, X_OK) == 0)
-{
-found = 1;
-pid = fork();
-if (pid == -1)
-{
-perror("fork error");
-exit(EXIT_FAILURE);
+    handle_command_not_found(found, args[0], command_number, program_name);
+
+    free(directories);
 }
-else if (pid == 0)
-{
-/* Child process */
-if (execv(path_command, args) == -1)
-{
-fprintf(stderr, "%s: %d: %s: not found\n",
-program_name, command_number, args[0]);
-exit(EXIT_FAILURE);
+
+/**
+ * execute_command_from_directories - Executes the command from available directories.
+ *
+ * @args: Array of command arguments.
+ * @command_number: Number of the command in the shell session.
+ * @program_name: The name of the shell program.
+ * @directories: Array of directories where commands might reside.
+ * 
+ * Return: Returns 1 if the command is found and executed, else returns 0.
+ */
+int execute_command_from_directories(char **args, int command_number, char *program_name, char **directories) {
+    int found = 0;
+    int i;
+
+    for (i = 0; directories[i] != NULL; i++) {
+        char path_command[BUFFER_SIZE];
+
+        construct_path_command(directories[i], args[0], path_command);
+
+        if (is_command_executable(path_command)) {
+            found = 1;
+            execute_command(args, command_number, program_name, path_command);
+            break;
+        }
+    }
+
+    return found;
 }
-}
-else
-{
-/* Parent process */
-waitpid(pid, &status, 0);
-}
-break;
-}
-}
-if (!found)
-{
-fprintf(stderr, "%s: %d: %s: not found\n",
-program_name, command_number, args[0]);
-}
-free(directories);
-}
+
+/* The rest of the functions remain the same as previously defined */
