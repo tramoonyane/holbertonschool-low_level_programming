@@ -161,58 +161,101 @@ return (args);
 }
 
 /**
- * execute_command_with_path - Executes the command with full path.
+ * Executes the command with full path.
  *
  * @args: Array of command arguments.
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args,
-int command_number, char *program_name)
-{
-pid_t pid;
-int status;
-char **directories = parse_path();
-int found = 0;
-int i;
+void execute_command_with_path(char **args, int command_number, char *program_name) {
+    char **directories = parse_path();
+    int found = 0;
+    int i;
 
-for (i = 0; directories[i] != NULL; i++)
-{
-char path_command[BUFFER_SIZE];
+    for (i = 0; directories[i] != NULL; i++) {
+        char path_command[BUFFER_SIZE];
+        create_path_command(directories[i], args[0], path_command);
 
-snprintf(path_command, sizeof(path_command), "%s/%s", directories[i], args[0]);
-/* Check if the command is executable at the given path */
-if (access(path_command, X_OK) == 0)
-{
-found = 1;
-pid = fork();
-if (pid == -1)
-{
-perror("fork error");
-exit(EXIT_FAILURE);
+        if (is_command_executable(path_command)) {
+            found = 1;
+            execute_command(args, command_number, program_name, path_command);
+            break;
+        }
+    }
+
+    handle_command_not_found(found, args[0], command_number, program_name);
+
+    free(directories);
 }
-else if (pid == 0)
-{
-/* Child process */
-if (execv(path_command, args) == -1)
-{
-fprintf(stderr, "%s: %d: %s: not found\n",
-program_name, command_number, args[0]);
-exit(EXIT_FAILURE);
+
+/**
+ * create_path_command - Creates the path to the command.
+ * @directory: The directory where the command resides.
+ * @command: The command name.
+ * @path_command: The buffer to store the constructed path.
+ *
+ * This function constructs the full path to a command using the provided directory
+ * and command name, storing it in path_command.
+ */
+void create_path_command(const char *directory, const char *command, char *path_command) {
+    snprintf(path_command, BUFFER_SIZE, "%s/%s", directory, command);
 }
+
+/**
+ * is_command_executable - Checks if the command is executable at the given path.
+ * @path_command: The path to the command.
+ * Return: Returns 0 if the command is executable, otherwise returns non-zero.
+ *
+ * This function checks whether the command is executable at the provided path.
+ * Returns 0 if the command is executable, else returns non-zero.
+ */
+int is_command_executable(const char *path_command) {
+    return access(path_command, X_OK) == 0;
 }
-else
-{
-/* Parent process */
-waitpid(pid, &status, 0);
+
+/**
+ * execute_command - Executes the given command.
+ * @args: Array of command arguments.
+ * @command_number: Number of the command in the shell session.
+ * @program_name: The name of the shell program.
+ * @path_command: The path to the command.
+ *
+ * This function executes the given command using fork and execv system calls.
+ * It handles the execution of the command in a child process and waits for its completion
+ * in the parent process.
+ */
+void execute_command(char **args, int command_number, const char *program_name, const char *path_command) {
+    pid_t pid;
+    int status;
+
+    pid = fork();
+    if (pid == -1) {
+        perror("fork error");
+        exit(EXIT_FAILURE);
+    } else if (pid == 0) {
+        /* Child process */
+        if (execv(path_command, args) == -1) {
+            fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+            exit(EXIT_FAILURE);
+        }
+    } else {
+        /* Parent process */
+        waitpid(pid, &status, 0);
+    }
 }
-break;
-}
-}
-if (!found)
-{
-fprintf(stderr, "%s: %d: %s: not found\n",
-program_name, command_number, args[0]);
-}
-free(directories);
+
+/**
+ * handle_command_not_found - Handles the case when the command is not found.
+ * @found: Flag indicating whether the command was found or not.
+ * @command: The command that was attempted.
+ * @command_number: Number of the command in the shell session.
+ * @program_name: The name of the shell program.
+ *
+ * This function handles the scenario when the command is not found in any of the directories.
+ * It prints an error message to stderr indicating that the command was not found.
+ */
+void handle_command_not_found(int found, const char *command, int command_number, const char *program_name) {
+    if (!found) {
+        fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, command);
+    }
 }
