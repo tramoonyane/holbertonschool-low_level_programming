@@ -12,6 +12,7 @@
 
 #define BUFFER_SIZE 1024
 #define PROMPT "$ " /* You can change the prompt as needed */
+extern char **environ;
 
 char **parse_path();
 int execute_command(char *command, int command_number, char *program_name);
