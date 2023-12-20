@@ -1,4 +1,4 @@
-/* simple_shell_arguments.c */
+/* simple_shell_path.c */
 
 #include "Shell.h"
 
