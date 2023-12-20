@@ -6,7 +6,7 @@
  * main - Main function of the shell.
  * Return: Returns EXIT_SUCCESS upon successful execution.
  */
-int main()
+int main(void)
 {
 char *program_name = "hsh"; /* Replace this with your program's name */
 if (isatty(STDIN_FILENO))
@@ -17,7 +17,7 @@ else
 {
 non_interactive_mode(program_name);
 }
-return EXIT_SUCCESS;
+return (EXIT_SUCCESS);
 }
 
 /**
@@ -44,8 +44,7 @@ process_command(command, &command_number, program_name);
 }
 free(command);
 command_number++;
-}
-while (1);
+}while (1);
 }
 
 /**
@@ -73,7 +72,8 @@ command_number++;
  */
 void process_command(char *command, int *command_number, char *program_name)
 {
-if (execute_command(command, *command_number, program_name) == EXIT_FAILURE) {
+if (execute_command(command, *command_number, program_name) == EXIT_FAILURE)
+{
 /* Handle error if needed */
 /* Display error messages or perform necessary actions */
 }
