@@ -17,8 +17,6 @@ This project is a Unix command line interpreter created as a Holberton School as
 - `Simple_Shell.h`: Header file containing function prototypes and definitions.
 - `simple_shell_arguments.c`: File implementing command line argument handling.
 - `simple_shell_path.c`: File managing command execution with PATH handling.
-- `simple_shell_exit.c`: File implementing the exit built-in command.
-- `simple_shell_env.c`: File implementing the env built-in command.
 
 ## Functions
 
