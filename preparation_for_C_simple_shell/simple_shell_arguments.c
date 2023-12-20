@@ -53,7 +53,7 @@ exit(EXIT_FAILURE);
 }
 directories[count] = NULL;
 free(path_copy);
-return directories;
+return (directories);
 }
 
 /**
@@ -72,7 +72,7 @@ int arg_count;
 
 if (command == NULL || *command == '\0')
 {
-return EXIT_SUCCESS; /* Skip execution for empty commands */
+return (EXIT_SUCCESS); /* Skip execution for empty commands */
 }
 arg_count = count_arguments(command);
 args = get_command_arguments(command, arg_count);
@@ -102,7 +102,7 @@ while (*p == ' ') /* Skip consecutive spaces */
 p++;
 }
 }
-return arg_count;
+return (arg_count);
 }
 
 /**
@@ -125,7 +125,8 @@ perror("malloc error");
 exit(EXIT_FAILURE);
 }
 args[i++] = strtok(command, " \n"); /* Get the command */
-while ((args[i++] = strtok(NULL, " \n")) != NULL);
+while
+((args[i++] = strtok(NULL, " \n")) != NULL);
 return (args);
 }
 
@@ -136,7 +137,8 @@ return (args);
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args, int command_number, char *program_name)
+void execute_command_with_path(char **args,
+int command_number, char *program_name)
 {
 pid_t pid;
 int status;
@@ -164,7 +166,8 @@ else if (pid == 0)
 /* Child process */
 if (execv(path_command, args) == -1)
 {
-fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, args[0]);
 exit(EXIT_FAILURE);
 }
 }
@@ -178,7 +181,8 @@ break;
 }
 if (!found)
 {
-fprintf(stderr, "%s: %d: %s: not found\n", program_name, command_number, args[0]);
+fprintf(stderr, "%s: %d: %s: not found\n",
+program_name, command_number, args[0]);
 }
 free(directories);
 }
