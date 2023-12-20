@@ -7,113 +7,53 @@
  *
  * Return: Returns an array of directories.
  */
-char **parse_path(void) {
-    const char *path = getenv("PATH");
+char **parse_path()
+{
+char *path = getenv("PATH");
+char *token;
+int count;
+char *path_copy;
+char **directories = malloc(sizeof(char *));
 
-    if (path == NULL || *path == '\0') {
-        fprintf(stderr, "No PATH variable found or empty.\n");
-        exit(EXIT_FAILURE);
-    }
-    
-    return tokenize_path(path);
+if (path == NULL || *path == '\0')
+{
+fprintf(stderr, "No PATH variable found or empty.\n");
+exit(EXIT_FAILURE);
 }
-
-/**
- * tokenize_path - Tokenizes the PATH environment variable.
- *
- * @path: The PATH environment variable string.
- *
- * Return: Returns an array of directories.
- */
-char **tokenize_path(const char *path) {
-    char *path_copy = strdup(path);
-    char **directories = NULL;
-    char *token;
-
-    if (path_copy == NULL) {
-        handle_allocation_error("strdup error");
-    }
-
-    token = strtok(path_copy, ":");
-
-    while (token != NULL) {
-        append_directory(&directories, token);
-        token = strtok(NULL, ":");
-    }
-
-    free(path_copy);
-    return directories;
+path_copy = strdup(path);
+if (path_copy == NULL)
+{
+perror("strdup error");
+exit(EXIT_FAILURE);
 }
-
-/**
- * append_directory - Appends a directory to the directories array.
- *
- * @directories: Pointer to the array of directories.
- * @token: The directory string to append.
- */
-void append_directory(char ***directories, const char *token) {
-    if (*directories == NULL) {
-        *directories = malloc(sizeof(char *));
-        if (*directories == NULL) {
-            handle_allocation_error("malloc error");
-        }
-    } else {
-        *directories = realloc(*directories, (count_directories(*directories) + 2) * sizeof(char *));
-        if (*directories == NULL) {
-            handle_allocation_error("realloc error");
-        }
-    }
-
-    (*directories)[count_directories(*directories)] = strdup(token);
-    if ((*directories)[count_directories(*directories)] == NULL) {
-        handle_allocation_error("strdup error");
-    }
-
-    (*directories)[count_directories(*directories) + 1] = NULL;
+token = strtok(path_copy, ":");
+count = 0;
+directories = malloc(sizeof(char *));
+if (directories == NULL)
+{
+perror("malloc error");
+exit(EXIT_FAILURE);
 }
-
-/**
- * count_directories - Counts the number of directories in the array.
- *
- * @directories: Pointer to the array of directories.
- *
- * Return: Returns the number of directories.
- */
-int count_directories(char **directories) {
-    int count = 0;
-    if (directories == NULL) {
-        return count;
-    }
-
-    while (directories[count] != NULL) {
-        count++;
-    }
-
-    return count;
+while (token != NULL)
+{
+directories = realloc(directories, (count + 1) * sizeof(char *));
+if (directories == NULL)
+{
+perror("realloc error");
+exit(EXIT_FAILURE);
 }
-
-/**
- * handle_allocation_error - Handles memory allocation errors.
- *
- * @message: The error message to display.
- */
-void handle_allocation_error(const char *message) {
-    perror(message);
-    exit(EXIT_FAILURE);
+directories[count++] = token;
+token = strtok(NULL, ":");
 }
-
-/**
- * free_directories - Frees the allocated memory for directories.
- *
- * @directories: The array of directories to be freed.
- */
-void free_directories(char **directories) {
-    int i = 0;
-    while (directories[i] != NULL) {
-        free(directories[i]);
-        i++;
-    }
-    free(directories);
+directories = realloc(directories, (count + 1) * sizeof(char *));
+if (directories == NULL)
+{
+perror("realloc error");
+exit(EXIT_FAILURE);
+}
+directories[count] = NULL;
+free(path_copy);
+return (directories);
 }
 
 /**
@@ -234,7 +174,7 @@ exit(EXIT_FAILURE);
 else
 {
 /* Parent process */
-waitpid(pid, &status, 0);
+waitpid(pid, &status, 0)
 }
 break;
 }
