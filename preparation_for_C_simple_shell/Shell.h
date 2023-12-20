@@ -28,11 +28,4 @@ int count_arguments(char *command);
 char **get_command_arguments(char *command, int arg_count);
 void execute_command_with_path(char **args, int command_number, char *program_name);
 
-char **tokenize_path(const char *path);
-void handle_allocation_error(const char *message);
-void free_directories(char **directories);
-void append_directory(char ***directories, const char *token);
-
-int count_directories(char **directories);
-
 #endif /* SHELL_H */
