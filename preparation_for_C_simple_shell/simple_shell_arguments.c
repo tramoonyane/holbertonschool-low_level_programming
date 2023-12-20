@@ -7,16 +7,15 @@
  *
  * Return: Returns an array of directories.
  */
-char **parse_path(void)
-{
-const char *path = getenv("PATH");
+char **parse_path(void) {
+    const char *path = getenv("PATH");
 
-if (path == NULL || *path == '\0')
-{
-fprintf(stderr, "No PATH variable found or empty.\n");
-exit(EXIT_FAILURE);
-}
-return (tokenize_path(path));
+    if (path == NULL || *path == '\0') {
+        fprintf(stderr, "No PATH variable found or empty.\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    return tokenize_path(path);
 }
 
 /**
