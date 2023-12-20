@@ -33,4 +33,6 @@ void handle_allocation_error(const char *message);
 void free_directories(char **directories);
 void append_directory(char ***directories, const char *token);
 
+int count_directories(char **directories);
+
 #endif /* SHELL_H */
