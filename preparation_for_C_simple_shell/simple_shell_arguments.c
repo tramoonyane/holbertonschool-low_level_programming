@@ -29,16 +29,19 @@ return (tokenize_path(path));
 char **tokenize_path(const char *path)
 {
 char *path_copy = strdup(path);
+char **directories;
+char *token;
+
 if (path_copy == NULL)
 {
 handle_allocation_error("strdup error");
 }
-char **directories = malloc(sizeof(char *));
+directories = malloc(sizeof(char *));
 if (directories == NULL)
 {
 handle_allocation_error("malloc error");
 }
-char *token = strtok(path_copy, ":");
+token = strtok(path_copy, ":");
 
 while (token != NULL)
 {
