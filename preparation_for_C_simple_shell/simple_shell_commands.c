@@ -73,7 +73,8 @@ return (EXIT_SUCCESS);
  * @command_number: Number of the command in the shell session.
  * @program_name: The name of the shell program.
  */
-void execute_command_with_path(char **args, int command_number, char *program_name)
+void execute_command_with_path(char **args, int command_number,
+char *program_name)
 {
 char **directories = parse_path();
 int found = 0;
@@ -98,7 +99,8 @@ free(directories);
 /**
  * execute_found_command - Executes the found command in a child process.
  *
- * This function forks a child process and attempts to execute the given command.
+ * This function forks a child process and attempts to execute
+ * the given command.
  * It utilizes the execv system call to execute the command and waits for the
  * child process to finish execution before returning to the parent process.
  *
@@ -107,7 +109,8 @@ free(directories);
  * @program_name: The name of the shell program.
  * @path_command: The path to the command to be executed.
  */
-void execute_found_command(char **args, int command_number, char *program_name, const char *path_command)
+void execute_found_command(char **args, int command_number,
+char *program_name, const char *path_command)
 {
 pid_t pid;
 int status;
